@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\ReportController as AdminReportController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -60,6 +61,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pedidos/{order}', [OrderController::class, 'show'])->name('orders.show');
     Route::post('/pedidos/{order}/avaliar/{item}', [ReviewController::class, 'store'])->name('orders.review.store');
     Route::post('/denunciar/anuncio/{listing}', [ListingPublicController::class, 'report'])->name('listings.report');
+
+    // Perfil do Usuário e Troca de Senha
+    Route::get('/perfil', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/perfil', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/perfil/senha', [ProfileController::class, 'updatePassword'])->name('profile.password');
 });
 
 /*

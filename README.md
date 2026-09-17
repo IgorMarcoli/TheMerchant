@@ -1,5 +1,6 @@
 # 🎮 TheMerchant — Marketplace de Cosméticos e Serviços para Jogos Digitais
 
+> 🔗 **Repositório Oficial no GitHub:** [https://github.com/IgorMarcoli/TheMerchant](https://github.com/IgorMarcoli/TheMerchant)  
 > **Documento de Especificação e Arquitetura** da disciplina de **Laboratório de Engenharia de Software III (LES III 2026)** — FATEC PG.  
 > Plataforma web de marketplace para intermediação segura de cosméticos (skins, temas, avatares) e serviços digitais (coaching) para jogos, construída em arquitetura monolítica modular com **PHP/Laravel**, **Blade**, **Tailwind CSS** e **Alpine.js**.
 

@@ -46,41 +46,45 @@ flowchart LR
 
 ---
 
-## 🎯 Milestone 1: Fundação, Autenticação e Perfis
+## 🎯 Milestone 1: Fundação, Autenticação e Perfis *(Status: CONCLUÍDA ✅)*
 
 ### Issue #01: `[Setup/Geral] Alinhamento Inicial do Repositório, Migrations Base e Padrão de Branches`
+- **Status:** `CONCLUÍDA / CLOSED ✅`
 - **Assignees:** `@JoaoPMA23`, `@IgorMarcoli` *(Trabalho em Dupla)*
 - **Milestone:** `M1: Fundação, Autenticação e Perfis`
 - **Labels:** `backend`, `database`, `architecture`
 - **Requisitos:** `RNF08`
-- **Resumo:** Sincronização do ambiente local de desenvolvimento (PHP 8.2+, Composer, Node.js), execução das migrações base, validação do `.env.example` e alinhamento do Git Flow conforme o `CONTRIBUTING.md`.
+- **Resumo:** Sincronização do ambiente de desenvolvimento, estruturação executável do Laravel (`artisan`, `public/index.php`, `.htaccess`, `.env`), migrations de todas as entidades do banco (com integridade referencial), documentação com link oficial do repositório no `README.md` e alinhamento do Git Flow conforme o `CONTRIBUTING.md`.
 
 ---
 
 ### Issue #02: `[Backend/Auth] Modelagem de Usuários, Autenticação Segura e Controle de Perfis (RBAC)`
+- **Status:** `CONCLUÍDA / CLOSED ✅`
 - **Assignee:** `@JoaoPMA23`
 - **Milestone:** `M1: Fundação, Autenticação e Perfis`
 - **Labels:** `backend`, `security`, `database`
 - **Requisitos:** `RF01`, `RF02`, `RF03`, `RF04`, `RNF02`, `RNF03`
-- **Resumo:** Implementação da autenticação baseada em sessão segura, hashing irreversível de senhas (Bcrypt/Argon2id), Model `User` e `SellerProfile`, além de middlewares e gates de proteção por papel (`buyer`, `seller`, `admin`).
+- **Resumo:** Implementação da autenticação baseada em sessão segura, hashing irreversível de senhas (Bcrypt), Models `User` e `SellerProfile`, rotinas de login/registro/logout no `AuthController`, e rotinas de controle de acesso de **Página de Perfil** e **Troca de Senha** segura com checagem de senha atual em `ProfileController`.
 
 ---
 
 ### Issue #03: `[UI/Auth] Telas de Login, Cadastro com Seleção de Perfil e Feedback de Validação`
+- **Status:** `CONCLUÍDA / CLOSED ✅`
 - **Assignee:** `@IgorMarcoli`
 - **Milestone:** `M1: Fundação, Autenticação e Perfis`
 - **Labels:** `frontend`, `ui/ux`, `blade`
 - **Requisitos:** `RF01`, `RF02`, `RNF01`
-- **Resumo:** Construção das views de autenticação (`login.blade.php` e `register.blade.php`) com Tailwind CSS, incluindo seletor intuitivo para intenção de compra ou venda e alertas visuais para erros de validação.
+- **Resumo:** Construção das views de autenticação (`login.blade.php` e `register.blade.php`) com Tailwind CSS e validação visual, além da interface completa de **Página de Perfil e Troca de Senha** (`profile/edit.blade.php`) com cards de informações pessoais, biografia e alteração de credenciais.
 
 ---
 
 ### Issue #04: `[UI/Components] Design System Base, Layout Mestre e Biblioteca de Componentes Blade`
+- **Status:** `CONCLUÍDA / CLOSED ✅`
 - **Assignee:** `@JoaoPMA23`
 - **Milestone:** `M1: Fundação, Autenticação e Perfis`
 - **Labels:** `frontend`, `ui/ux`, `blade`
 - **Requisitos:** `RNF01`
-- **Resumo:** Estruturação do layout mestre `layouts/app.blade.php`, barra de navegação responsiva com menu condicional (visitante vs autenticado) e biblioteca de componentes reutilizáveis (`<x-badge>`, `<x-listing-card>`, alertas flash dismissible).
+- **Resumo:** Estruturação do layout mestre `layouts/app.blade.php`, barra de navegação responsiva com menu condicional (visitante vs autenticado, atalhos de perfil e logout) e biblioteca de componentes reutilizáveis (`<x-badge>`, `<x-listing-card>`, alertas flash dismissible).
 
 ---
 

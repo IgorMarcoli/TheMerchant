@@ -40,8 +40,11 @@
                     @endif
 
                     <!-- User Menu / Logout -->
-                    <div class="flex items-center gap-2 pl-4 border-l border-slate-800">
-                        <span class="text-xs text-slate-400 font-medium hidden sm:inline">{{ auth()->user()->name }}</span>
+                    <div class="flex items-center gap-3 pl-4 border-l border-slate-800">
+                        <a href="{{ route('profile.edit') }}" class="text-xs text-slate-300 hover:text-white font-semibold hover:underline flex items-center gap-1.5 transition" title="Editar Perfil">
+                            <span>👤</span>
+                            <span class="hidden sm:inline">{{ auth()->user()->name }}</span>
+                        </a>
                         <form action="{{ route('logout') }}" method="POST">
                             @csrf
                             <button type="submit" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-3 py-1.5 rounded-lg transition font-medium">
