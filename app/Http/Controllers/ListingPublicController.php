@@ -6,6 +6,9 @@ use App\Models\Game;
 use App\Models\Category;
 use App\Models\Listing;
 use App\Models\Report;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -14,14 +17,34 @@ class ListingPublicController extends Controller
 {
     public function home(): View
     {
-        $featuredGames = Game::where('active', true)->withCount('listings')->take(6)->get();
-        $recentListings = Listing::with(['game', 'category', 'seller', 'primaryImage'])
-            ->where('status', 'publicado')
-            ->latest()
-            ->take(8)
-            ->get();
+        $dbStatus = [
+            'connected'     => false,
+            'driver'        => config('database.default'),
+            'database'      => config('database.connections.' . config('database.default') . '.database', 'themerchant'),
+            'host'          => config('database.connections.' . config('database.default') . '.host', '127.0.0.1'),
+            'port'          => config('database.connections.' . config('database.default') . '.port', '3306'),
+            'hasUsersTable' => false,
+            'usersCount'    => 0,
+            'tables'        => [],
+            'error'         => null,
+        ];
 
-        return view('home', compact('featuredGames', 'recentListings'));
+        try {
+            DB::connection()->getPdo();
+            $dbStatus['connected'] = true;
+            $dbStatus['hasUsersTable'] = Schema::hasTable('users');
+            if ($dbStatus['hasUsersTable']) {
+                $dbStatus['usersCount'] = User::count();
+            }
+            $tablesRaw = DB::select('SHOW TABLES');
+            $dbStatus['tables'] = array_map(function ($t) {
+                return array_values((array)$t)[0];
+            }, $tablesRaw);
+        } catch (\Throwable $e) {
+            $dbStatus['error'] = $e->getMessage();
+        }
+
+        return view('home', compact('dbStatus'));
     }
 
     public function index(Request $request): View
