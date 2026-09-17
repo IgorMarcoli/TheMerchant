@@ -64,9 +64,9 @@ Desenvolver uma plataforma web de marketplace que permita anunciar, pesquisar, c
 
 | Perfil | Responsabilidades Principais |
 | :--- | :--- |
-| **Comprador** | Pesquisa produtos e serviços, filtra por jogo/categoria, adiciona itens ao carrinho, realiza checkout via gateway externo, acompanha o status de seus pedidos e avalia o vendedor após a entrega. |
-| **Vendedor** | Mantém perfil comercial, publica e faz a gestão dos seus anúncios (ativar, pausar, editar fotos/preço), acompanha pedidos das suas vendas e acumula reputação verificada. |
-| **Administrador** | Gerencia catálogo de jogos e categorias, modera denúncias, suspende anúncios irregulares, audita transações e gerencia contas de usuários. |
+| **Comprador** | Pesquisa produtos e serviços, gerencia o carrinho, finaliza compras, acompanha pedidos, avalia vendedores e pode denunciar anúncios. |
+| **Vendedor** | Publica e gerencia seus próprios anúncios, acompanha vendas e utiliza as funcionalidades comuns disponíveis aos usuários da plataforma. |
+| **Administrador** | Gerencia usuários e categorias, modera anúncios, trata denúncias e administra aspectos operacionais da plataforma. |
 
 ---
 
@@ -76,21 +76,26 @@ Desenvolver uma plataforma web de marketplace que permita anunciar, pesquisar, c
 
 | ID | Prioridade | Descrição |
 | :--- | :---: | :--- |
-| **RF01** | Alta | O sistema deve permitir o cadastro de usuários com nome, e-mail e senha. |
-| **RF02** | Alta | O sistema deve permitir login e logout de usuários cadastrados. |
-| **RF03** | Alta | O sistema deve permitir verificação de e-mail e recuperação de senha. |
+| **RF01** | Alta | O sistema deve permitir que um visitante cadastre uma conta informando, no mínimo, nome, e-mail e senha, escolhendo o perfil de comprador ou vendedor quando aplicável. |
+| **RF02** | Alta | O sistema deve permitir autenticação, logout e controle de sessão de usuários cadastrados. |
+| **RF03** | Alta | O sistema deve permitir verificação de e-mail e recuperação de acesso por meio de fluxo seguro. |
 | **RF04** | Alta | O sistema deve aplicar permissões conforme o perfil do usuário: comprador, vendedor ou administrador. |
 | **RF05** | Alta | O vendedor deve poder cadastrar, editar, pausar e remover seus próprios anúncios. |
 | **RF06** | Alta | Cada anúncio deve permitir informar jogo, categoria, título, descrição, preço, imagens e status. |
-| **RF07** | Alta | O comprador deve poder pesquisar, filtrar e ordenar anúncios por jogo, categoria e faixa de preço. |
-| **RF08** | Alta | O sistema deve exibir uma página de detalhes do anúncio com informações do vendedor e avaliação. |
-| **RF09** | Alta | O sistema deve disponibilizar carrinho de compras para o comprador. |
-| **RF10** | Alta | O sistema deve permitir finalizar a compra por meio de checkout integrado a um gateway de pagamento. |
-| **RF11** | Alta | O sistema deve registrar e atualizar o status do pagamento e do pedido, inclusive por notificações/webhooks do gateway. |
-| **RF12** | Alta | O comprador deve poder acompanhar o histórico e o status de seus pedidos. |
-| **RF13** | Média | O vendedor deve poder acompanhar as vendas relacionadas aos seus anúncios. |
-| **RF14** | Média | O comprador deve poder avaliar o vendedor após a conclusão da compra. |
-| **RF15** | Alta | O administrador deve poder gerenciar usuários, categorias, anúncios e denúncias. |
+| **RF07** | Alta | O usuário deve poder pesquisar, filtrar e ordenar anúncios por jogo, categoria e faixa de preço. |
+| **RF08** | Alta | O sistema deve exibir uma página de detalhes do anúncio com informações do produto ou serviço, vendedor e reputação disponível. |
+| **RF09** | Alta | O comprador deve poder gerenciar o carrinho, adicionando, removendo e ajustando itens antes da compra. |
+| **RF10** | Alta | O comprador deve poder finalizar a compra por meio do checkout, gerando o pedido correspondente. |
+| **RF11** | Alta | A finalização da compra deve incluir o processamento do pagamento por meio de um gateway externo. |
+| **RF12** | Alta | O sistema deve receber notificações/webhooks do gateway e atualizar de forma idempotente os status do pagamento e do pedido. |
+| **RF13** | Alta | O comprador deve poder acompanhar o histórico e o status de seus pedidos. |
+| **RF14** | Média | O vendedor deve poder acompanhar as vendas relacionadas aos seus anúncios. |
+| **RF15** | Média | O comprador deve poder avaliar o vendedor somente após a conclusão da compra. |
+| **RF16** | Média | O usuário autenticado deve poder denunciar um anúncio, informando o motivo da denúncia. |
+| **RF17** | Alta | O administrador deve poder gerenciar usuários, incluindo consulta, alteração de status e demais ações administrativas previstas pela plataforma. |
+| **RF18** | Alta | O administrador deve poder gerenciar as categorias utilizadas para classificar anúncios. |
+| **RF19** | Alta | O administrador deve poder moderar anúncios, podendo ocultar, bloquear ou restaurar anúncios conforme as regras da plataforma. |
+| **RF20** | Alta | O administrador deve poder consultar e tratar denúncias registradas pelos usuários. |
 
 ### Requisitos Não Funcionais (RNF)
 
@@ -192,49 +197,90 @@ flowchart TD
     Tailwind --> Browser
 ```
 
-### Diagrama de Casos de Uso
+### Diagrama de Casos de Uso (Notação UML Revisada)
+
+O diagrama segue a notação UML rigorosa. O ator **Usuário** é uma abstração de modelagem — não um novo perfil do sistema — e é especializado pelos atores **Comprador**, **Vendedor** e **Administrador** via herança/generalização. O **Visitante** representa quem ainda não possui conta, enquanto o **Gateway de Pagamento** atua como ator externo.
 
 ```mermaid
 flowchart LR
-    Buyer((Comprador))
-    Seller((Vendedor))
+    Visitante((Visitante))
+    Usuario((Usuário))
+    Comprador((Comprador))
+    Vendedor((Vendedor))
     Admin((Administrador))
-    Gateway[Gateway Externo]
+    Gateway[«ator externo»<br>Gateway de Pagamento]
 
-    subgraph TheMerchant["Plataforma TheMerchant"]
-        UC1[Cadastrar-se / Autenticar]
-        UC2[Pesquisar e Filtrar Anúncios]
-        UC3[Visualizar Detalhes do Anúncio]
-        UC4[Gerenciar Carrinho]
-        UC5[Finalizar Compra / Checkout]
-        UC6[Processar Pagamento]
-        UC7[Acompanhar Pedidos]
-        UC8[Avaliar Vendedor]
-        
-        UC9[Gerenciar Anúncios CRUD]
-        UC10[Acompanhar Vendas]
-        
-        UC11[Gerenciar Usuários e Categorias]
-        UC12[Moderar Anúncios e Denúncias]
+    subgraph TheMerchant["Marketplace de Cosméticos e Serviços para Jogos Digitais"]
+        UC_Cad["Cadastrar-se"]
+        UC_Auth["Autenticar-se"]
+        UC_Search["Pesquisar e filtrar anúncios"]
+        UC_View["Visualizar anúncio"]
+        UC_Report["Denunciar anúncio"]
+
+        UC_Cart["Gerenciar carrinho"]
+        UC_Checkout["Finalizar compra"]
+        UC_Pay["Processar pagamento"]
+        UC_Orders["Acompanhar pedidos"]
+        UC_Review["Avaliar vendedor"]
+        UC_Status["Atualizar status de pagamento/pedido"]
+
+        UC_Listings["Gerenciar anúncios"]
+        UC_Sales["Acompanhar vendas"]
+
+        UC_AdminUsers["Gerenciar usuários"]
+        UC_AdminCats["Gerenciar categorias"]
+        UC_AdminListings["Moderar anúncios"]
+        UC_AdminReports["Tratar denúncias"]
     end
 
-    Buyer --> UC1
-    Buyer --> UC2
-    Buyer --> UC3
-    Buyer --> UC4
-    Buyer --> UC5
-    UC5 -.->|inclui| UC6
-    UC6 <-->|API / Webhook| Gateway
-    Buyer --> UC7
-    Buyer --> UC8
+    %% Herança / Generalização
+    Comprador --|> Usuario
+    Vendedor --|> Usuario
+    Admin --|> Usuario
 
-    Seller --> UC1
-    Seller --> UC9
-    Seller --> UC10
+    %% Visitante
+    Visitante --- UC_Cad
+    Visitante --- UC_Auth
+    Visitante --- UC_Search
+    Visitante --- UC_View
 
-    Admin --> UC11
-    Admin --> UC12
+    %% Usuário Geral
+    Usuario --- UC_Auth
+    Usuario --- UC_Search
+    Usuario --- UC_View
+    Usuario --- UC_Report
+
+    %% Comprador
+    Comprador --- UC_Cart
+    Comprador --- UC_Checkout
+    Comprador --- UC_Orders
+    Comprador --- UC_Review
+
+    %% Include Obrigatório
+    UC_Checkout -.->|«include»| UC_Pay
+
+    %% Gateway de Pagamento
+    UC_Pay --- Gateway
+    UC_Status --- Gateway
+
+    %% Vendedor
+    Vendedor --- UC_Listings
+    Vendedor --- UC_Sales
+
+    %% Administrador
+    Admin --- UC_AdminUsers
+    Admin --- UC_AdminCats
+    Admin --- UC_AdminListings
+    Admin --- UC_AdminReports
 ```
+
+#### Critérios de Modelagem UML Aplicados
+- **Associações contínuas:** Associações entre atores e casos de uso representadas por linhas contínuas, sem setas.
+- **Generalização de Atores:** Comprador, Vendedor e Administrador especializam o ator geral `Usuário`, herdando as ações comuns.
+- **Relacionamento `<<include>>` estrito:** O único relacionamento obrigatório entre casos de uso é `Finalizar compra <<include>> Processar pagamento`.
+- **Independência de Carrinho e Checkout:** `Gerenciar carrinho` e `Finalizar compra` não possuem relacionamento direto no diagrama, pois representam sequência de fluxo e não relação de caso de uso.
+- **Ações administrativas atômicas:** `Gerenciar usuários`, `Gerenciar categorias`, `Moderar anúncios` e `Tratar denúncias` são casos de uso separados e atômicos.
+- **Gateway como Ator Externo:** Participa ativamente dos casos `Processar pagamento` e `Atualizar status de pagamento/pedido`.
 
 ---
 

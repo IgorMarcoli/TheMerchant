@@ -10,7 +10,7 @@
     <p class="text-xs text-slate-400">Visão geral do sistema e métricas de moderação.</p>
 </div>
 
-<!-- Métricas (RF15) -->
+<!-- Métricas (RF17, RF18) -->
 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
     <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800">
         <span class="text-xs text-slate-400 uppercase tracking-wider block">Usuários Cadastrados</span>

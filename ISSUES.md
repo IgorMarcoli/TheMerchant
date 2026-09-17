@@ -26,9 +26,9 @@ flowchart LR
 | :---: | :--- | :--- | :--- |
 | **M1** | **Fundação, Autenticação e Perfis** | Setup base do Laravel, banco, design system com Tailwind/Blade e controle de papéis (RBAC). | RF01, RF02, RF03, RF04, RNF01, RNF02, RNF03, RNF08 |
 | **M2** | **Catálogo, Anúncios e Mecanismo de Busca** | CRUD de jogos/categorias, cadastro de anúncios com galeria de fotos, vitrine Home e motor de busca com filtros. | RF05, RF06, RF07, RF08, RNF01, RNF05 |
-| **M3** | **Carrinho, Checkout Transacional e Pagamentos** | Persistência do carrinho, UI dinâmica de itens, serviço atômico de checkout e gateway de pagamentos com webhooks. | RF09, RF10, RF11, RNF04, RNF06, RNF09 |
-| **M4** | **Pós-Venda, Entrega Digital e Reputação** | Painéis de pedidos e vendas, confirmação de entrega do item e motor dinâmico de avaliação com estrelas. | RF12, RF13, RF14, RNF01, RNF07 |
-| **M5** | **Painel Administrativo, Moderação e Qualidade** | Dashboard de KPIs, moderação de denúncias, testes automatizados e homologação final para apresentação. | RF15, RNF02, RNF03, RNF06, RNF08 |
+| **M3** | **Carrinho, Checkout Transacional e Pagamentos** | Persistência do carrinho, UI dinâmica de itens, serviço atômico de checkout e gateway de pagamentos com webhooks. | RF09, RF10, RF11, RF12, RNF04, RNF06, RNF09 |
+| **M4** | **Pós-Venda, Entrega Digital e Reputação** | Painéis de pedidos e vendas, confirmação de entrega do item e motor dinâmico de avaliação com estrelas. | RF13, RF14, RF15, RNF01, RNF07 |
+| **M5** | **Painel Administrativo, Moderação e Qualidade** | Dashboard de KPIs, moderação de denúncias, testes automatizados e homologação final para apresentação. | RF16, RF17, RF18, RF19, RF20, RNF02, RNF03, RNF06, RNF08, RNF09 |
 
 ---
 
@@ -139,7 +139,7 @@ flowchart LR
 - **Assignee:** `@IgorMarcoli`
 - **Milestone:** `M2: Catálogo, Anúncios e Mecanismo de Busca`
 - **Labels:** `frontend`, `ui/ux`, `blade`
-- **Requisitos:** `RF08`, `RNF01`
+- **Requisitos:** `RF08`, `RF16`, `RNF01`
 - **Resumo:** Layout em 2 colunas para detalhes do produto (`listings/show.blade.php`), carrossel de fotos, especificações, card do vendedor com reputação e modal para denúncia rápida de anúncios suspeitos.
 
 ---
@@ -177,7 +177,7 @@ flowchart LR
 - **Assignee:** `@JoaoPMA23`
 - **Milestone:** `M3: Carrinho, Checkout Transacional e Pagamentos`
 - **Labels:** `backend`, `payment`, `security`
-- **Requisitos:** `RF11`, `RNF04`, `RNF06`, `RNF09`
+- **Requisitos:** `RF11`, `RF12`, `RNF04`, `RNF06`, `RNF09`
 - **Resumo:** Camada desacoplada `PaymentGatewayService`, endpoint seguro de Webhook com verificação de assinatura HMAC, job assíncrono em fila e trava de idempotência para garantir que nenhum pagamento seja creditado ou confirmado duplamente.
 
 ---
@@ -186,7 +186,7 @@ flowchart LR
 - **Assignee:** `@IgorMarcoli`
 - **Milestone:** `M3: Carrinho, Checkout Transacional e Pagamentos`
 - **Labels:** `frontend`, `ui/ux`, `blade`
-- **Requisitos:** `RF10`, `RNF01`
+- **Requisitos:** `RF10`, `RF11`, `RNF01`
 - **Resumo:** Tela de checkout com campo opcional para Trade URL / horários de coaching, validação em `CheckoutRequest` com aceite obrigatório das diretrizes dos jogos e telas de sucesso (`checkout/success.blade.php`) e cancelamento.
 
 ---
@@ -195,7 +195,7 @@ flowchart LR
 - **Assignees:** `@JoaoPMA23`, `@IgorMarcoli` *(Trabalho em Dupla)*
 - **Milestone:** `M3: Carrinho, Checkout Transacional e Pagamentos`
 - **Labels:** `backend`, `payment`, `testing`
-- **Requisitos:** `RF10`, `RF11`, `RNF06`
+- **Requisitos:** `RF10`, `RF11`, `RF12`, `RNF06`
 - **Resumo:** Homologação conjunta em ambiente sandbox da jornada completa de pagamento: emissão de preferência, simulação de retorno do gateway, conferência da mudança para status `pago` e validação do retry idempotente do webhook.
 
 ---
@@ -206,7 +206,7 @@ flowchart LR
 - **Assignee:** `@IgorMarcoli`
 - **Milestone:** `M4: Pós-Venda, Entrega Digital e Reputação`
 - **Labels:** `frontend`, `backend`, `feature`
-- **Requisitos:** `RF12`, `RNF03`
+- **Requisitos:** `RF13`, `RNF03`
 - **Resumo:** Histórico de compras do usuário autenticado com paginação, badges de status do pedido e visualização detalhada com timeline de entrega (`orders/index.blade.php` e `orders/show.blade.php`).
 
 ---
@@ -215,7 +215,7 @@ flowchart LR
 - **Assignee:** `@IgorMarcoli`
 - **Milestone:** `M4: Pós-Venda, Entrega Digital e Reputação`
 - **Labels:** `backend`, `frontend`, `feature`
-- **Requisitos:** `RF13`
+- **Requisitos:** `RF14`
 - **Resumo:** Painel de vendas para acompanhamento dos pedidos recebidos pelo vendedor (`seller/sales/index.blade.php`), com botão de marcar como entregue e transição automática do pedido para `concluido`.
 
 ---
@@ -224,7 +224,7 @@ flowchart LR
 - **Assignee:** `@JoaoPMA23`
 - **Milestone:** `M4: Pós-Venda, Entrega Digital e Reputação`
 - **Labels:** `backend`, `database`, `business-rules`
-- **Requisitos:** `RF14`, `RNF07`
+- **Requisitos:** `RF15`, `RNF07`
 - **Resumo:** Lógica de negócio no `ReviewController` com trava contra avaliações em pedidos não entregues, garantia de unicidade (1 avaliação por item) e recálculo transacional da média de estrelas e total de vendas em `seller_profiles`.
 
 ---
@@ -233,7 +233,7 @@ flowchart LR
 - **Assignee:** `@JoaoPMA23`
 - **Milestone:** `M4: Pós-Venda, Entrega Digital e Reputação`
 - **Labels:** `frontend`, `ui/ux`, `blade`
-- **Requisitos:** `RF14`, `RNF01`
+- **Requisitos:** `RF15`, `RNF01`
 - **Resumo:** Componente interativo com Alpine.js embutido na página do pedido para seleção de 1 a 5 estrelas com efeito de preenchimento visual no hover, campo de comentário e exibição da avaliação já enviada.
 
 ---
@@ -242,7 +242,7 @@ flowchart LR
 - **Assignees:** `@JoaoPMA23`, `@IgorMarcoli` *(Trabalho em Dupla)*
 - **Milestone:** `M4: Pós-Venda, Entrega Digital e Reputação`
 - **Labels:** `testing`, `feature`
-- **Requisitos:** `RF12`, `RF13`, `RF14`
+- **Requisitos:** `RF13`, `RF14`, `RF15`
 - **Resumo:** Simulação ponta a ponta com duas contas: Igor como Vendedor anunciando um cosmético, João como Comprador realizando o checkout, envio simulado de pagamento, marcação de entrega e submissão da avaliação com atualização da reputação pública.
 
 ---
@@ -253,7 +253,7 @@ flowchart LR
 - **Assignee:** `@IgorMarcoli`
 - **Milestone:** `M5: Painel Administrativo, Moderação e Qualidade`
 - **Labels:** `admin`, `backend`, `frontend`
-- **Requisitos:** `RF15`, `RNF03`
+- **Requisitos:** `RF17`, `RF18`, `RNF03`
 - **Resumo:** Dashboard administrativo (`admin/dashboard.blade.php`) com indicadores de faturamento, volume de transações e usuários, além de interfaces para cadastro de categorias e suspensão de contas irregulares.
 
 ---
@@ -262,7 +262,7 @@ flowchart LR
 - **Assignee:** `@IgorMarcoli`
 - **Milestone:** `M5: Painel Administrativo, Moderação e Qualidade`
 - **Labels:** `admin`, `moderation`, `feature`
-- **Requisitos:** `RF15`, `RNF09`
+- **Requisitos:** `RF16`, `RF19`, `RF20`, `RNF09`
 - **Resumo:** Fila de denúncias para moderadores (`admin/reports/index.blade.php`), com campo para inserção de parecer, opção de suspensão de anúncio e registro de log de auditoria.
 
 ---

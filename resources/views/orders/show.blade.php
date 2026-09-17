@@ -28,7 +28,7 @@
             </div>
         </div>
 
-        <!-- Itens do Pedido & Avaliação pós-compra (RF14) -->
+        <!-- Itens do Pedido & Avaliação pós-compra (RF15) -->
         <div class="divide-y divide-slate-800 my-6">
             @foreach($order->items as $item)
                 <div class="py-6 flex flex-col md:flex-row md:items-center justify-between gap-4">

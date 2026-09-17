@@ -42,6 +42,6 @@ Ao gerar ou modificar código neste projeto, respeite os seguintes princípios:
 
 ## 📚 Documentos de Referência no Repositório
 - `README.md`: Visão executiva, membros da equipe, status e resumo do projeto.
-- `requirements.md`: Tabela completa de Requisitos Funcionais (RF01 - RF15) e Não Funcionais (RNF01 - RNF09).
+- `requirements.md`: Tabela completa de Requisitos Funcionais (RF01 - RF20) e Não Funcionais (RNF01 - RNF09).
 - `specs.md`: Especificações arquiteturais detalhadas, diagramas ERD, definições de schema e tabelas.
 - `CONTRIBUTING.md`: Guia de branches, Conventional Commits e fluxos de PR.
