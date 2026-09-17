@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\ReportController as AdminReportController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ProfileController;
+use App\Http\Controllers\TableDataController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,6 +51,10 @@ Route::get('/test-db', function () {
         ], 500, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     }
 })->name('test.db');
+
+// Endpoints diretos de consulta de tabelas em JSON
+Route::get('/tabela', [TableDataController::class, 'index'])->name('tables.index');
+Route::get('/tabela/{table}', [TableDataController::class, 'show'])->name('tables.show');
 
 Route::get('/anuncios', [ListingPublicController::class, 'index'])->name('listings.index');
 Route::get('/anuncios/{slug}', [ListingPublicController::class, 'show'])->name('listings.show');
