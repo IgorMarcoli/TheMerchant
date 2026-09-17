@@ -14,13 +14,48 @@ use App\Http\Controllers\Admin\ReportController as AdminReportController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ProfileController;
+use App\Http\Controllers\TableDataController;
 
 /*
 |--------------------------------------------------------------------------
-| Rotas Públicas (Catálogo e Detalhes)
+| Rotas Públicas (Hello World e Teste de BD)
 |--------------------------------------------------------------------------
 */
-Route::get('/', [ListingPublicController::class, 'home'])->name('home');
+Route::get('/', function () {
+    return 'Hello World';
+})->name('home');
+
+Route::get('/test-db', function () {
+    try {
+        \Illuminate\Support\Facades\DB::connection()->getPdo();
+        $dbName = \Illuminate\Support\Facades\DB::connection()->getDatabaseName();
+        $userCount = \Illuminate\Support\Facades\Schema::hasTable('users') 
+            ? \App\Models\User::count() 
+            : 0;
+        $tablesRaw = \Illuminate\Support\Facades\DB::select('SHOW TABLES');
+        $tables = array_map(fn($t) => array_values((array)$t)[0], $tablesRaw);
+
+        return response()->json([
+            'status' => 'Conexão com o banco de dados OK!',
+            'driver' => config('database.default'),
+            'database' => $dbName,
+            'tabela_users' => \Illuminate\Support\Facades\Schema::hasTable('users') ? 'OK' : 'Não encontrada',
+            'usuarios_cadastrados' => $userCount,
+            'total_tabelas' => count($tables),
+            'tabelas' => $tables,
+        ], 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    } catch (\Throwable $e) {
+        return response()->json([
+            'status' => 'Erro de conexão com o banco de dados',
+            'erro' => $e->getMessage(),
+        ], 500, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    }
+})->name('test.db');
+
+// Endpoints diretos de consulta de tabelas em JSON
+Route::get('/tabela', [TableDataController::class, 'index'])->name('tables.index');
+Route::get('/tabela/{table}', [TableDataController::class, 'show'])->name('tables.show');
+
 Route::get('/anuncios', [ListingPublicController::class, 'index'])->name('listings.index');
 Route::get('/anuncios/{slug}', [ListingPublicController::class, 'show'])->name('listings.show');
 
