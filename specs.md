@@ -135,7 +135,7 @@ created_at, updated_at TIMESTAMP
 ```
 
 ### 2.8 Tabela `orders` e `order_items`
-Registro imutável dos pedidos gerados.
+Registro de pedidos com preços e condições comerciais preservados; estados de pagamento/entrega podem evoluir.
 
 ```sql
 -- orders
@@ -159,6 +159,12 @@ delivered_at TIMESTAMP NULL,
 created_at, updated_at TIMESTAMP
 ```
 
+### 2.8.1 Disponibilidade e reservas — revisão planejada (#29, #13)
+
+O dicionário acima descreve a base inicial. Acrescentar `capacity` para sessões disponíveis de serviço e `session_duration_minutes`, com restrições positivas; cosmético único possui capacidade 1. Snapshot de tipo, duração e instruções por item do pedido. Serviço admite múltiplas compras até consumir sua capacidade.
+
+Modelar `listing_reservations`: `id`, `listing_id`, `order_item_id` único, `quantity`, `expires_at`, `status` (active/confirmed/released), timestamps. Reservas ativas reduzem disponibilidade e são adquiridas sob lock; aprovação reduz capacidade e confirma reserva uma única vez. Expiração libera apenas reserva ainda ativa. Suspensão/pausa não pode apagar reservas ou histórico.
+
 ### 2.9 Tabela `payments`
 Registro de auditoria e status retornado pelo gateway de pagamento.
 
@@ -180,8 +186,8 @@ Avaliações concedidas exclusivamente após pedido entregue.
 | Campo | Tipo | Nulo | Descrição |
 | :--- | :--- | :---: | :--- |
 | `id` | `BIGINT UNSIGNED AUTO_INCREMENT` | Não | Chave primária |
-| `order_id` | `BIGINT UNSIGNED` | Não | FK para `orders.id` (Unique por par item/comprador) |
-| `order_item_id` | `BIGINT UNSIGNED` | Não | FK para `order_items.id` |
+| `order_id` | `BIGINT UNSIGNED` | Não | FK para `orders.id`; admite avaliações de itens diferentes do pedido |
+| `order_item_id` | `BIGINT UNSIGNED` | Não | FK para `order_items.id`, UNIQUE (uma avaliação por item) |
 | `buyer_id` | `BIGINT UNSIGNED` | Não | FK para `users.id` (autor da avaliação) |
 | `seller_id` | `BIGINT UNSIGNED` | Não | FK para `users.id` (vendedor avaliado) |
 | `rating` | `TINYINT UNSIGNED` | Não | Nota de 1 a 5 estrelas |
@@ -211,14 +217,13 @@ Para cumprir o requisito não funcional **RNF08** de organização em camadas e 
 
 ### 3.1 `CheckoutService`
 Responsável pelo fluxo transacional de criação do pedido a partir do carrinho:
-1. Validação de estoque e status de cada item (devem estar com status `publicado`);
-2. Abertura de transação no banco de dados (`DB::beginTransaction()`);
-3. Criação do registro em `orders` com número único e valor total consolidado;
-4. Criação dos registros em `order_items` preservando o preço vigente (`unit_price`);
-5. Atualização do status dos anúncios para `vendido` ou `pausado` (se item único);
-6. Limpeza do carrinho do usuário (`Cart::clear()`);
-7. Invocação do `PaymentGatewayService` para gerar a preferência/sessão de pagamento;
-8. Commit da transação e retorno do link de pagamento para redirecionamento.
+1. Validar preço, elegibilidade e quantidade (cosmético único = 1; serviço = sessões/capacidade).
+2. Em `DB::transaction()`, bloquear registros de disponibilidade, reservar com expiração e criar pedido `pendente`.
+3. Congelar preço, quantidade, tipo, duração e condições em `order_items`; limpar carrinho.
+4. Após commit, criar preferência no gateway com chave idempotente; persistir identificador e reconciliar falhas sem manter transação de banco aberta durante a chamada externa.
+5. Aprovação confirmada pelo provedor consome reserva: cosmético fica `vendido`; serviço mantém anúncio disponível se houver capacidade.
+6. Recusa/cancelamento/expiração liberam reserva idempotentemente; pagamento tardio exige reconciliação/estorno no provedor sem dupla venda.
+7. Executar job agendado de expiração e testes de concorrência/retry. Definir TTL configurável alinhado à preferência do provedor.
 
 ### 3.2 `PaymentGatewayService`
 Responsável por encapsular chamadas de API externas:
@@ -250,14 +255,17 @@ sequenceDiagram
     WebhookCtrl->>Queue: Despacha ProcessPaymentWebhookJob
     WebhookCtrl-->>Gateway: HTTP 200 OK imediato
 
-    Queue->>DB: Verifica se idempotency_key já existe em 'payments'
-    alt Já processado
+    Queue->>DB: Deduplica evento e bloqueia transação/pedido
+    alt Mesmo evento já processado
         Queue-->>Queue: Encerra sem reprocessar (Idempotência garantida)
-    else Novo pagamento
-        Queue->>DB: Registra 'payments' com status aprovado
-        Queue->>DB: Atualiza 'orders.status' para 'pago'
-        Queue->>DB: Atualiza 'order_items.delivery_status' para 'em_entrega'
-        Queue->>App: Envia OrderPaidNotification para Comprador e Vendedores
+    else Novo evento validado no provedor
+        Queue->>DB: Atualiza payment sem regredir estado
+        alt Aprovado e reserva válida
+            Queue->>DB: Consome reserva, pedido pago e itens em_entrega
+            Queue->>App: Após commit, notifica comprador e vendedores
+        else Recusado, cancelado ou reserva expirada
+            Queue->>DB: Libera reserva ou registra reconciliação de pagamento tardio
+        end
     end
 ```
 
@@ -270,4 +278,51 @@ sequenceDiagram
 3. **Policies do Laravel:**
    - `ListingPolicy`: Impede que um vendedor modifique ou exclua anúncios pertencentes a outro usuário. Permite apenas ao dono ou a um `admin` a exclusão.
    - `OrderPolicy`: Garante que um comprador visualize apenas seus próprios pedidos, e que um vendedor visualize apenas os itens de pedidos destinados a ele.
-   - `ReviewPolicy`: Garante que apenas o comprador do pedido concluído possa submeter uma avaliação, e no máximo uma vez por transação.
+   - `ReviewPolicy`: Garante que apenas o comprador do item pago e entregue possa avaliá-lo, uma vez por `order_item_id`, sem depender de itens de outros vendedores.
+
+## 6. Chat privado em tempo real — RF21–RF23 (planejado)
+
+Revisão solicitada em 18/09/2026, issues #30 (backend), #31 (UI) e #32 (QA). O PDF original excluía chat; a revisão passa a incluir texto privado, histórico e não lidas na v1. Não implica que o módulo já esteja implementado.
+
+### Persistência e autorização
+
+- `conversations`: id, buyer_id (usuário interessado), seller_id, listing_id, buyer_last_read_message_id e seller_last_read_message_id opcionais, timestamps. UNIQUE(buyer_id, seller_id, listing_id). Impedir participantes iguais.
+- `messages`: id, conversation_id, sender_id, client_uuid, body (texto de 1–2000 caracteres), timestamps. UNIQUE(conversation_id, sender_id, client_uuid); índice (conversation_id, id).
+- Remetente sempre derivado da sessão. Cursor de leitura deve pertencer à conversa e só avançar após exibição.
+- `ConversationPolicy` protege leitura, envio e canal; somente participantes ativos. Administrador não obtém acesso ao conteúdo pelo papel. Histórico não expõe e-mail, credenciais ou dados de pagamento.
+- Anúncio publicado permite iniciar conversa; compra existente permite retomada após venda. Não excluir conversas ao arquivar anúncio. Sem anexos, grupos ou áudio/vídeo.
+- `ChatService` e Form Requests concentram criação, envio idempotente, leitura paginada e atualização de cursor, com transação quando alterar múltiplas tabelas.
+
+### Transporte e interface
+
+Usar Laravel Broadcasting + Reverb e Laravel Echo, em versões compatíveis com o Laravel adotado. [Documentação oficial de Broadcasting](https://laravel.com/docs/11.x/broadcasting) e [Reverb](https://laravel.com/docs/11.x/reverb).
+
+Persistir mensagem e transmitir evento enfileirado após commit em canal privado autorizado. UI Blade/Tailwind/Alpine envia por HTTP autenticado com CSRF, recebe via Echo e reconcilia mensagens por ID/UUID. Reconexão consulta histórico incremental, recuperando mensagens perdidas. Limitação de envios, saída escapada, estados de erro/retry e contador de não lidas são obrigatórios.
+
+### Operação e validação
+
+Servidor WebSocket e worker de fila devem ter inicialização/reinício documentados; configurar origens permitidas e TLS em produção, sem versionar segredos. Testar acesso HTTP e assinatura de canais com terceiros/contas suspensas, eventos após commit, reconexão, paginação e retries concorrentes. E2E em duas sessões usa Reverb e worker reais.
+
+```mermaid
+sequenceDiagram
+    participant C as Comprador/interessado
+    participant A as Laravel + ChatService
+    participant D as Banco
+    participant Q as Fila / Reverb
+    participant V as Vendedor
+    C->>A: Enviar texto + client_uuid (HTTP autenticado)
+    A->>A: Policy, validação e limitação
+    A->>D: Persistir mensagem em transação
+    D-->>A: Commit
+    A->>Q: Evento após commit
+    Q-->>V: Mensagem no canal privado autorizado
+    V->>A: Consultar histórico / marcar leitura
+```
+
+## 7. Rastreabilidade e pendências do documento acadêmico
+
+- #27 completa RF03; #28 trata exposição de diagnósticos antes de qualquer publicação.
+- #7/#8 incluem reputação; #23 inclui restauração de anúncio pelo administrador.
+- #29 define cosmético único, sessões/capacidade e conclusão por item. Avaliação única por `order_item_id` entregue/pago via ReviewService e Policy, sem aguardar outros vendedores.
+- #33 atualiza PDF e diagramas: associações visíveis, catálogo público para visitante, chat para comprador/vendedor e ERD com novas entidades.
+- #25 depende das entregas e evidências de testes de todas as milestones, inclusive #32. O PDF original permanece referência histórica até sua revisão.
