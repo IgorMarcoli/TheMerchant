@@ -10,7 +10,7 @@
         </a>
         <span class="px-3 py-1 rounded-xl text-xs font-bold uppercase tracking-wider
             {{ $order->status === 'concluido' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' :
-               ($order->status === 'pago' ? 'bg-indigo-950 text-indigo-400 border border-indigo-800' :
+               ($order->status === 'pago' ? 'bg-brand-950 text-brand-400 border border-brand-800' :
                'bg-amber-950 text-amber-400 border border-amber-800') }}">
             Status: {{ $order->status }}
         </span>
@@ -24,11 +24,11 @@
             </div>
             <div class="text-right">
                 <span class="text-xs text-slate-400 block">Total do Pedido</span>
-                <span class="text-2xl font-black text-indigo-400">R$ {{ number_format($order->total_amount, 2, ',', '.') }}</span>
+                <span class="text-2xl font-black text-brand-400">R$ {{ number_format($order->total_amount, 2, ',', '.') }}</span>
             </div>
         </div>
 
-        <!-- Itens do Pedido & Avaliação pós-compra (RF14) -->
+        <!-- Itens do Pedido & Avaliação pós-compra (RF15) -->
         <div class="divide-y divide-slate-800 my-6">
             @foreach($order->items as $item)
                 <div class="py-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -48,7 +48,7 @@
                     </div>
 
                     <div class="flex flex-col md:items-end gap-2">
-                        <span class="font-extrabold text-sm text-indigo-400">
+                        <span class="font-extrabold text-sm text-brand-400">
                             R$ {{ number_format($item->unit_price, 2, ',', '.') }}
                         </span>
 

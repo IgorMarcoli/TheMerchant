@@ -1,0 +1,77 @@
+[
+    {
+        "id": 1,
+        "seller_id": 2,
+        "game_id": 1,
+        "category_id": 2,
+        "title": "Karambit Doppler (Phase 2) - Pouco Usada",
+        "slug": "karambit-doppler-phase-2-qzldws",
+        "description": "Faca Karambit com padrão Doppler Phase 2 (Pink Galaxy). Float baixo (0.015). Envio imediato via Steam Trade Offer com garantia TheMerchant.",
+        "price": "4850.00",
+        "status": "publicado",
+        "views_count": 312,
+        "created_at": "2026-09-17T22:27:07.000000Z",
+        "updated_at": "2026-09-17T22:27:07.000000Z",
+        "images": [
+            {
+                "id": 1,
+                "listing_id": 1,
+                "image_path": "sample\/karambit.jpg",
+                "is_primary": true,
+                "display_order": 0,
+                "created_at": "2026-09-17T22:27:07.000000Z",
+                "updated_at": "2026-09-17T22:27:07.000000Z"
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "seller_id": 2,
+        "game_id": 1,
+        "category_id": 1,
+        "title": "AK-47 Imperatriz (Testada em Campo)",
+        "slug": "ak-47-imperatriz-ft-kwybcj",
+        "description": "AK-47 A Imperatriz com acabamento impecável, adesivos holográficos já aplicados. Pronto para entrega.",
+        "price": "280.00",
+        "status": "publicado",
+        "views_count": 146,
+        "created_at": "2026-09-17T22:27:07.000000Z",
+        "updated_at": "2026-09-21T12:03:04.000000Z",
+        "images": [
+            {
+                "id": 2,
+                "listing_id": 2,
+                "image_path": "sample\/ak47.jpg",
+                "is_primary": true,
+                "display_order": 0,
+                "created_at": "2026-09-17T22:27:07.000000Z",
+                "updated_at": "2026-09-17T22:27:07.000000Z"
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "seller_id": 2,
+        "game_id": 2,
+        "category_id": 3,
+        "title": "Coaching Individual de Valorant - 2 Horas (VOD Review + Mira)",
+        "slug": "coaching-valorant-2h-oak5lw",
+        "description": "Aula personalizada com ex-Radiante. Análise completa de VOD, posicionamento de mira, movimentação e estratégias de entrada em bomb.",
+        "price": "99.90",
+        "status": "publicado",
+        "views_count": 89,
+        "created_at": "2026-09-17T22:27:07.000000Z",
+        "updated_at": "2026-09-21T12:02:52.000000Z",
+        "images": [
+            {
+                "id": 3,
+                "listing_id": 3,
+                "image_path": "sample\/coaching.jpg",
+                "is_primary": true,
+                "display_order": 0,
+                "created_at": "2026-09-17T22:27:07.000000Z",
+                "updated_at": "2026-09-17T22:27:07.000000Z"
+            }
+        ]
+    }
+]

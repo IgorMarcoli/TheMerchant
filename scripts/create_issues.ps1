@@ -39,7 +39,7 @@ gh issue create --title "[Backend/Checkout] Camada de Serviço de Checkout Trans
   --assignee "JoaoPMA23" --label "backend,architecture,database" --milestone "M3: Carrinho, Checkout Transacional e Pagamentos"
 
 gh issue create --title "[Backend/Payments] Integração com Gateway, Endpoint de Webhook Assíncrono e Idempotência" `
-  --body "Criar o serviço de integração de pagamento (PaymentGatewayService) e o endpoint seguro de Webhook com processamento em fila, verificação de assinatura e mecanismo estrito de idempotência para evitar confirmação duplicada de pedidos.`n`nRequisitos: RF11, RNF04, RNF06, RNF09" `
+  --body "Criar o serviço de integração de pagamento (PaymentGatewayService) e o endpoint seguro de Webhook com processamento em fila, verificação de assinatura e mecanismo estrito de idempotência para evitar confirmação duplicada de pedidos.`n`nRequisitos: RF11, RF12, RNF04, RNF06, RNF09" `
   --assignee "JoaoPMA23" --label "backend,payment,security" --milestone "M3: Carrinho, Checkout Transacional e Pagamentos"
 
 gh issue create --title "[Feature/Cart] Carrinho de Compras com Persistência em Banco e Controle de Subtotal" `
@@ -47,20 +47,20 @@ gh issue create --title "[Feature/Cart] Carrinho de Compras com Persistência em
   --assignee "IgorMarcoli" --label "backend,frontend,feature" --milestone "M3: Carrinho, Checkout Transacional e Pagamentos"
 
 gh issue create --title "[UI/Checkout] Interface de Checkout, Instruções de Entrega e Telas de Confirmação" `
-  --body "Desenvolver as páginas do fluxo de checkout: tela de resumo e confirmação com campo para instruções de entrega, checkbox de concordância com os termos e telas de retorno (sucesso e cancelamento).`n`nRequisitos: RF10, RNF01" `
+  --body "Desenvolver as páginas do fluxo de checkout: tela de resumo e confirmação com campo para instruções de entrega, checkbox de concordância com os termos e telas de retorno (sucesso e cancelamento).`n`nRequisitos: RF10, RF11, RNF01" `
   --assignee "IgorMarcoli" --label "frontend,ui/ux,blade" --milestone "M3: Carrinho, Checkout Transacional e Pagamentos"
 
 # M4
 gh issue create --title "[Backend/Reviews] Motor de Avaliação Pós-Compra e Cálculo Dinâmico de Reputação" `
-  --body "Construir a camada de avaliação do vendedor pelo comprador (ReviewController). O sistema deve garantir que avaliações só ocorram após a entrega confirmada do item/serviço, limitando a 1 avaliação por compra e recalculando atomicamente a reputação média do vendedor.`n`nRequisitos: RF14, RNF07" `
+  --body "Construir a camada de avaliação do vendedor pelo comprador (ReviewController). O sistema deve garantir que avaliações só ocorram após a entrega confirmada do item/serviço, limitando a 1 avaliação por compra e recalculando atomicamente a reputação média do vendedor.`n`nRequisitos: RF15, RNF07" `
   --assignee "JoaoPMA23" --label "backend,database,business-rules" --milestone "M4: Pós-Venda, Entrega Digital e Reputação"
 
 gh issue create --title "[Feature/Orders] Painel de Acompanhamento de Pedidos e Histórico do Comprador" `
-  --body "Construir a área do comprador para consulta de histórico cronológico de pedidos e tela detalhada de acompanhamento de status de entrega, incluindo o formulário de avaliação do vendedor.`n`nRequisitos: RF12, RNF03" `
+  --body "Construir a área do comprador para consulta de histórico cronológico de pedidos e tela detalhada de acompanhamento de status de entrega, incluindo o formulário de avaliação do vendedor.`n`nRequisitos: RF13, RNF03" `
   --assignee "IgorMarcoli" --label "frontend,backend,feature" --milestone "M4: Pós-Venda, Entrega Digital e Reputação"
 
 gh issue create --title "[Feature/Sales] Painel de Vendas do Vendedor e Ação de Confirmação de Entrega" `
-  --body "Desenvolver o painel de vendas recebidas para vendedores credenciados, permitindo visualizar os itens comprados por outros usuários, detalhes de contato/entrega e acionar o botão de marcação de item como entregue.`n`nRequisitos: RF13" `
+  --body "Desenvolver o painel de vendas recebidas para vendedores credenciados, permitindo visualizar os itens comprados por outros usuários, detalhes de contato/entrega e acionar o botão de marcação de item como entregue.`n`nRequisitos: RF14" `
   --assignee "IgorMarcoli" --label "backend,frontend,feature" --milestone "M4: Pós-Venda, Entrega Digital e Reputação"
 
 # M5
@@ -69,11 +69,11 @@ gh issue create --title "[Backend/Security] Testes Automatizados de Regras Crít
   --assignee "JoaoPMA23" --label "testing,security,qa" --milestone "M5: Painel Administrativo, Moderação e Qualidade"
 
 gh issue create --title "[Feature/Admin] Painel de Controle Administrativo e Gestão de Usuários/Categorias" `
-  --body "Construir o painel administrativo exclusivo para usuários com papel admin, exibindo indicadores gerais da plataforma (total de usuários, volume de pedidos, anúncios ativos) e gerenciamento de categorias e usuários.`n`nRequisitos: RF15, RNF03" `
+  --body "Construir o painel administrativo exclusivo para usuários com papel admin, exibindo indicadores gerais da plataforma (total de usuários, volume de pedidos, anúncios ativos) e gerenciamento de categorias e usuários.`n`nRequisitos: RF17, RF18, RNF03" `
   --assignee "IgorMarcoli" --label "admin,backend,frontend" --milestone "M5: Painel Administrativo, Moderação e Qualidade"
 
 gh issue create --title "[Feature/Moderation] Fila de Moderação de Denúncias e Bloqueio de Anúncios Suspeitos" `
-  --body "Desenvolver a fila de moderação de denúncias para os administradores, permitindo visualizar detalhes reportados pelos compradores, registrar parecer motivado e suspender/bloquear anúncios irregulares.`n`nRequisitos: RF15, RNF09" `
+  --body "Desenvolver a fila de moderação de denúncias para os administradores, permitindo visualizar detalhes reportados pelos compradores, registrar parecer motivado e suspender/bloquear anúncios irregulares.`n`nRequisitos: RF16, RF19, RF20, RNF09" `
   --assignee "IgorMarcoli" --label "admin,moderation,feature" --milestone "M5: Painel Administrativo, Moderação e Qualidade"
 
 Write-Host "Todas as Milestones e Issues foram criadas com sucesso!" -ForegroundColor Green

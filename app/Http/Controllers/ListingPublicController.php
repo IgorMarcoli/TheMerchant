@@ -6,51 +6,25 @@ use App\Models\Game;
 use App\Models\Category;
 use App\Models\Listing;
 use App\Models\Report;
-use App\Models\User;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 
 class ListingPublicController extends Controller
 {
-    public function home(): View
+    public function home(\App\Services\StorefrontService $storefront): View
     {
-        $dbStatus = [
-            'connected'     => false,
-            'driver'        => config('database.default'),
-            'database'      => config('database.connections.' . config('database.default') . '.database', 'themerchant'),
-            'host'          => config('database.connections.' . config('database.default') . '.host', '127.0.0.1'),
-            'port'          => config('database.connections.' . config('database.default') . '.port', '3306'),
-            'hasUsersTable' => false,
-            'usersCount'    => 0,
-            'tables'        => [],
-            'error'         => null,
-        ];
-
-        try {
-            DB::connection()->getPdo();
-            $dbStatus['connected'] = true;
-            $dbStatus['hasUsersTable'] = Schema::hasTable('users');
-            if ($dbStatus['hasUsersTable']) {
-                $dbStatus['usersCount'] = User::count();
-            }
-            $tablesRaw = DB::select('SHOW TABLES');
-            $dbStatus['tables'] = array_map(function ($t) {
-                return array_values((array)$t)[0];
-            }, $tablesRaw);
-        } catch (\Throwable $e) {
-            $dbStatus['error'] = $e->getMessage();
-        }
-
-        return view('home', compact('dbStatus'));
+        return view('home', $storefront->home());
     }
 
     public function index(Request $request): View
     {
         $query = Listing::with(['game', 'category', 'seller', 'primaryImage'])
             ->where('status', 'publicado');
+
+        if (in_array($request->query('tipo'), ['cosmetic', 'service'], true)) {
+            $query->whereHas('category', fn ($category) => $category->where('type', $request->query('tipo')));
+        }
 
         if ($request->filled('busca')) {
             $query->where('title', 'like', '%' . $request->busca . '%');

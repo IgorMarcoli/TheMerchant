@@ -21,9 +21,7 @@ use App\Http\Controllers\TableDataController;
 | Rotas Públicas (Hello World e Teste de BD)
 |--------------------------------------------------------------------------
 */
-Route::get('/', function () {
-    return 'Hello World';
-})->name('home');
+Route::get('/', [ListingPublicController::class, 'home'])->name('home');
 
 Route::get('/test-db', function () {
     try {

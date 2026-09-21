@@ -6,18 +6,15 @@ use App\Models\User;
 use App\Models\SellerProfile;
 use App\Models\Game;
 use App\Models\Category;
-use App\Models\Listing;
-use App\Models\ListingImage;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
         // 1. Usuários de Demonstração
-        $admin = User::create([
+        User::create([
             'name'              => 'Administrador TheMerchant',
             'email'             => 'admin@themerchant.local',
             'password'          => Hash::make('admin123456'),
@@ -43,7 +40,7 @@ class DatabaseSeeder extends Seeder
             'total_sales'      => 342,
         ]);
 
-        $buyer = User::create([
+        User::create([
             'name'              => 'João Pedro (Comprador)',
             'email'             => 'comprador@themerchant.local',
             'password'          => Hash::make('comprador123456'),
@@ -74,7 +71,7 @@ class DatabaseSeeder extends Seeder
             'active'      => true,
         ]);
 
-        $dota2 = Game::create([
+        Game::create([
             'name'        => 'Dota 2',
             'slug'        => 'dota-2',
             'cover_image' => 'games/dota2.jpg',
@@ -82,90 +79,34 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // 3. Categorias
-        $catSkins = Category::create([
+        Category::create([
             'game_id' => $cs2->id,
             'name'    => 'Skins de Rifles',
             'slug'    => 'skins-rifles',
             'type'    => 'cosmetic',
         ]);
 
-        $catFacas = Category::create([
+        Category::create([
             'game_id' => $cs2->id,
             'name'    => 'Facas & Luvas',
             'slug'    => 'facas-e-luvas',
             'type'    => 'cosmetic',
         ]);
 
-        $catCoachingVal = Category::create([
+        Category::create([
             'game_id' => $valorant->id,
             'name'    => 'Sessão de Coaching Competitivo',
             'slug'    => 'coaching-valorant',
             'type'    => 'service',
         ]);
 
-        $catCoachingLol = Category::create([
+        Category::create([
             'game_id' => $lol->id,
             'name'    => 'Mentoria de Rota e Macroplay',
             'slug'    => 'mentoria-lol',
             'type'    => 'service',
         ]);
 
-        // 4. Anúncios de Teste
-        $listing1 = Listing::create([
-            'seller_id'   => $seller->id,
-            'game_id'     => $cs2->id,
-            'category_id' => $catFacas->id,
-            'title'       => 'Karambit Doppler (Phase 2) - Pouco Usada',
-            'slug'        => 'karambit-doppler-phase-2-' . Str::lower(Str::random(6)),
-            'description' => 'Faca Karambit com padrão Doppler Phase 2 (Pink Galaxy). Float baixo (0.015). Envio imediato via Steam Trade Offer com garantia TheMerchant.',
-            'price'       => 4850.00,
-            'status'      => 'publicado',
-            'views_count' => 312,
-        ]);
-
-        ListingImage::create([
-            'listing_id'    => $listing1->id,
-            'image_path'    => 'sample/karambit.jpg',
-            'is_primary'    => true,
-            'display_order' => 0,
-        ]);
-
-        $listing2 = Listing::create([
-            'seller_id'   => $seller->id,
-            'game_id'     => $cs2->id,
-            'category_id' => $catSkins->id,
-            'title'       => 'AK-47 Imperatriz (Testada em Campo)',
-            'slug'        => 'ak-47-imperatriz-ft-' . Str::lower(Str::random(6)),
-            'description' => 'AK-47 A Imperatriz com acabamento impecável, adesivos holográficos já aplicados. Pronto para entrega.',
-            'price'       => 280.00,
-            'status'      => 'publicado',
-            'views_count' => 145,
-        ]);
-
-        ListingImage::create([
-            'listing_id'    => $listing2->id,
-            'image_path'    => 'sample/ak47.jpg',
-            'is_primary'    => true,
-            'display_order' => 0,
-        ]);
-
-        $listing3 = Listing::create([
-            'seller_id'   => $seller->id,
-            'game_id'     => $valorant->id,
-            'category_id' => $catCoachingVal->id,
-            'title'       => 'Coaching Individual de Valorant - 2 Horas (VOD Review + Mira)',
-            'slug'        => 'coaching-valorant-2h-' . Str::lower(Str::random(6)),
-            'description' => 'Aula personalizada com ex-Radiante. Análise completa de VOD, posicionamento de mira, movimentação e estratégias de entrada em bomb.',
-            'price'       => 99.90,
-            'status'      => 'publicado',
-            'views_count' => 88,
-        ]);
-
-        ListingImage::create([
-            'listing_id'    => $listing3->id,
-            'image_path'    => 'sample/coaching.jpg',
-            'is_primary'    => true,
-            'display_order' => 0,
-        ]);
+        // Anúncios são cadastrados manualmente para os testes do marketplace.
     }
 }

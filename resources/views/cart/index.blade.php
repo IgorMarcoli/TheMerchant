@@ -24,7 +24,7 @@
             <span class="text-5xl block mb-4">🛍️</span>
             <h2 class="text-lg font-bold text-white mb-2">Seu carrinho está vazio</h2>
             <p class="text-sm text-slate-400 mb-6">Nenhum cosmético ou serviço adicionado até agora.</p>
-            <a href="{{ route('listings.index') }}" class="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm shadow-lg shadow-indigo-600/30 transition">
+            <a href="{{ route('listings.index') }}" class="px-6 py-3 rounded-xl bg-brand-600 hover:bg-brand-500 text-slate-950 font-bold text-sm shadow-lg shadow-brand-600/10 transition">
                 Explorar Anúncios
             </a>
         </div>
@@ -43,7 +43,7 @@
                             </div>
                         </div>
                         <div class="flex items-center gap-6">
-                            <span class="font-extrabold text-sm text-indigo-400">
+                            <span class="font-extrabold text-sm text-brand-400">
                                 R$ {{ number_format($item->unit_price, 2, ',', '.') }}
                             </span>
                             <form action="{{ route('cart.remove', $item) }}" method="POST">
@@ -68,10 +68,10 @@
                     </div>
                     <div class="flex justify-between text-sm font-extrabold text-white pt-4 border-t border-slate-800 mb-6">
                         <span>Total</span>
-                        <span class="text-indigo-400 text-lg">R$ {{ number_format($cart->total(), 2, ',', '.') }}</span>
+                        <span class="text-brand-400 text-lg">R$ {{ number_format($cart->total(), 2, ',', '.') }}</span>
                     </div>
 
-                    <a href="{{ route('checkout.index') }}" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl shadow-lg shadow-indigo-600/40 transition text-center block text-sm">
+                    <a href="{{ route('checkout.index') }}" class="w-full py-3.5 bg-brand-600 hover:bg-brand-500 text-slate-950 font-bold rounded-xl shadow-lg shadow-brand-600/10 transition text-center block text-sm">
                         Avançar para Checkout
                     </a>
                 </div>
