@@ -23,7 +23,7 @@
                         <span class="text-slate-400">{{ $order->created_at->format('d/m/Y H:i') }}</span>
                         <span class="px-2.5 py-1 rounded-lg font-bold text-[10px] uppercase tracking-wider
                             {{ $order->status === 'concluido' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' :
-                               ($order->status === 'pago' ? 'bg-indigo-950 text-indigo-400 border border-indigo-800' :
+                               ($order->status === 'pago' ? 'bg-brand-950 text-brand-400 border border-brand-800' :
                                'bg-amber-950 text-amber-400 border border-amber-800') }}">
                             {{ $order->status }}
                         </span>
@@ -42,7 +42,7 @@
                 <div class="pt-4 border-t border-slate-800 flex justify-between items-center">
                     <div>
                         <span class="text-xs text-slate-400">Total:</span>
-                        <span class="font-extrabold text-sm text-indigo-400 ml-1">R$ {{ number_format($order->total_amount, 2, ',', '.') }}</span>
+                        <span class="font-extrabold text-sm text-brand-400 ml-1">R$ {{ number_format($order->total_amount, 2, ',', '.') }}</span>
                     </div>
                     <a href="{{ route('orders.show', $order) }}" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs transition">
                         Ver Detalhes &rarr;

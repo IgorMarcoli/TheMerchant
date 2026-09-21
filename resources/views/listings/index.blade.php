@@ -10,17 +10,25 @@
 
 <!-- Filtros e Busca (RF07) -->
 <form method="GET" action="{{ route('listings.index') }}" class="p-6 rounded-2xl bg-slate-900 border border-slate-800 mb-8">
+    <div class="mb-4">
+        <label for="catalog-type" class="block text-xs font-semibold text-slate-300 mb-2">Tipo de anúncio</label>
+        <select id="catalog-type" name="tipo" class="bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white">
+            <option value="">Todos os anúncios</option>
+            <option value="cosmetic" @selected(request('tipo') === 'cosmetic')>Skins e cosméticos</option>
+            <option value="service" @selected(request('tipo') === 'service')>Coaching e serviços</option>
+        </select>
+    </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
         <!-- Busca Textual -->
         <div class="md:col-span-2">
             <label class="block text-xs font-semibold text-slate-300 mb-2">Buscar por palavra-chave</label>
-            <input type="text" name="busca" value="{{ request('busca') }}" placeholder="Ex: Karambit, Vandal, Coaching..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500">
+            <input type="text" name="busca" value="{{ request('busca') }}" placeholder="Ex: Karambit, Vandal, Coaching..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500">
         </div>
 
         <!-- Filtro por Jogo -->
         <div>
             <label class="block text-xs font-semibold text-slate-300 mb-2">Jogo</label>
-            <select name="jogo" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
+            <select name="jogo" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500">
                 <option value="">Todos os Jogos</option>
                 @foreach($games as $game)
                     <option value="{{ $game->id }}" {{ request('jogo') == $game->id ? 'selected' : '' }}>{{ $game->name }}</option>
@@ -31,7 +39,7 @@
         <!-- Filtro por Categoria -->
         <div>
             <label class="block text-xs font-semibold text-slate-300 mb-2">Categoria</label>
-            <select name="categoria" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
+            <select name="categoria" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500">
                 <option value="">Todas</option>
                 @foreach($categories as $category)
                     <option value="{{ $category->id }}" {{ request('categoria') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
@@ -41,7 +49,7 @@
 
         <!-- Botão Filtrar -->
         <div class="flex items-end">
-            <button type="submit" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold rounded-xl transition shadow-lg shadow-indigo-600/30">
+            <button type="submit" class="w-full py-2.5 bg-brand-600 hover:bg-brand-500 text-slate-950 text-sm font-semibold rounded-xl transition shadow-lg shadow-brand-600/10">
                 Filtrar Resultados
             </button>
         </div>
@@ -51,7 +59,7 @@
 <!-- Grid de Resultados -->
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
     @forelse($listings as $listing)
-        <div class="rounded-2xl bg-slate-900 border border-slate-800 overflow-hidden hover:border-indigo-500/40 hover:shadow-xl hover:shadow-indigo-500/10 transition flex flex-col">
+        <div class="rounded-2xl bg-slate-900 border border-slate-800 overflow-hidden hover:border-brand-500/40 hover:shadow-xl hover:shadow-brand-500/10 transition flex flex-col">
             <div class="h-44 bg-slate-950 relative flex items-center justify-center text-slate-700">
                 <span class="text-4xl">💎</span>
                 <span class="absolute top-3 left-3 px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-900/90 text-slate-300 border border-slate-700">
@@ -66,9 +74,9 @@
                 <div class="mt-4 pt-4 border-t border-slate-800 flex items-center justify-between">
                     <div>
                         <span class="text-[10px] text-slate-400 uppercase tracking-wider block">Preço</span>
-                        <span class="text-base font-extrabold text-indigo-400">R$ {{ number_format($listing->price, 2, ',', '.') }}</span>
+                        <span class="text-base font-extrabold text-brand-400">R$ {{ number_format($listing->price, 2, ',', '.') }}</span>
                     </div>
-                    <a href="{{ route('listings.show', $listing->slug) }}" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition">
+                    <a href="{{ route('listings.show', $listing->slug) }}" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-brand-600 hover:bg-brand-500 text-slate-950 transition">
                         Ver Anúncio
                     </a>
                 </div>

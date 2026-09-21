@@ -14,7 +14,7 @@
         <a href="{{ route('seller.sales.index') }}" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition">
             Ver Vendas
         </a>
-        <a href="{{ route('seller.anuncios.create') }}" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-lg shadow-indigo-600/30 transition">
+        <a href="{{ route('seller.anuncios.create') }}" class="px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-slate-950 text-xs font-bold shadow-lg shadow-brand-600/10 transition">
             + Novo Anúncio
         </a>
     </div>
@@ -31,7 +31,7 @@
                     <h3 class="font-bold text-sm text-white">{{ $listing->title }}</h3>
                     <div class="flex items-center gap-2 mt-1">
                         <span class="text-xs text-slate-400">{{ $listing->game->name }} &bull; {{ $listing->category->name }}</span>
-                        <span class="text-xs text-indigo-400 font-bold ml-2">R$ {{ number_format($listing->price, 2, ',', '.') }}</span>
+                        <span class="text-xs text-brand-400 font-bold ml-2">R$ {{ number_format($listing->price, 2, ',', '.') }}</span>
                     </div>
                 </div>
             </div>

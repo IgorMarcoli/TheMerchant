@@ -18,7 +18,7 @@
     </div>
     <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800">
         <span class="text-xs text-slate-400 uppercase tracking-wider block">Anúncios Ativos</span>
-        <span class="text-2xl font-black text-indigo-400 mt-1 block">{{ $metrics['active_listings'] }}</span>
+        <span class="text-2xl font-black text-brand-400 mt-1 block">{{ $metrics['active_listings'] }}</span>
     </div>
     <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800">
         <span class="text-xs text-slate-400 uppercase tracking-wider block">Total de Pedidos</span>
@@ -34,7 +34,7 @@
 <div class="rounded-3xl bg-slate-900 border border-slate-800 p-6">
     <div class="flex items-center justify-between mb-4">
         <h2 class="text-base font-bold text-white">Denúncias Pendentes de Análise</h2>
-        <a href="{{ route('admin.reports.index') }}" class="text-xs text-indigo-400 hover:text-indigo-300 font-semibold">Ver todas &rarr;</a>
+        <a href="{{ route('admin.reports.index') }}" class="text-xs text-brand-400 hover:text-brand-300 font-semibold">Ver todas &rarr;</a>
     </div>
 
     <div class="divide-y divide-slate-800">

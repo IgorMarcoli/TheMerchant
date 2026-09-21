@@ -18,7 +18,7 @@
                 <span class="px-3 py-1 rounded-xl text-xs font-bold bg-slate-950/80 text-white border border-slate-700">
                     {{ $listing->game->name }}
                 </span>
-                <span class="px-3 py-1 rounded-xl text-xs font-bold bg-indigo-950/80 text-indigo-400 border border-indigo-800">
+                <span class="px-3 py-1 rounded-xl text-xs font-bold bg-brand-950/80 text-brand-400 border border-brand-800">
                     {{ $listing->category->name }}
                 </span>
             </div>
@@ -37,14 +37,14 @@
         <!-- Card de Preço e Ação -->
         <div class="rounded-3xl bg-slate-900 border border-slate-800 p-6 shadow-xl">
             <span class="text-xs text-slate-400 block mb-1">Preço à vista</span>
-            <div class="text-3xl font-black text-indigo-400 mb-6">
+            <div class="text-3xl font-black text-brand-400 mb-6">
                 R$ {{ number_format($listing->price, 2, ',', '.') }}
             </div>
 
             @if($listing->isAvailable())
                 <form action="{{ route('cart.add', $listing) }}" method="POST">
                     @csrf
-                    <button type="submit" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl shadow-lg shadow-indigo-600/40 transition flex items-center justify-center gap-2">
+                    <button type="submit" class="w-full py-3.5 bg-brand-600 hover:bg-brand-500 text-slate-950 font-bold rounded-xl shadow-lg shadow-brand-600/10 transition flex items-center justify-center gap-2">
                         <span>🛒</span> Adicionar ao Carrinho
                     </button>
                 </form>
@@ -63,7 +63,7 @@
         <div class="rounded-3xl bg-slate-900 border border-slate-800 p-6">
             <h3 class="text-xs uppercase tracking-wider font-bold text-slate-400 mb-4">Informações do Vendedor</h3>
             <div class="flex items-center gap-4 mb-4">
-                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center text-xl font-bold text-white">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-xl font-bold text-slate-950">
                     {{ substr($listing->seller->name, 0, 1) }}
                 </div>
                 <div>

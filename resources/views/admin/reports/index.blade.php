@@ -48,7 +48,7 @@
                             <input type="checkbox" name="block_listing" value="1" id="blk-{{ $report->id }}" class="rounded bg-slate-800">
                             <label for="blk-{{ $report->id }}" class="text-[11px] text-rose-300">Bloquear Anúncio</label>
                         </div>
-                        <button type="submit" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold">
+                        <button type="submit" class="px-4 py-1.5 bg-brand-600 hover:bg-brand-500 text-slate-950 rounded-xl text-xs font-semibold">
                             Julgar
                         </button>
                     </form>

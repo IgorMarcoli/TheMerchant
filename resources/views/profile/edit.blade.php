@@ -14,7 +14,7 @@
         </div>
 
         <div class="flex items-center gap-2">
-            <span class="text-xs uppercase tracking-wider font-bold px-3 py-1.5 rounded-xl border {{ $user->role === 'admin' ? 'bg-rose-950/60 border-rose-500/40 text-rose-300' : ($user->role === 'seller' ? 'bg-amber-950/60 border-amber-500/40 text-amber-300' : 'bg-indigo-950/60 border-indigo-500/40 text-indigo-300') }}">
+            <span class="text-xs uppercase tracking-wider font-bold px-3 py-1.5 rounded-xl border {{ $user->role === 'admin' ? 'bg-rose-950/60 border-rose-500/40 text-rose-300' : ($user->role === 'seller' ? 'bg-amber-950/60 border-amber-500/40 text-amber-300' : 'bg-brand-950/60 border-brand-500/40 text-brand-300') }}">
                 {{ $user->role === 'admin' ? '🛡️ Administrador' : ($user->role === 'seller' ? '💼 Vendedor' : '🛒 Comprador') }}
             </span>
             <span class="text-xs px-3 py-1.5 rounded-xl bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 font-semibold">
@@ -39,7 +39,7 @@
         <div class="space-y-6">
             <div class="rounded-3xl bg-slate-900 border border-slate-800 p-6 shadow-xl">
                 <div class="text-center pb-6 border-b border-slate-800">
-                    <div class="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-3xl font-black text-white shadow-lg shadow-indigo-500/20 mb-3">
+                    <div class="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center text-3xl font-black text-slate-950 shadow-lg shadow-brand-500/10 mb-3">
                         {{ strtoupper(substr($user->name, 0, 2)) }}
                     </div>
                     <h2 class="text-lg font-bold text-white">{{ $user->name }}</h2>
@@ -84,11 +84,11 @@
                 </h3>
                 <ul class="text-xs text-slate-400 space-y-2">
                     <li class="flex items-start gap-2">
-                        <span class="text-indigo-400">•</span>
+                        <span class="text-brand-400">•</span>
                         <span>Utilize senhas exclusivas com pelo menos 8 dígitos, combinando números e caracteres especiais.</span>
                     </li>
                     <li class="flex items-start gap-2">
-                        <span class="text-indigo-400">•</span>
+                        <span class="text-brand-400">•</span>
                         <span>Nunca compartilhe suas credenciais ou tokens de autenticação com terceiros.</span>
                     </li>
                 </ul>
@@ -114,13 +114,13 @@
                         <div>
                             <label class="block text-xs font-semibold text-slate-300 mb-1">Nome Completo</label>
                             <input type="text" name="name" value="{{ old('name', $user->name) }}" required maxlength="120"
-                                class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-indigo-500 transition">
+                                class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-brand-500 transition">
                         </div>
 
                         <div>
                             <label class="block text-xs font-semibold text-slate-300 mb-1">Endereço de E-mail</label>
                             <input type="email" name="email" value="{{ old('email', $user->email) }}" required maxlength="150"
-                                class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-indigo-500 transition">
+                                class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-brand-500 transition">
                         </div>
                     </div>
 
@@ -128,13 +128,13 @@
                         <div>
                             <label class="block text-xs font-semibold text-slate-300 mb-1">Biografia do Vendedor (Aparece em seus anúncios)</label>
                             <textarea name="bio" rows="3" maxlength="500"
-                                class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-indigo-500 transition"
+                                class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-brand-500 transition"
                                 placeholder="Conte um pouco sobre seu histórico de negociações, horários de entrega ou especialidades...">{{ old('bio', optional($user->sellerProfile)->bio) }}</textarea>
                         </div>
                     @endif
 
                     <div class="pt-2 flex justify-end">
-                        <button type="submit" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-xs shadow-lg shadow-indigo-600/30 transition flex items-center gap-2">
+                        <button type="submit" class="px-6 py-2.5 bg-brand-600 hover:bg-brand-500 text-slate-950 font-bold rounded-xl text-xs shadow-lg shadow-brand-600/10 transition flex items-center gap-2">
                             <span>💾</span> Salvar Informações
                         </button>
                     </div>
@@ -157,7 +157,7 @@
                     <div>
                         <label class="block text-xs font-semibold text-slate-300 mb-1">Senha Atual</label>
                         <input type="password" name="current_password" required
-                            class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-indigo-500 transition"
+                            class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-brand-500 transition"
                             placeholder="Digite sua senha em uso">
                     </div>
 
@@ -165,14 +165,14 @@
                         <div>
                             <label class="block text-xs font-semibold text-slate-300 mb-1">Nova Senha</label>
                             <input type="password" name="password" required minlength="8"
-                                class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-indigo-500 transition"
+                                class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-brand-500 transition"
                                 placeholder="Mínimo 8 caracteres">
                         </div>
 
                         <div>
                             <label class="block text-xs font-semibold text-slate-300 mb-1">Confirmar Nova Senha</label>
                             <input type="password" name="password_confirmation" required minlength="8"
-                                class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-indigo-500 transition"
+                                class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-brand-500 transition"
                                 placeholder="Repita a nova senha">
                         </div>
                     </div>
