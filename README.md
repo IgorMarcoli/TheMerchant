@@ -1,17 +1,53 @@
-# 🎮 TheMerchant — Marketplace de Cosméticos e Serviços para Jogos Digitais
+<div align="center">
 
-> 🔗 **Repositório Oficial no GitHub:** [https://github.com/IgorMarcoli/TheMerchant](https://github.com/IgorMarcoli/TheMerchant)  
-> **Documento de Especificação e Arquitetura** da disciplina de **Laboratório de Engenharia de Software III (LES III 2026)** — FATEC PG.  
-> Plataforma web de marketplace para intermediação segura de cosméticos (skins, temas, avatares) e serviços digitais (coaching) para jogos, construída em arquitetura monolítica modular com **PHP/Laravel**, **Blade**, **Tailwind CSS** e **Alpine.js**.
+# 🎮 TheMerchant
 
-[![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)]()
-[![Laravel](https://img.shields.io/badge/Laravel-11%20%2F%2012-FF2D20?logo=laravel&logoColor=white)]()
-[![PHP](https://img.shields.io/badge/PHP-8.2%2B-777BB4?logo=php&logoColor=white)]()
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?logo=tailwind-css&logoColor=white)]()
-[![Alpine.js](https://img.shields.io/badge/Alpine.js-8BC0D0?logo=alpinedotjs&logoColor=white)]()
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&logoColor=white)]()
-[![MySQL](https://img.shields.io/badge/MySQL-00758F?logo=mysql&logoColor=white)]()
-[![License](https://img.shields.io/badge/license-MIT-blue)]()
+### Marketplace de cosméticos e serviços para jogos digitais
+
+**Skins, coaching e conexões entre jogadores.**<br>
+Projeto acadêmico de Laboratório de Engenharia de Software III · FATEC Praia Grande · 2026
+
+<p>
+  <img src="https://img.shields.io/badge/STATUS-EM_DESENVOLVIMENTO-F59E0B?style=for-the-badge" alt="Status: em desenvolvimento">
+  <img src="https://img.shields.io/badge/FATEC_PG-LES_III_2026-6366F1?style=for-the-badge" alt="FATEC PG — LES III 2026">
+</p>
+
+<p>
+  <img src="https://img.shields.io/badge/PHP-8.2%2B-777BB4?style=for-the-badge&amp;logo=php&amp;logoColor=white" alt="PHP 8.2 ou superior">
+  <img src="https://img.shields.io/badge/Laravel-11-FF2D20?style=for-the-badge&amp;logo=laravel&amp;logoColor=white" alt="Laravel 11">
+  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&amp;logo=javascript&amp;logoColor=black" alt="JavaScript">
+  <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&amp;logo=html5&amp;logoColor=white" alt="HTML5">
+  <img src="https://img.shields.io/badge/CSS-663399?style=for-the-badge&amp;logo=css&amp;logoColor=white" alt="CSS">
+</p>
+
+<p>
+  <img src="https://img.shields.io/badge/Blade-FF2D20?style=flat-square&amp;logo=laravel&amp;logoColor=white" alt="Blade">
+  <img src="https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=flat-square&amp;logo=tailwindcss&amp;logoColor=white" alt="Tailwind CSS">
+  <img src="https://img.shields.io/badge/Alpine.js-8BC0D0?style=flat-square&amp;logo=alpinedotjs&amp;logoColor=black" alt="Alpine.js">
+  <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&amp;logo=mysql&amp;logoColor=white" alt="MySQL">
+  <img src="https://img.shields.io/badge/Composer-885630?style=flat-square&amp;logo=composer&amp;logoColor=white" alt="Composer">
+  <img src="https://img.shields.io/badge/Git-F05032?style=flat-square&amp;logo=git&amp;logoColor=white" alt="Git">
+</p>
+
+<p>
+  <a href="#sobre">Sobre</a> ·
+  <a href="#tecnologias">Tecnologias</a> ·
+  <a href="#requisitos">Requisitos</a> ·
+  <a href="#arquitetura">Arquitetura</a> ·
+  <a href="#executar">Executar</a> ·
+  <a href="#testes">Testes</a> ·
+  <a href="#roadmap">Roadmap</a>
+</p>
+
+</div>
+
+---
+
+> **Projeto em construção:** pagamento atualmente simulado e chat planejado. As seções abaixo apresentam o escopo e a arquitetura; o [guia de testes](docs/TESTES.md) registra o que foi efetivamente validado.
+
+| 🚀 Executar localmente | 🧪 Validar a aplicação | 📌 Acompanhar entregas |
+| :---: | :---: | :---: |
+| [Guia de instalação e execução](docs/EXECUCAO.md) | [Guia de testes e validações](docs/TESTES.md) | [Issues e milestones](ISSUES.md) |
 
 ---
 
@@ -26,9 +62,11 @@
 
 ---
 
+<a id="sobre"></a>
+
 ## 📋 Sobre o Projeto e Justificativa
 
-O mercado de jogos digitais expandiu de forma vertiginosa a demanda por **itens cosméticos** (como *skins*, temas visuais, pacotes gráficos e avatares) e **serviços associados** (como *coaching* e personalizações autorizadas). 
+O mercado de jogos digitais expandiu de forma vertiginosa a demanda por **itens cosméticos** (como *skins*, temas visuais, pacotes gráficos e avatares) e **serviços associados** (como *coaching* e personalizações autorizadas).
 
 Atualmente, grande parte dessas negociações acontece na informalidade — por meio de grupos de redes sociais, fóruns e mensageiros instantâneos. Nesses ambientes, os usuários enfrentam:
 - **Ausência de padronização** nas ofertas e nos pagamentos;
@@ -44,10 +82,10 @@ O **TheMerchant** surge como uma plataforma web centralizada para intermediar tr
 
 ## 🎯 Objetivos
 
-### 4.1 Objetivo Geral
+### Objetivo geral
 Desenvolver uma plataforma web de marketplace que permita anunciar, pesquisar, comprar e acompanhar produtos e serviços digitais relacionados a jogos, intermediando as negociações com segurança, rastreabilidade e controle administrativo.
 
-### 4.2 Objetivos Específicos
+### Objetivos específicos
 - 🔐 Permitir cadastro, autenticação, recuperação de acesso e controle de perfis de usuário (*RBAC*).
 - 📦 Possibilitar que vendedores cadastrem, editem, pausem e removam anúncios de produtos e serviços digitais com galeria de imagens.
 - 🔍 Permitir pesquisa e filtragem estruturada por jogo, categoria, faixa de preço e avaliação do vendedor.
@@ -70,6 +108,8 @@ Desenvolver uma plataforma web de marketplace que permita anunciar, pesquisar, c
 
 ---
 
+<a id="requisitos"></a>
+
 ## 📊 Requisitos do Sistema
 
 ### Requisitos Funcionais (RF)
@@ -82,7 +122,7 @@ Desenvolver uma plataforma web de marketplace que permita anunciar, pesquisar, c
 | **RF04** | Alta | O sistema deve aplicar permissões conforme o perfil do usuário: comprador, vendedor ou administrador. |
 | **RF05** | Alta | O vendedor deve poder cadastrar, editar, pausar e remover seus próprios anúncios. |
 | **RF06** | Alta | Cada anúncio deve permitir informar jogo, categoria, título, descrição, preço, imagens e status. |
-| **RF07** | Alta | O usuário deve poder pesquisar, filtrar e ordenar anúncios por jogo, categoria e faixa de preço. |
+| **RF07** | Alta | O usuário deve poder pesquisar, filtrar e ordenar anúncios por jogo, categoria, faixa de preço e reputação do vendedor. |
 | **RF08** | Alta | O sistema deve exibir uma página de detalhes do anúncio com informações do produto ou serviço, vendedor e reputação disponível. |
 | **RF09** | Alta | O comprador deve poder gerenciar o carrinho, adicionando, removendo e ajustando itens antes da compra. |
 | **RF10** | Alta | O comprador deve poder finalizar a compra por meio do checkout, gerando o pedido correspondente. |
@@ -96,6 +136,16 @@ Desenvolver uma plataforma web de marketplace que permita anunciar, pesquisar, c
 | **RF18** | Alta | O administrador deve poder gerenciar as categorias utilizadas para classificar anúncios. |
 | **RF19** | Alta | O administrador deve poder moderar anúncios, podendo ocultar, bloquear ou restaurar anúncios conforme as regras da plataforma. |
 | **RF20** | Alta | O administrador deve poder consultar e tratar denúncias registradas pelos usuários. |
+
+### Chat em tempo real — ampliação de escopo
+
+Incluído na v1 em 18/09/2026. A implementação está planejada nas issues #30–#32; atualização do PDF na #33.
+
+| ID | Prioridade | Descrição |
+| :--- | :---: | :--- |
+| **RF21** | Alta | Iniciar e retomar conversa privada com o vendedor pelo anúncio ou pela compra. |
+| **RF22** | Alta | Enviar e receber texto em tempo real, com persistência e autorização dos participantes. |
+| **RF23** | Média | Consultar histórico, mensagens não lidas e recuperar mensagens após reconexão. |
 
 ### Requisitos Não Funcionais (RNF)
 
@@ -119,27 +169,36 @@ Desenvolver uma plataforma web de marketplace que permita anunciar, pesquisar, c
 | :--- | :--- |
 | ✅ Aplicação web 100% responsiva (Desktop / Mobile) | ❌ Aplicativo mobile nativo (iOS / Android) |
 | ✅ Catálogo, carrinho, checkout e webhook assíncrono | ❌ Integração direta com APIs oficiais de jogos (Steam, Riot) |
-| ✅ Sistema de reputação e avaliações pós-compra | ❌ Chat em tempo real entre comprador e vendedor |
+| ✅ Reputação pós-compra e chat privado de texto com vendedor | ❌ Anexos, áudio/vídeo e grupos no chat |
 | ✅ Painel administrativo de moderação e denúncias | ❌ Múltiplos idiomas e múltiplas moedas (foco BRL) |
 | ✅ Gateway externo (Mercado Pago / Stripe / PagSeguro) | ❌ Carteira financeira própria ou custódia interna de valores |
+| ✅ Coaching com sessões, capacidade e combinação de horários | ❌ Agenda automática de coaching |
 
 ---
 
+<a id="tecnologias"></a>
+
 ## 🛠️ Stack Tecnológica
+
+**Linguagens:** PHP no backend; JavaScript nas interações; HTML e CSS na apresentação. O ambiente inspecionado utiliza Laravel 11.56.1. Composer admite 11/12; MySQL é o caminho local documentado.
 
 | Camada / Função | Tecnologia | Descrição |
 | :--- | :--- | :--- |
 | **Linguagem & Back-end** | **PHP 8.2+ / Laravel 11/12** | Monólito modular baseado no padrão MVC do Laravel. |
 | **Camada de Apresentação** | **Blade + Tailwind CSS + Alpine.js** | Renderização server-side rápida, estilização moderna e componentes interativos leves. |
-| **Banco de Dados** | **PostgreSQL / MySQL** | Modelagem relacional estrita com migrations versionadas e Eloquent ORM. |
+| **Banco de Dados** | **MySQL / PostgreSQL previsto** | Migrations e Eloquent; os diagnósticos atuais usam SQL específico de MySQL. |
 | **Autenticação & Autorização** | **Laravel Sessions & Policies** | Sessões seguras com cookies HTTP-only, CSRF e Laravel Policies/Gates. |
 | **Integração de Pagamentos** | **Mercado Pago / Stripe / PagSeguro** | Camada de serviço desacoplada (`PaymentGatewayService`) com suporte a webhooks assíncronos e idempotência. |
 | **Armazenamento de Arquivos** | **Laravel Storage (Disk Local / S3)** | Armazenamento de imagens de anúncios e perfis com links simbólicos públicos. |
 | **Filas & Tarefas Assíncronas** | **Laravel Queues / Jobs** | Processamento em segundo plano para envio de e-mails, confirmação de webhooks e logs de auditoria. |
 | **Testes Automatizados** | **Pest / PHPUnit** | Cobertura de testes unitários para Services e testes de feature para fluxos HTTP críticos. |
-| **Versionamento & Ambiente** | **Git, GitHub & Docker (Sail)** | Padronização do ambiente de desenvolvimento e controle de versões via branches. |
+| **Versionamento** | **Git + GitHub** | Branches, revisão de código e acompanhamento de entregas. |
+| **Chat planejado** | **Laravel Reverb + Echo** | Mensagens em canais privados, histórico e reconexão; ainda não implementado. |
+| **Evoluções de ambiente** | **Vite / Docker (Sail)** | Dependências declaradas; configurações de build/Compose ainda não versionadas. |
 
 ---
+
+<a id="arquitetura"></a>
 
 ## 🏛️ Arquitetura da Aplicação
 
@@ -197,9 +256,9 @@ flowchart TD
     Tailwind --> Browser
 ```
 
-### Diagrama de Casos de Uso (Notação UML Revisada)
+### Visão dos casos de uso
 
-O diagrama segue a notação UML rigorosa. O ator **Usuário** é uma abstração de modelagem — não um novo perfil do sistema — e é especializado pelos atores **Comprador**, **Vendedor** e **Administrador** via herança/generalização. O **Visitante** representa quem ainda não possui conta, enquanto o **Gateway de Pagamento** atua como ator externo.
+A visualização Mermaid resume os casos de uso; o diagrama UML formal é mantido no documento acadêmico. O ator **Usuário** é uma abstração de modelagem — não um novo perfil do sistema — e é especializado pelos atores **Comprador**, **Vendedor** e **Administrador** via herança/generalização. O **Visitante** representa quem ainda não possui conta, enquanto o **Gateway de Pagamento** atua como ator externo.
 
 ```mermaid
 flowchart LR
@@ -216,6 +275,7 @@ flowchart LR
         UC_Search["Pesquisar e filtrar anúncios"]
         UC_View["Visualizar anúncio"]
         UC_Report["Denunciar anúncio"]
+        UC_Chat["Conversar com vendedor: texto, histórico e não lidas"]
 
         UC_Cart["Gerenciar carrinho"]
         UC_Checkout["Finalizar compra"]
@@ -234,9 +294,9 @@ flowchart LR
     end
 
     %% Herança / Generalização
-    Comprador --|> Usuario
-    Vendedor --|> Usuario
-    Admin --|> Usuario
+    Comprador -->|especializa| Usuario
+    Vendedor -->|especializa| Usuario
+    Admin -->|especializa| Usuario
 
     %% Visitante
     Visitante --- UC_Cad
@@ -251,6 +311,8 @@ flowchart LR
     Usuario --- UC_Report
 
     %% Comprador
+    Comprador --- UC_Chat
+    Vendedor --- UC_Chat
     Comprador --- UC_Cart
     Comprador --- UC_Checkout
     Comprador --- UC_Orders
@@ -328,12 +390,15 @@ erDiagram
 
     ORDERS ||--o{ ORDER_ITEMS : "possui itens"
     ORDERS ||--o{ PAYMENTS : "gera registros de pagamento"
-    ORDERS ||--o| REVIEWS : "permite avaliação pós-conclusão"
+    ORDERS ||--o{ REVIEWS : "reúne avaliações dos itens"
+    ORDER_ITEMS ||--o| REVIEWS : "permite avaliação após entrega"
 ```
 
 ---
 
 ## 🔄 Ciclos de Vida e Regras de Negócio
+
+> **Regra planejada:** checkout cria reserva com expiração; aprovação confirma a venda. Coaching mantém disponibilidade conforme capacidade. Detalhes em [requirements.md](requirements.md) e na #29.
 
 ### 1. Estados do Anúncio (`listings.status`)
 - `rascunho`: Anúncio salvo pelo vendedor sem visibilidade pública no catálogo.
@@ -346,7 +411,7 @@ erDiagram
 - `pendente`: Pedido gerado aguardando confirmação do gateway de pagamento.
 - `pago`: Pagamento confirmado via webhook assíncrono.
 - `em_andamento`: Vendedor notificado para liberação ou entrega do item/serviço digital.
-- `concluido`: Entrega confirmada; habilita a avaliação do vendedor pelo comprador.
+- `concluido`: Todos os itens entregues; avaliação é habilitada por item pago e entregue, sem aguardar outros vendedores.
 - `cancelado`: Pedido cancelado por expiração ou estorno.
 
 ---
@@ -355,76 +420,74 @@ erDiagram
 
 | Método | Rota | Descrição | Acesso |
 | :--- | :--- | :--- | :--- |
-| `GET` | `/` | Página inicial com destaques, jogos populares e busca rápida | Público |
+| `GET` | `/` | Atualmente `Hello World`; vitrine prevista na #9 | Público |
 | `GET` | `/anuncios` | Catálogo geral com paginação, filtros e ordenação | Público |
 | `GET` | `/anuncios/{slug}` | Detalhes do anúncio, galeria de fotos e dados do vendedor | Público |
-| `GET/POST` | `/carrinho` | Visualização e manipulação do carrinho de compras | Comprador |
-| `GET/POST` | `/checkout` | Resumo da compra e redirecionamento para o gateway | Comprador |
+| `GET` / `POST` | `/carrinho` / `/carrinho/adicionar/{listing}` | Consultar carrinho / adicionar item | Autenticado |
+| `GET` / `POST` | `/checkout` / `/checkout/processar` | Resumo / processamento da compra | Autenticado |
 | `POST` | `/api/webhooks/payment` | Recebimento assíncrono de notificações de pagamento do gateway | Externo / Assíncrono |
 | `GET` | `/pedidos` | Histórico e rastreamento dos pedidos realizados | Comprador |
-| `POST` | `/pedidos/{id}/avaliar` | Envio de avaliação e nota para o vendedor | Comprador |
+| `POST` | `/pedidos/{order}/avaliar/{item}` | Envio de avaliação e nota para o vendedor | Comprador |
 | `GET/POST` | `/vendedor/anuncios` | Painel do vendedor para CRUD e gestão de anúncios | Vendedor |
 | `GET` | `/vendedor/vendas` | Acompanhamento de vendas recebidas e status de entrega | Vendedor |
 | `GET` | `/admin/dashboard` | Métricas gerais de faturamento, usuários e volume de anúncios | Administrador |
-| `GET/POST` | `/admin/denuncias` | Moderação de denúncias e suspensão de anúncios/usuários | Administrador |
+| `GET` / `PATCH` | `/admin/denuncias` / `/admin/denuncias/{report}/moderar` | Consulta / julgamento de denúncias | Administrador |
 
 ---
+
+<a id="executar"></a>
 
 ## 🚀 Como Executar o Projeto
 
-### Pré-requisitos
-- **PHP 8.2 ou superior** com extensões ativas (`pdo`, `pdo_pgsql` ou `pdo_mysql`, `mbstring`, `openssl`, `curl`, `gd` ou `imagick`, `fileinfo`);
-- **Composer 2.x**;
-- **Node.js 18+** e **npm**;
-- Banco de dados **PostgreSQL** ou **MySQL** (ou Docker).
+Pré-requisitos: PHP 8.2+ compatível com o lockfile, Composer 2 e MySQL. Consulte o [guia completo](docs/EXECUCAO.md) para extensões, contas de demonstração, filas e solução de problemas.
 
----
-
-### Opção 1: Execução Local com PHP & Node
-
-```bash
-# 1. Clone o repositório
+```powershell
 git clone https://github.com/IgorMarcoli/TheMerchant.git
 cd TheMerchant
-
-# 2. Instale as dependências do backend PHP
 composer install
+if (!(Test-Path .env)) { Copy-Item .env.example .env }
+```
 
-# 3. Configure as variáveis de ambiente
-cp .env.example .env
+Crie um banco **local dedicado** chamado `themerchant` e configure suas credenciais no `.env`. Para executar a base atual sem tabelas auxiliares ainda ausentes, ajuste:
+
+```dotenv
+APP_URL=http://127.0.0.1:8000
+SESSION_DRIVER=file
+CACHE_STORE=file
+QUEUE_CONNECTION=sync
+```
+
+`sync` executa jobs na requisição: serve para desenvolvimento inicial, não comprova processamento assíncrono.
+
+```powershell
+php artisan config:clear
 php artisan key:generate
-
-# 4. Ajuste as credenciais do banco em .env e execute as migrações com dados de teste
-php artisan migrate --seed
-
-# 5. Crie o link simbólico para o armazenamento público de imagens
+php artisan migrate
+php artisan db:seed
 php artisan storage:link
-
-# 6. Instale e compile os assets do frontend (Tailwind CSS / Vite)
-npm install
-npm run build   # ou 'npm run dev' para hot-reload em desenvolvimento
-
-# 7. Inicie o servidor local da aplicação
-php artisan serve
+php artisan serve --host=127.0.0.1 --port=8000
 ```
 
-Acesse no navegador: **`http://localhost:8000`**
+Gere a chave apenas na configuração inicial de um ambiente novo. Execute o seeder apenas na base nova: ele usa registros fixos e não é idempotente. Não é necessário iniciar Vite para o layout atual.
 
----
+Abra [o catálogo local](http://127.0.0.1:8000/anuncios) ou [o login](http://127.0.0.1:8000/login). As contas fictícias e os passos detalhados estão no [guia de execução](docs/EXECUCAO.md).
 
-### Opção 2: Execução com Docker / Laravel Sail
+<a id="testes"></a>
 
-```bash
-# 1. Suba os containers do projeto (App, Banco de Dados, Redis/Mailpit se configurados)
-./vendor/bin/sail up -d
+## 🧪 Testes e Validações
 
-# 2. Execute as migrações e seeds
-./vendor/bin/sail artisan migrate --seed
+Verificações sem alterar o banco:
 
-# 3. Compile os assets do frontend
-./vendor/bin/sail npm install
-./vendor/bin/sail npm run dev
+```powershell
+composer validate --no-check-publish
+composer check-platform-reqs
+php artisan --version
+php artisan route:list --except-vendor
+php vendor/phpunit/phpunit/phpunit --no-configuration --bootstrap vendor/autoload.php tests/Unit/CheckoutServiceTest.php
 ```
+
+O teste unitário existente verifica somente a instanciação do serviço. Para testes de feature, use o [ambiente isolado descrito no guia](docs/TESTES.md#2-testes-automatizados-no-estado-atual): os testes usam `RefreshDatabase` e não devem apontar para a base de desenvolvimento.
+
 
 ---
 
@@ -441,6 +504,9 @@ TheMerchant/
 ├── specs.md                         # Especificações técnicas, ERD detalhado e rotas
 ├── composer.json                    # Dependências do ecossistema PHP/Laravel
 ├── package.json                     # Dependências do ecossistema Node/Tailwind/Vite
+├── docs/
+│   ├── EXECUCAO.md                  # Instalação e operação local
+│   └── TESTES.md                    # Testes, validação manual e evidências
 ├── app/
 │   ├── Http/
 │   │   ├── Controllers/
@@ -528,7 +594,6 @@ TheMerchant/
 └── tests/
     ├── Feature/                     # Testes de integração de fluxos HTTP
     │   ├── CheckoutTest.php
-    │   ├── ListingTest.php
     │   └── WebhookPaymentTest.php
     └── Unit/                        # Testes unitários de serviços e regras
         └── CheckoutServiceTest.php
@@ -536,7 +601,27 @@ TheMerchant/
 
 ---
 
+<a id="roadmap"></a>
+
+## 🗺️ Roadmap
+
+| Milestone | Entrega |
+| :--- | :--- |
+| [M1](https://github.com/IgorMarcoli/TheMerchant/milestone/10) | Fundação, autenticação e perfis; inclui pendências de RF03 e segurança |
+| [M2](https://github.com/IgorMarcoli/TheMerchant/milestone/11) | Catálogo, anúncios, busca e regras de cosméticos/coaching |
+| [M3](https://github.com/IgorMarcoli/TheMerchant/milestone/12) | Carrinho, reservas, checkout e pagamentos |
+| [M4](https://github.com/IgorMarcoli/TheMerchant/milestone/13) | Pós-venda, entrega, reputação e chat |
+| [M5](https://github.com/IgorMarcoli/TheMerchant/milestone/14) | Administração, moderação, qualidade e apresentação |
+
+Consulte o GitHub para o estado atualizado; uma issue fechada não substitui evidência de teste.
+
+
+---
+
 ## 📑 Documentação Complementar
+
+- 🚀 [Guia de Execução](docs/EXECUCAO.md) — Instalação, `.env`, banco, filas e problemas frequentes.
+- 🧪 [Guia de Testes](docs/TESTES.md) — Comandos isolados, matriz de validação e evidências.
 
 - 📋 [Requisitos Detalhados (`requirements.md`)](./requirements.md) — Matriz completa de Requisitos Funcionais, Não Funcionais e Regras de Negócio.
 - 📐 [Especificações Técnicas & ERD (`specs.md`)](./specs.md) — Dicionário de dados, máquina de estados e contratos dos Services.
@@ -548,4 +633,4 @@ TheMerchant/
 
 ## 📄 Licença
 
-Este projeto é desenvolvido para fins exclusivamente acadêmicos na FATEC Praia Grande sob a licença [MIT](./LICENSE).
+Projeto desenvolvido para fins acadêmicos na FATEC Praia Grande. O `composer.json` declara licença MIT; conferir a inclusão do arquivo de licença antes da distribuição.
