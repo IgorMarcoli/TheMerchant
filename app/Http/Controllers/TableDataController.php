@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
@@ -15,28 +15,27 @@ class TableDataController extends Controller
     public function index(): JsonResponse
     {
         try {
-            $tablesRaw = DB::select('SHOW TABLES');
-            $allTables = array_map(fn($t) => array_values((array)$t)[0], $tablesRaw);
+            $allTables = Schema::getTableListing();
 
             $summary = [];
             foreach ($allTables as $table) {
                 $summary[] = [
-                    'tabela'          => $table,
+                    'tabela' => $table,
                     'total_registros' => DB::table($table)->count(),
-                    'url'             => url("/api/tabela/{$table}"),
+                    'url' => url("/api/tabela/{$table}"),
                 ];
             }
 
             return response()->json([
-                'status'   => 'success',
-                'banco'    => DB::connection()->getDatabaseName(),
+                'status' => 'success',
+                'banco' => DB::connection()->getDatabaseName(),
                 'mensagem' => 'Envie o nome da tabela na URL para consultar seus dados. Ex: /api/tabela/users',
-                'tabelas'  => $summary,
+                'tabelas' => $summary,
             ], 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         } catch (\Throwable $e) {
             return response()->json([
-                'status'   => 'error',
-                'mensagem' => 'Erro ao consultar o banco de dados: ' . $e->getMessage(),
+                'status' => 'error',
+                'mensagem' => 'Erro ao consultar o banco de dados: '.$e->getMessage(),
             ], 500, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         }
     }
@@ -50,13 +49,12 @@ class TableDataController extends Controller
             $table = strtolower(trim($table));
 
             // Obtém todas as tabelas existentes para prevenção estrita de SQL Injection
-            $tablesRaw = DB::select('SHOW TABLES');
-            $allTables = array_map(fn($t) => array_values((array)$t)[0], $tablesRaw);
+            $allTables = Schema::getTableListing();
 
-            if (!in_array($table, $allTables)) {
+            if (! in_array($table, $allTables)) {
                 return response()->json([
-                    'status'              => 'error',
-                    'mensagem'            => "A tabela '{$table}' não existe no banco de dados.",
+                    'status' => 'error',
+                    'mensagem' => "A tabela '{$table}' não existe no banco de dados.",
                     'tabelas_disponiveis' => $allTables,
                 ], 404, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
             }
@@ -64,7 +62,7 @@ class TableDataController extends Controller
             $query = DB::table($table);
 
             // Se for a tabela de usuários, oculta o hash da senha por segurança, a menos que ?all=1 seja passado
-            if ($table === 'users' && !$request->boolean('all')) {
+            if ($table === 'users' && ! $request->boolean('all')) {
                 $columns = Schema::getColumnListing('users');
                 $visibleColumns = array_values(array_diff($columns, ['password', 'remember_token']));
                 $records = $query->select($visibleColumns)->get();
@@ -73,16 +71,16 @@ class TableDataController extends Controller
             }
 
             return response()->json([
-                'status'          => 'success',
-                'banco'           => DB::connection()->getDatabaseName(),
-                'tabela'          => $table,
+                'status' => 'success',
+                'banco' => DB::connection()->getDatabaseName(),
+                'tabela' => $table,
                 'total_registros' => $records->count(),
-                'dados'           => $records,
+                'dados' => $records,
             ], 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         } catch (\Throwable $e) {
             return response()->json([
-                'status'   => 'error',
-                'mensagem' => 'Erro ao consultar a tabela: ' . $e->getMessage(),
+                'status' => 'error',
+                'mensagem' => 'Erro ao consultar a tabela: '.$e->getMessage(),
             ], 500, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         }
     }

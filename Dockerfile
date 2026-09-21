@@ -19,10 +19,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     unzip \
     sqlite3 \
     libsqlite3-dev \
+    libpq-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) \
         pdo_mysql \
         pdo_sqlite \
+        pdo_pgsql \
         mbstring \
         exif \
         pcntl \
@@ -52,7 +54,7 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progre
 
 # 8. Ajustar permissões para o servidor web (www-data)
 RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database
 
 # 9. Copiar e preparar script de inicialização (sanitizando quebras de linha CRLF/LF)
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh

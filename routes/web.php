@@ -1,20 +1,23 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ListingPublicController;
-use App\Http\Controllers\Buyer\CartController;
-use App\Http\Controllers\Buyer\CheckoutController;
-use App\Http\Controllers\Buyer\OrderController;
-use App\Http\Controllers\Buyer\ReviewController;
-use App\Http\Controllers\Seller\ListingController as SellerListingController;
-use App\Http\Controllers\Seller\SaleController as SellerSaleController;
-use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\ReportController as AdminReportController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ProfileController;
+use App\Http\Controllers\Buyer\CartController;
+use App\Http\Controllers\Buyer\CheckoutController;
+use App\Http\Controllers\Buyer\OrderController;
+use App\Http\Controllers\Buyer\ReviewController;
+use App\Http\Controllers\ListingPublicController;
+use App\Http\Controllers\Seller\ListingController as SellerListingController;
+use App\Http\Controllers\Seller\SaleController as SellerSaleController;
 use App\Http\Controllers\TableDataController;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Schema;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,24 +28,23 @@ Route::get('/', [ListingPublicController::class, 'home'])->name('home');
 
 Route::get('/test-db', function () {
     try {
-        \Illuminate\Support\Facades\DB::connection()->getPdo();
-        $dbName = \Illuminate\Support\Facades\DB::connection()->getDatabaseName();
-        $userCount = \Illuminate\Support\Facades\Schema::hasTable('users') 
-            ? \App\Models\User::count() 
+        DB::connection()->getPdo();
+        $dbName = DB::connection()->getDatabaseName();
+        $userCount = Schema::hasTable('users')
+            ? User::count()
             : 0;
-        $tablesRaw = \Illuminate\Support\Facades\DB::select('SHOW TABLES');
-        $tables = array_map(fn($t) => array_values((array)$t)[0], $tablesRaw);
+        $tables = Schema::getTableListing();
 
         return response()->json([
             'status' => 'Conexão com o banco de dados OK!',
             'driver' => config('database.default'),
             'database' => $dbName,
-            'tabela_users' => \Illuminate\Support\Facades\Schema::hasTable('users') ? 'OK' : 'Não encontrada',
+            'tabela_users' => Schema::hasTable('users') ? 'OK' : 'Não encontrada',
             'usuarios_cadastrados' => $userCount,
             'total_tabelas' => count($tables),
             'tabelas' => $tables,
         ], 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-    } catch (\Throwable $e) {
+    } catch (Throwable $e) {
         return response()->json([
             'status' => 'Erro de conexão com o banco de dados',
             'erro' => $e->getMessage(),
