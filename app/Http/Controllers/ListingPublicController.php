@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Game;
 use App\Models\Category;
+use App\Models\Game;
 use App\Models\Listing;
 use App\Models\Report;
+use App\Services\StorefrontService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
 
 class ListingPublicController extends Controller
 {
-    public function home(\App\Services\StorefrontService $storefront): View
+    public function home(StorefrontService $storefront): View
     {
         return view('home', $storefront->home());
     }
@@ -20,14 +21,14 @@ class ListingPublicController extends Controller
     public function index(Request $request): View
     {
         $query = Listing::with(['game', 'category', 'seller', 'primaryImage'])
-            ->where('status', 'publicado');
+            ->available();
 
         if (in_array($request->query('tipo'), ['cosmetic', 'service'], true)) {
             $query->whereHas('category', fn ($category) => $category->where('type', $request->query('tipo')));
         }
 
         if ($request->filled('busca')) {
-            $query->where('title', 'like', '%' . $request->busca . '%');
+            $query->where('title', 'like', '%'.$request->busca.'%');
         }
 
         if ($request->filled('jogo')) {
@@ -50,7 +51,7 @@ class ListingPublicController extends Controller
         match ($request->get('ordem')) {
             'menor_preco' => $query->orderBy('price', 'asc'),
             'maior_preco' => $query->orderBy('price', 'desc'),
-            default       => $query->latest(),
+            default => $query->latest(),
         };
 
         $listings = $query->paginate(12)->withQueryString();
@@ -63,6 +64,7 @@ class ListingPublicController extends Controller
     public function show(string $slug): View
     {
         $listing = Listing::with(['game', 'category', 'seller.sellerProfile', 'images'])
+            ->available()
             ->where('slug', $slug)
             ->firstOrFail();
 
@@ -74,16 +76,16 @@ class ListingPublicController extends Controller
     public function report(Request $request, Listing $listing): RedirectResponse
     {
         $request->validate([
-            'reason'  => ['required', 'string', 'max:100'],
+            'reason' => ['required', 'string', 'max:100'],
             'details' => ['required', 'string', 'max:1000'],
         ]);
 
         Report::create([
             'reporter_id' => $request->user()->id,
-            'listing_id'  => $listing->id,
-            'reason'      => $request->reason,
-            'details'     => $request->details,
-            'status'      => 'aberta',
+            'listing_id' => $listing->id,
+            'reason' => $request->reason,
+            'details' => $request->details,
+            'status' => 'aberta',
         ]);
 
         return back()->with('success', 'Denúncia enviada com sucesso para análise da equipe de moderação.');

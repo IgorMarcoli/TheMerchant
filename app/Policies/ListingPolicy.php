@@ -12,7 +12,7 @@ class ListingPolicy
      */
     public function update(User $user, Listing $listing): bool
     {
-        return $user->id === $listing->seller_id || $user->isAdmin();
+        return $user->isAdmin() || ($user->isSeller() && $user->id === $listing->seller_id && $listing->status !== 'bloqueado');
     }
 
     /**
@@ -20,12 +20,17 @@ class ListingPolicy
      */
     public function delete(User $user, Listing $listing): bool
     {
-        return $user->id === $listing->seller_id || $user->isAdmin();
+        return $user->isAdmin() || ($user->isSeller() && $user->id === $listing->seller_id && $listing->status !== 'bloqueado');
     }
 
     /**
      * Somente usuários com permissão de vendedor podem criar anúncios.
      */
+    public function viewAny(User $user): bool
+    {
+        return $user->status === 'active' && ($user->sellerProfile()->exists() || $user->isAdmin());
+    }
+
     public function create(User $user): bool
     {
         return $user->isSeller();

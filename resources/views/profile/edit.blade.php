@@ -4,6 +4,7 @@
 
 @section('content')
 <div class="max-w-5xl mx-auto space-y-8">
+    <a href="{{ route('seller.application') }}" class="text-brand-400 font-semibold">Gerenciar meu perfil de vendedor</a>
     <!-- Header da Página -->
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-slate-800/80 pb-6">
         <div>
@@ -14,8 +15,8 @@
         </div>
 
         <div class="flex items-center gap-2">
-            <span class="text-xs uppercase tracking-wider font-bold px-3 py-1.5 rounded-xl border {{ $user->role === 'admin' ? 'bg-rose-950/60 border-rose-500/40 text-rose-300' : ($user->role === 'seller' ? 'bg-amber-950/60 border-amber-500/40 text-amber-300' : 'bg-brand-950/60 border-brand-500/40 text-brand-300') }}">
-                {{ $user->role === 'admin' ? '🛡️ Administrador' : ($user->role === 'seller' ? '💼 Vendedor' : '🛒 Comprador') }}
+            <span class="text-xs uppercase tracking-wider font-bold px-3 py-1.5 rounded-xl border {{ $user->isAdmin() ? 'bg-rose-950/60 border-rose-500/40 text-rose-300' : ($user->isSeller() ? 'bg-amber-950/60 border-amber-500/40 text-amber-300' : 'bg-brand-950/60 border-brand-500/40 text-brand-300') }}">
+                {{ $user->isAdmin() ? '🛡️ Administrador' : ($user->isSeller() ? '💼 Comprador e vendedor' : '🛒 Comprador') }}
             </span>
             <span class="text-xs px-3 py-1.5 rounded-xl bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 font-semibold">
                 ● Conta Ativa
@@ -49,7 +50,7 @@
                     </span>
                 </div>
 
-                @if ($user->isSeller() && $user->sellerProfile)
+                @if ($user->sellerProfile)
                     <div class="pt-6 space-y-4">
                         <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Desempenho Comercial</h3>
                         <div class="grid grid-cols-2 gap-3">
@@ -124,7 +125,7 @@
                         </div>
                     </div>
 
-                    @if ($user->isSeller())
+                    @if ($user->sellerProfile)
                         <div>
                             <label class="block text-xs font-semibold text-slate-300 mb-1">Biografia do Vendedor (Aparece em seus anúncios)</label>
                             <textarea name="bio" rows="3" maxlength="500"

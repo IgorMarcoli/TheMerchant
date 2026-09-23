@@ -11,10 +11,10 @@ class StorefrontService
     {
         return [
             'games' => Game::where('active', true)
-                ->withCount(['listings' => fn ($query) => $query->where('status', 'publicado')])
+                ->withCount(['listings' => fn ($query) => $query->available()])
                 ->orderByDesc('listings_count')->orderBy('name')->limit(6)->get(),
             'listings' => Listing::with(['game', 'category', 'primaryImage'])
-                ->where('status', 'publicado')->latest()->orderByDesc('id')->limit(4)->get(),
+                ->available()->latest()->orderByDesc('id')->limit(4)->get(),
         ];
     }
 }

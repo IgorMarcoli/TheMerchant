@@ -9,6 +9,9 @@
         <div class="tm-account">
             <a class="tm-cart" href="{{ route('cart.index') }}" aria-label="Meu carrinho"><x-icon name="cart" /></a>
             @auth
+                @can('viewAny', \App\Models\User::class)
+                    <a href="{{ route('admin.usuarios.index') }}" class="tm-login">Administração</a>
+                @endcan
                 <a href="{{ route('profile.edit') }}" class="tm-login"><x-icon name="user" /><span>Minha conta</span></a>
                 <form method="POST" action="{{ route('logout') }}">@csrf<button class="tm-button tm-button-small" type="submit">Sair</button></form>
             @else
@@ -23,7 +26,7 @@
             <a href="{{ route('listings.index', ['tipo' => 'service']) }}">Coaching <span class="tm-mini-label">LEVEL UP</span></a>
             <a href="#como-funciona">Como funciona</a>
         </div>
-        <a class="tm-sell-link" href="{{ route('seller.anuncios.create') }}"><x-icon name="store" />Quero vender <x-icon /></a>
+        <a class="tm-sell-link" href="{{ route('seller.application') }}"><x-icon name="store" />Quero vender <x-icon /></a>
         <a class="tm-mobile-cart" href="{{ route('cart.index') }}"><x-icon name="cart" />Meu carrinho</a>
     </div></nav>
 </header>

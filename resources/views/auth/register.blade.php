@@ -28,13 +28,7 @@
                 <input type="email" name="email" value="{{ old('email') }}" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500">
             </div>
 
-            <div>
-                <label class="block text-xs font-semibold text-slate-300 mb-1">Perfil Principal</label>
-                <select name="role" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500">
-                    <option value="buyer">Quero Comprar Itens e Serviços (Comprador)</option>
-                    <option value="seller">Quero Vender Cosméticos e Serviços (Vendedor)</option>
-                </select>
-            </div>
+            <p class="text-xs text-slate-400">Uma conta para comprar e vender. Depois do cadastro, solicite a aprovação do seu perfil de vendedor.</p>
 
             <div>
                 <label class="block text-xs font-semibold text-slate-300 mb-1">Senha (Mínimo 8 caracteres)</label>

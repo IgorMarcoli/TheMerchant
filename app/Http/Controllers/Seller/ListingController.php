@@ -4,21 +4,21 @@ namespace App\Http\Controllers\Seller;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ListingStoreRequest;
-use App\Models\Game;
 use App\Models\Category;
+use App\Models\Game;
 use App\Models\Listing;
 use App\Models\ListingImage;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 
 class ListingController extends Controller
 {
     public function index(Request $request): View
     {
+        $this->authorize('viewAny', Listing::class);
         $listings = Listing::with(['game', 'category', 'primaryImage'])
             ->where('seller_id', $request->user()->id)
             ->latest()
@@ -29,6 +29,7 @@ class ListingController extends Controller
 
     public function create(): View
     {
+        $this->authorize('create', Listing::class);
         $games = Game::where('active', true)->get();
         $categories = Category::all();
 
@@ -40,17 +41,17 @@ class ListingController extends Controller
         $data = $request->validated();
 
         DB::transaction(function () use ($data, $request) {
-            $slug = Str::slug($data['title']) . '-' . Str::lower(Str::random(6));
+            $slug = Str::slug($data['title']).'-'.Str::lower(Str::random(6));
 
             $listing = Listing::create([
-                'seller_id'   => $request->user()->id,
-                'game_id'     => $data['game_id'],
+                'seller_id' => $request->user()->id,
+                'game_id' => $data['game_id'],
                 'category_id' => $data['category_id'],
-                'title'       => $data['title'],
-                'slug'        => $slug,
+                'title' => $data['title'],
+                'slug' => $slug,
                 'description' => $data['description'],
-                'price'       => $data['price'],
-                'status'      => $data['status'] ?? 'publicado',
+                'price' => $data['price'],
+                'status' => $data['status'] ?? 'publicado',
             ]);
 
             // Upload de imagens
@@ -59,9 +60,9 @@ class ListingController extends Controller
                     $path = $file->store("listings/{$listing->id}", 'public');
 
                     ListingImage::create([
-                        'listing_id'    => $listing->id,
-                        'image_path'    => $path,
-                        'is_primary'    => $index === 0,
+                        'listing_id' => $listing->id,
+                        'image_path' => $path,
+                        'is_primary' => $index === 0,
                         'display_order' => $index,
                     ]);
                 }
@@ -73,7 +74,7 @@ class ListingController extends Controller
 
     public function edit(Listing $anuncio): View
     {
-        abort_unless(auth()->id() === $anuncio->seller_id || auth()->user()->isAdmin(), 403);
+        $this->authorize('update', $anuncio);
 
         $games = Game::where('active', true)->get();
         $categories = Category::all();
@@ -83,15 +84,15 @@ class ListingController extends Controller
 
     public function update(Request $request, Listing $anuncio): RedirectResponse
     {
-        abort_unless(auth()->id() === $anuncio->seller_id || auth()->user()->isAdmin(), 403);
+        $this->authorize('update', $anuncio);
 
         $validated = $request->validate([
-            'game_id'     => ['required', 'exists:games,id'],
+            'game_id' => ['required', 'exists:games,id'],
             'category_id' => ['required', 'exists:categories,id'],
-            'title'       => ['required', 'string', 'min:5', 'max:150'],
+            'title' => ['required', 'string', 'min:5', 'max:150'],
             'description' => ['required', 'string', 'min:20', 'max:5000'],
-            'price'       => ['required', 'numeric', 'min:1.00'],
-            'status'      => ['required', 'in:rascunho,publicado,pausado'],
+            'price' => ['required', 'numeric', 'min:1.00'],
+            'status' => ['required', 'in:rascunho,publicado,pausado'],
         ]);
 
         $anuncio->update($validated);
@@ -101,7 +102,8 @@ class ListingController extends Controller
 
     public function toggleStatus(Listing $listing): RedirectResponse
     {
-        abort_unless(auth()->id() === $listing->seller_id || auth()->user()->isAdmin(), 403);
+        $this->authorize('update', $listing);
+        abort_unless(in_array($listing->status, ['publicado', 'pausado'], true), 422);
 
         $newStatus = $listing->status === 'publicado' ? 'pausado' : 'publicado';
         $listing->update(['status' => $newStatus]);
@@ -111,7 +113,7 @@ class ListingController extends Controller
 
     public function destroy(Listing $anuncio): RedirectResponse
     {
-        abort_unless(auth()->id() === $anuncio->seller_id || auth()->user()->isAdmin(), 403);
+        $this->authorize('delete', $anuncio);
 
         $anuncio->delete();
 

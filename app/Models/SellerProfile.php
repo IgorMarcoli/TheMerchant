@@ -9,6 +9,7 @@ class SellerProfile extends Model
 {
     protected $fillable = [
         'user_id',
+        'status',
         'bio',
         'reputation_score',
         'total_reviews',
