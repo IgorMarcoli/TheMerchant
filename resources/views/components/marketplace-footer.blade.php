@@ -42,7 +42,7 @@
             <nav aria-label="Área do vendedor">
                 <h3>Para vender</h3>
                 <ul>
-                    <li><a href="{{ route('seller.anuncios.create') }}">Criar um anúncio</a></li>
+                    <li><a href="{{ route('seller.application') }}">Criar um anúncio</a></li>
                     <li><a href="{{ route('seller.anuncios.index') }}">Meus anúncios</a></li>
                     <li><a href="{{ route('seller.sales.index') }}">Minhas vendas</a></li>
                     @guest

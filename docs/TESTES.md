@@ -6,7 +6,7 @@ Este guia separa verificações disponíveis hoje dos critérios das próximas e
 
 ## 1. Preparação
 
-- Use dados fictícios e sessões separadas para comprador/vendedor; uma terceira conta testa acesso indevido.
+- Use dados fictícios: uma conta deve comprar e vender, outra fornece anúncios e uma conta administrativa aprova solicitações. Teste também vendedor pendente e suspenso.
 - Registre branch e commit com `git branch --show-current` e `git rev-parse --short HEAD`.
 - Os testes de feature usam `RefreshDatabase`: nunca aponte para desenvolvimento compartilhado ou produção.
 - Registre cenários como **PASSOU**, **FALHOU**, **BLOQUEADO** ou **NÃO EXECUTADO**. Funcionalidade ausente não é sucesso presumido.
@@ -105,7 +105,7 @@ git diff --check
 | :--- | :--- | :--- |
 | Cadastro/sessão | Criar conta, entrar, sair e tentar acessar perfil | Validação e bloqueio após logout; RF01–RF02 |
 | Perfil/senha | Trocar dados; fornecer senha atual incorreta | Validação e credenciais coerentes |
-| Papéis | Comprador tenta ações de vendedor/admin | Negação sem alterar dados; RF04 |
+| Permissões | Conta sem perfil aprovado tenta vender; vendedor tenta administrar | Negação sem alterar dados; administrador sem perfil também não publica; RF04 |
 | Recuperação/verificação | Recuperar acesso sem login; expirar/reutilizar link | Fluxo seguro; RF03/#27, ainda pendente |
 | Diagnósticos | Revisar autorização com dados fictícios | Sem acesso público a dados internos; #28 |
 

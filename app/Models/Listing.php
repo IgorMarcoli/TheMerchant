@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -55,8 +56,15 @@ class Listing extends Model
         return $this->hasMany(Report::class);
     }
 
+    public function scopeAvailable(Builder $query): Builder
+    {
+        return $query->where('status', 'publicado')
+            ->whereHas('seller', fn ($seller) => $seller->where('status', 'active')
+                ->whereHas('sellerProfile', fn ($profile) => $profile->where('status', 'approved')));
+    }
+
     public function isAvailable(): bool
     {
-        return $this->status === 'publicado';
+        return $this->status === 'publicado' && ($this->seller?->isSeller() ?? false);
     }
 }

@@ -3,10 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -16,7 +16,6 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role', // 'buyer', 'seller', 'admin'
         'status', // 'active', 'suspended'
     ];
 
@@ -30,6 +29,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_admin' => 'boolean',
         ];
     }
 
@@ -70,11 +70,12 @@ class User extends Authenticatable
 
     public function isSeller(): bool
     {
-        return in_array($this->role, ['seller', 'admin']);
+        return $this->status === 'active'
+            && $this->sellerProfile()->where('status', 'approved')->exists();
     }
 
     public function isAdmin(): bool
     {
-        return $this->role === 'admin';
+        return $this->status === 'active' && $this->is_admin;
     }
 }

@@ -22,7 +22,7 @@ class UserFactory extends Factory
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'password' => static::$password ??= Hash::make('password'),
-            'role' => 'buyer',
+            'is_admin' => false,
             'status' => 'active',
             'remember_token' => Str::random(10),
         ];
@@ -30,15 +30,15 @@ class UserFactory extends Factory
 
     public function seller(): static
     {
-        return $this->state(fn (array $attributes) => [
-            'role' => 'seller',
-        ]);
+        return $this->afterCreating(function (User $user): void {
+            $user->sellerProfile()->create(['status' => 'approved']);
+        });
     }
 
     public function admin(): static
     {
         return $this->state(fn (array $attributes) => [
-            'role' => 'admin',
+            'is_admin' => true,
         ]);
     }
 }

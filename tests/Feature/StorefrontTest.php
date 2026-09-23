@@ -49,8 +49,9 @@ class StorefrontTest extends TestCase
     {
         $slug = Str::slug($title);
         $seller = User::firstOrCreate(['email' => 'storefront@example.test'], [
-            'name' => 'Vendedor de teste', 'password' => 'test-password', 'role' => 'seller', 'status' => 'active',
+            'name' => 'Vendedor de teste', 'password' => 'test-password', 'status' => 'active',
         ]);
+        $seller->sellerProfile()->firstOrCreate([], ['status' => 'approved']);
         $game = Game::firstOrCreate(['slug' => 'test-game'], ['name' => 'Jogo de teste', 'active' => true]);
         $category = Category::firstOrCreate(['slug' => $type], [
             'game_id' => $game->id, 'name' => $type, 'type' => $type,
