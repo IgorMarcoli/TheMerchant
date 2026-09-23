@@ -19,3 +19,6 @@ yarn-error.log
 Thumbs.db
 *.sqlite
 *.sqlite-journal
+
+# Documentos locais de IA
+AI_ROLES.md

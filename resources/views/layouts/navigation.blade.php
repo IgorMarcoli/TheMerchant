@@ -4,8 +4,8 @@
             <!-- Logo & Brand -->
             <div class="flex items-center gap-8">
                 <a href="{{ route('home') }}" class="flex items-center gap-2 text-xl font-black tracking-tight text-white group">
-                    <span class="p-2 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/25 group-hover:scale-105 transition">🎮</span>
-                    <span>The<span class="text-indigo-400">Merchant</span></span>
+                    <span class="p-2 rounded-xl bg-gradient-to-br from-brand-500 to-brand-600 text-slate-950 shadow-lg shadow-brand-500/10 group-hover:scale-105 transition">🎮</span>
+                    <span>The<span class="text-brand-400">Merchant</span></span>
                 </a>
                 <div class="hidden md:flex items-center gap-4 text-sm font-medium text-slate-300">
                     <a href="{{ route('listings.index') }}" class="hover:text-white transition px-3 py-2 rounded-lg hover:bg-slate-800">Explorar Catálogo</a>
@@ -56,7 +56,7 @@
                     <a href="{{ route('login') }}" class="text-sm font-medium text-slate-300 hover:text-white transition px-3 py-2">
                         Entrar
                     </a>
-                    <a href="{{ route('register') }}" class="text-sm font-semibold bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl shadow-lg shadow-indigo-600/30 transition">
+                    <a href="{{ route('register') }}" class="text-sm font-semibold bg-brand-600 hover:bg-brand-500 text-slate-950 px-4 py-2 rounded-xl shadow-lg shadow-brand-600/10 transition">
                         Criar Conta
                     </a>
                 @endauth

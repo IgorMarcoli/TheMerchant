@@ -10,7 +10,9 @@
     <p class="text-xs text-slate-400">Visão geral do sistema e métricas de moderação.</p>
 </div>
 
-<!-- Métricas (RF15) -->
+<a href="{{ route('admin.usuarios.index', ['access' => 'pending']) }}" class="tm-button mb-6">Aprovar vendedores e gerenciar contas</a>
+
+<!-- Métricas (RF17, RF18) -->
 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
     <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800">
         <span class="text-xs text-slate-400 uppercase tracking-wider block">Usuários Cadastrados</span>
@@ -18,7 +20,7 @@
     </div>
     <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800">
         <span class="text-xs text-slate-400 uppercase tracking-wider block">Anúncios Ativos</span>
-        <span class="text-2xl font-black text-indigo-400 mt-1 block">{{ $metrics['active_listings'] }}</span>
+        <span class="text-2xl font-black text-brand-400 mt-1 block">{{ $metrics['active_listings'] }}</span>
     </div>
     <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800">
         <span class="text-xs text-slate-400 uppercase tracking-wider block">Total de Pedidos</span>
@@ -34,7 +36,7 @@
 <div class="rounded-3xl bg-slate-900 border border-slate-800 p-6">
     <div class="flex items-center justify-between mb-4">
         <h2 class="text-base font-bold text-white">Denúncias Pendentes de Análise</h2>
-        <a href="{{ route('admin.reports.index') }}" class="text-xs text-indigo-400 hover:text-indigo-300 font-semibold">Ver todas &rarr;</a>
+        <a href="{{ route('admin.reports.index') }}" class="text-xs text-brand-400 hover:text-brand-300 font-semibold">Ver todas &rarr;</a>
     </div>
 
     <div class="divide-y divide-slate-800">

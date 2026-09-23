@@ -9,7 +9,7 @@
     </div>
     <h1 class="text-3xl font-black text-white mb-2">Pedido Registrado com Sucesso!</h1>
     <p class="text-sm text-slate-400 mb-6">
-        Número do Pedido: <span class="font-mono text-indigo-400 font-bold">{{ $order->order_number }}</span>
+        Número do Pedido: <span class="font-mono text-brand-400 font-bold">{{ $order->order_number }}</span>
     </p>
 
     <div class="rounded-2xl bg-slate-900 border border-slate-800 p-6 text-left mb-8 text-xs text-slate-300 space-y-2">
@@ -24,7 +24,7 @@
     </div>
 
     <div class="flex justify-center gap-4">
-        <a href="{{ route('orders.show', $order) }}" class="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg shadow-indigo-600/30 transition">
+        <a href="{{ route('orders.show', $order) }}" class="px-6 py-3 rounded-xl bg-brand-600 hover:bg-brand-500 text-slate-950 font-bold text-xs shadow-lg shadow-brand-600/10 transition">
             Acompanhar Pedido
         </a>
         <a href="{{ route('listings.index') }}" class="px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs transition">

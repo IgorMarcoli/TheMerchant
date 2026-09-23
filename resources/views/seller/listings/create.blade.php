@@ -66,11 +66,11 @@
 
             <div>
                 <label class="block text-xs font-semibold text-slate-300 mb-1">Imagens do Produto (Mínimo 1, Máximo 6)</label>
-                <input type="file" name="images[]" multiple required accept="image/*" class="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 cursor-pointer">
+                <input type="file" name="images[]" multiple required accept="image/*" class="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-600 file:text-slate-950 hover:file:bg-brand-500 cursor-pointer">
             </div>
 
             <div class="pt-4">
-                <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl shadow-lg shadow-indigo-600/30 text-xs transition">
+                <button type="submit" class="w-full py-3 bg-brand-600 hover:bg-brand-500 text-slate-950 font-bold rounded-xl shadow-lg shadow-brand-600/10 text-xs transition">
                     Publicar Anúncio Agora
                 </button>
             </div>

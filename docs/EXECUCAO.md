@@ -116,7 +116,9 @@ O seeder usa `create()` e e-mails/slugs fixos; rodá-lo novamente pode gerar err
 
 Essas credenciais são exclusivas de demonstração. A reputação e os contadores do vendedor também são dados fictícios, não avaliações produzidas por compras reais.
 
-Os caminhos de imagens no seeder são referências; o seeder não baixa os arquivos. Para mostrar imagens, disponibilize arquivos de demonstração em `storage/app/public/sample/` (`karambit.jpg`, `ak47.jpg`, `coaching.jpg`) e `storage/app/public/games/` (`cs2.jpg`, `valorant.jpg`, `lol.jpg`, `dota2.jpg`). A ligação `public/storage` precisa existir.
+O seeder mantém jogos, categorias e contas de demonstração, mas não cria anúncios nem imagens de produtos. O catálogo inicia vazio para que os itens sejam cadastrados manualmente, inclusive após a migração para outro banco.
+
+As capas de jogos referenciadas no seeder podem ser disponibilizadas em `storage/app/public/games/` (`cs2.jpg`, `valorant.jpg`, `lol.jpg`, `dota2.jpg`). A ligação `public/storage` precisa existir para imagens enviadas pelo cadastro de anúncios.
 
 Para reconstruir **somente um banco local descartável**, confira primeiro `DB_DATABASE`. O comando abaixo apaga todas as tabelas desse banco:
 

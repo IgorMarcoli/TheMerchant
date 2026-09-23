@@ -100,6 +100,9 @@ Desenvolver uma plataforma web de marketplace que permita anunciar, pesquisar, c
 
 ## 👤 Perfis de Usuário
 
+Uma pessoa usa a mesma conta para comprar e vender. `seller_profiles.status` controla a habilitação de vendas (`pending`, `approved`, `suspended`); `users.is_admin` concede administração separadamente. Administradores também precisam de perfil aprovado para criar seus próprios anúncios. Veja [o fluxo e a atualização do banco](docs/CONTAS_E_VENDEDORES.md).
+
+
 | Perfil | Responsabilidades Principais |
 | :--- | :--- |
 | **Comprador** | Pesquisa produtos e serviços, gerencia o carrinho, finaliza compras, acompanha pedidos, avalia vendedores e pode denunciar anúncios. |
@@ -116,10 +119,10 @@ Desenvolver uma plataforma web de marketplace que permita anunciar, pesquisar, c
 
 | ID | Prioridade | Descrição |
 | :--- | :---: | :--- |
-| **RF01** | Alta | O sistema deve permitir que um visitante cadastre uma conta informando, no mínimo, nome, e-mail e senha, escolhendo o perfil de comprador ou vendedor quando aplicável. |
+| **RF01** | Alta | O sistema deve permitir que um visitante cadastre uma conta informando, no mínimo, nome, e-mail e senha, com uma conta única apta a comprar e solicitar aprovação para vender. |
 | **RF02** | Alta | O sistema deve permitir autenticação, logout e controle de sessão de usuários cadastrados. |
 | **RF03** | Alta | O sistema deve permitir verificação de e-mail e recuperação de acesso por meio de fluxo seguro. |
-| **RF04** | Alta | O sistema deve aplicar permissões conforme o perfil do usuário: comprador, vendedor ou administrador. |
+| **RF04** | Alta | Toda conta ativa pode comprar; vender exige perfil aprovado; administração depende de `users.is_admin`. |
 | **RF05** | Alta | O vendedor deve poder cadastrar, editar, pausar e remover seus próprios anúncios. |
 | **RF06** | Alta | Cada anúncio deve permitir informar jogo, categoria, título, descrição, preço, imagens e status. |
 | **RF07** | Alta | O usuário deve poder pesquisar, filtrar e ordenar anúncios por jogo, categoria, faixa de preço e reputação do vendedor. |
@@ -258,7 +261,7 @@ flowchart TD
 
 ### Visão dos casos de uso
 
-A visualização Mermaid resume os casos de uso; o diagrama UML formal é mantido no documento acadêmico. O ator **Usuário** é uma abstração de modelagem — não um novo perfil do sistema — e é especializado pelos atores **Comprador**, **Vendedor** e **Administrador** via herança/generalização. O **Visitante** representa quem ainda não possui conta, enquanto o **Gateway de Pagamento** atua como ator externo.
+A visualização Mermaid resume os casos de uso; o diagrama UML formal é mantido no documento acadêmico. O ator **Usuário** é uma abstração de modelagem — não uma conta separada para cada atividade — e é especializado pelos atores **Comprador**, **Vendedor** e **Administrador** via herança/generalização; os atores representam capacidades que podem coexistir na mesma conta. O **Visitante** representa quem ainda não possui conta, enquanto o **Gateway de Pagamento** atua como ator externo.
 
 ```mermaid
 flowchart LR

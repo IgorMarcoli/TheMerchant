@@ -45,18 +45,19 @@ Armazena credenciais e dados de perfil de todos os usuários da plataforma.
 | `email` | `VARCHAR(150)` | Não | E-mail único para autenticação |
 | `email_verified_at` | `TIMESTAMP` | Sim | Data da confirmação de e-mail |
 | `password` | `VARCHAR(255)` | Não | Hash seguro da senha |
-| `role` | `ENUM('buyer', 'seller', 'admin')` | Não | Papel de acesso principal (default: `buyer`) |
+| `is_admin` | `BOOLEAN` | Não | Administração independente da habilitação de vendas (default: `false`) |
 | `status` | `ENUM('active', 'suspended')` | Não | Estado da conta (default: `active`) |
 | `remember_token` | `VARCHAR(100)` | Sim | Token para recurso "Lembrar-me" |
 | `created_at` / `updated_at` | `TIMESTAMP` | Sim | Timestamps do Eloquent |
 
 ### 2.2 Tabela `seller_profiles`
-Metadados específicos para usuários que operam como vendedores.
+Metadados de venda da mesma conta usada para comprar. Solicitações começam em `pending`; apenas um administrador pode aprovar ou suspender vendas. A suspensão comercial não suspende compras nem a entrega de pedidos existentes.
 
 | Campo | Tipo | Nulo | Descrição |
 | :--- | :--- | :---: | :--- |
 | `id` | `BIGINT UNSIGNED AUTO_INCREMENT` | Não | Chave primária |
 | `user_id` | `BIGINT UNSIGNED` | Não | FK para `users.id` (Unique, 1:1) |
+| `status` | `ENUM('pending', 'approved', 'suspended')` | Não | Aprovação de vendas, default `pending` |
 | `bio` | `TEXT` | Sim | Descrição comercial e apresentação |
 | `reputation_score` | `DECIMAL(3,2)` | Não | Média agregada de avaliações (0.00 a 5.00) |
 | `total_reviews` | `INT UNSIGNED` | Não | Total de avaliações recebidas (default: 0) |

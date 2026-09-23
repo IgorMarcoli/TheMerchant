@@ -6,6 +6,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name', 'TheMerchant') }} - @yield('title', 'Marketplace de Cosméticos e Serviços')</title>
 
+    <link rel="stylesheet" href="{{ asset('css/theme.css') }}">
+
     <!-- Google Fonts & Tailwind CDN / Vite -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,21 +23,32 @@
                         sans: ['Plus Jakarta Sans', 'sans-serif'],
                     },
                     colors: {
-                        brand: {
-                            50: '#eef2ff',
-                            500: '#6366f1',
-                            600: '#4f46e5',
-                            700: '#4338ca',
-                        }
+                        // Shared CSS tokens keep Tailwind pages and the storefront in sync.
+                        brand: Object.fromEntries(
+                            [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950].map(
+                                shade => [shade, `rgb(var(--tm-brand-${shade}) / <alpha-value>)`]
+                            )
+                        ),
+                        slate: Object.fromEntries(
+                            [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950].map(
+                                shade => [shade, `rgb(var(--tm-neutral-${shade}) / <alpha-value>)`]
+                            )
+                        ),
                     }
                 }
             }
         }
     </script>
+    @stack('styles')
 </head>
-<body class="h-full flex flex-col antialiased selection:bg-brand-500 selection:text-white">
+<body class="min-h-screen flex flex-col antialiased selection:bg-brand-600 selection:text-slate-950 @yield('body-class')">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:bg-white focus:text-black focus:p-4">Pular para o conteúdo</a>
     <!-- Navbar -->
-    @include('layouts.navigation')
+    @hasSection('navigation')
+        @yield('navigation')
+    @else
+        @include('layouts.navigation')
+    @endif
 
     <!-- Flash Messages -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full mt-4">
@@ -57,22 +70,10 @@
     </div>
 
     <!-- Main Content -->
-    <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-8">
+    <main id="main-content" class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-8">
         @yield('content')
     </main>
 
-    <!-- Footer -->
-    <footer class="border-t border-slate-800/80 bg-slate-900/50 py-8 mt-12 text-center text-xs text-slate-400">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div>
-                <span class="font-bold text-white tracking-wider">TheMerchant</span> &copy; {{ date('Y') }} — FATEC PG (LES III)
-            </div>
-            <div class="flex gap-6">
-                <a href="{{ route('home') }}" class="hover:text-slate-200 transition">Início</a>
-                <a href="{{ route('listings.index') }}" class="hover:text-slate-200 transition">Catálogo</a>
-                <a href="https://github.com/IgorMarcoli/TheMerchant" target="_blank" class="hover:text-slate-200 transition">GitHub</a>
-            </div>
-        </div>
-    </footer>
+    <x-marketplace-footer />
 </body>
 </html>

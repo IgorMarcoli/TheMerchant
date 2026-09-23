@@ -1,145 +1,49 @@
 @extends('layouts.app')
-
-@section('title', 'Hello World - TheMerchant')
-
+@section('title', 'Seu próximo nível começa aqui')
+@section('body-class', 'tm-home')
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/storefront.css') }}">
+    <meta name="description" content="Explore skins, cosméticos e coaching para seus jogos favoritos. Compre e venda no TheMerchant, o marketplace feito para quem joga.">
+@endpush
+@section('navigation')
+    <x-storefront-header />
+@endsection
 @section('content')
-<div class="max-w-4xl mx-auto space-y-8 py-4">
-
-    <!-- Hero / Hello World -->
-    <div class="text-center space-y-4">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-            <span>🎓</span> Laboratório de Engenharia de Software III (2026) — FATEC PG
-        </div>
-
-        <h1 class="text-4xl sm:text-6xl font-black tracking-tight text-white">
-            Hello World! <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">TheMerchant</span> 🎮
-        </h1>
-
-        <p class="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
-            Projeto criado, versionado no GitHub e com o banco de dados configurado com sucesso. Abaixo você confere o teste em tempo real do banco de dados e os atalhos para as rotinas de controle de acesso.
-        </p>
-    </div>
-
-    <!-- Painel de Teste do Banco de Dados -->
-    <div class="rounded-3xl bg-slate-900 border border-slate-800 p-8 shadow-2xl relative overflow-hidden">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-slate-800">
-            <div>
-                <h2 class="text-xl font-bold text-white flex items-center gap-2">
-                    <span>🗄️</span> Teste de Conexão com o Banco de Dados
-                </h2>
-                <p class="text-xs text-slate-400 mt-0.5">Diagnóstico em tempo real da conexão com o MySQL / phpMyAdmin.</p>
-            </div>
-
-            <div>
-                @if ($dbStatus['connected'])
-                    <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-xs font-bold">
-                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Conectado com Sucesso
-                    </span>
-                @else
-                    <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-rose-950/80 border border-rose-500/40 text-rose-300 text-xs font-bold">
-                        <span class="w-2 h-2 rounded-full bg-rose-500"></span> Falha na Conexão
-                    </span>
-                @endif
-            </div>
-        </div>
-
-        @if ($dbStatus['connected'])
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 my-6">
-                <!-- Driver & Host -->
-                <div class="p-4 rounded-2xl bg-slate-950/60 border border-slate-800">
-                    <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Driver & Host</span>
-                    <span class="text-sm font-bold text-white mt-1 block">
-                        {{ strtoupper($dbStatus['driver']) }} ({{ $dbStatus['host'] }}:{{ $dbStatus['port'] }})
-                    </span>
-                </div>
-
-                <!-- Database Name -->
-                <div class="p-4 rounded-2xl bg-slate-950/60 border border-slate-800">
-                    <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Banco de Dados</span>
-                    <span class="text-sm font-bold text-indigo-400 mt-1 block">
-                        {{ $dbStatus['database'] }}
-                    </span>
-                </div>
-
-                <!-- Users Table Status -->
-                <div class="p-4 rounded-2xl bg-slate-950/60 border border-slate-800">
-                    <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Tabela de Usuários</span>
-                    <span class="text-sm font-bold text-emerald-400 mt-1 flex items-center gap-1.5">
-                        @if ($dbStatus['hasUsersTable'])
-                            ✅ {{ $dbStatus['usersCount'] }} usuários no banco
-                        @else
-                            ⚠️ Tabela não encontrada
-                        @endif
-                    </span>
-                </div>
-            </div>
-
-            <!-- Tabelas Detectadas -->
-            <div class="p-4 rounded-2xl bg-slate-950/40 border border-slate-800/80 mb-6">
-                <span class="text-xs font-bold text-slate-300 block mb-2">
-                    📋 Tabelas Criadas no MySQL ({{ count($dbStatus['tables']) }} tabelas encontradas):
-                </span>
-                <div class="flex flex-wrap gap-2">
-                    @foreach ($dbStatus['tables'] as $tableName)
-                        <span class="text-[11px] px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 font-mono border border-slate-700/60">
-                            {{ $tableName }}
-                        </span>
-                    @endforeach
-                </div>
-            </div>
-        @else
-            <!-- Erro de Conexão -->
-            <div class="my-6 p-4 rounded-2xl bg-rose-950/50 border border-rose-500/40 text-rose-200 text-xs space-y-2">
-                <p class="font-bold">Não foi possível conectar ao banco de dados MySQL:</p>
-                <p class="font-mono text-[11px] bg-rose-950 p-2 rounded-lg">{{ $dbStatus['error'] }}</p>
-                <p class="text-slate-300">💡 <strong>Dica:</strong> Certifique-se de que o módulo MySQL no XAMPP está iniciado e que o banco de dados <code>{{ $dbStatus['database'] }}</code> foi criado.</p>
-            </div>
-        @endif
-
-        <!-- Botão de Re-teste -->
-        <div class="flex justify-end">
-            <a href="{{ route('home') }}" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-xl border border-slate-700 transition flex items-center gap-2">
-                <span>🔄</span> Testar Conexão Novamente
-            </a>
-        </div>
-    </div>
-
-    <!-- Rotinas de Controle de Acesso Solicitadas pelo Professor -->
-    <div class="rounded-3xl bg-slate-900 border border-slate-800 p-8 shadow-xl">
-        <h2 class="text-xl font-bold text-white flex items-center gap-2 mb-2">
-            <span>🔐</span> Rotinas de Controle de Acesso (Solicitação do Professor)
-        </h2>
-        <p class="text-xs text-slate-400 mb-6">Clique nos módulos abaixo para testar as telas e regras de negócio implementadas:</p>
-
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <!-- Login -->
-            <a href="{{ route('login') }}" class="p-5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-indigo-500/50 hover:bg-slate-950 transition flex flex-col items-center text-center group">
-                <span class="text-3xl mb-2 group-hover:scale-110 transition">🔑</span>
-                <h3 class="text-sm font-bold text-white group-hover:text-indigo-400 transition">Testar Login</h3>
-                <p class="text-[11px] text-slate-400 mt-1">Autenticação por sessão segura e Bcrypt.</p>
-            </a>
-
-            <!-- Cadastro -->
-            <a href="{{ route('register') }}" class="p-5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-indigo-500/50 hover:bg-slate-950 transition flex flex-col items-center text-center group">
-                <span class="text-3xl mb-2 group-hover:scale-110 transition">📝</span>
-                <h3 class="text-sm font-bold text-white group-hover:text-indigo-400 transition">Testar Cadastro</h3>
-                <p class="text-[11px] text-slate-400 mt-1">Criação de contas Comprador e Vendedor.</p>
-            </a>
-
-            <!-- Perfil & Troca de Senha -->
-            <a href="{{ route('profile.edit') }}" class="p-5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-indigo-500/50 hover:bg-slate-950 transition flex flex-col items-center text-center group">
-                <span class="text-3xl mb-2 group-hover:scale-110 transition">👤</span>
-                <h3 class="text-sm font-bold text-white group-hover:text-indigo-400 transition">Perfil & Troca de Senha</h3>
-                <p class="text-[11px] text-slate-400 mt-1">Edição de dados cadastrais e alteração de senha.</p>
-            </a>
-        </div>
-    </div>
-
-    <!-- Rodapé de Metadados Acadêmicos -->
-    <div class="text-center text-xs text-slate-500 space-y-1">
-        <p>Desenvolvido por <strong>Igor Marcoli Bastos</strong> e <strong>João Pedro Martins de Andrade</strong></p>
-        <p>Repositório Oficial: <a href="https://github.com/IgorMarcoli/TheMerchant" target="_blank" class="text-indigo-400 hover:underline">github.com/IgorMarcoli/TheMerchant</a></p>
-    </div>
-
+<div class="tm-welcome"><span><span class="tm-status-dot"></span> DE PLAYER PARA PLAYER</span><span>Seu universo gamer. Um só lugar.</span></div>
+<section class="tm-hero" aria-labelledby="hero-title">
+    <div class="tm-hero-copy"><span class="tm-eyebrow"><x-icon name="spark" /> SEU INVENTÁRIO MERECE UM UPGRADE</span><h1 id="hero-title">Seu próximo nível<br>começa <span>aqui.</span></h1><p>Skins que marcam presença. Coaching que muda o jogo.<br class="tm-desktop-break"> Encontre o que falta para jogar do seu jeito.</p><div class="tm-hero-actions"><a class="tm-button" href="{{ route('listings.index') }}">Explorar marketplace <x-icon /></a><a class="tm-quiet-link" href="#jogos">Encontre seu jogo <x-icon name="chevron" /></a></div><div class="tm-hero-note"><x-icon name="game" /><span>Para quem vive o game, dentro e fora da partida.</span></div></div>
+    <div class="tm-hero-visual" aria-hidden="true"><span class="tm-orbit tm-orbit-one"></span><span class="tm-orbit tm-orbit-two"></span><span class="tm-visual-coordinate">INVENTORY / 001</span><img src="{{ asset('images/marketplace/hero-blade.svg') }}" alt="" width="620" height="440" fetchpriority="high"><div class="tm-floating-label"><span class="tm-status-dot"></span> NOVAS POSSIBILIDADES. <strong>SEU ESTILO.</strong></div><span class="tm-visual-cross">+</span></div>
+</section>
+<div class="tm-benefits" aria-label="Explore o marketplace">
+    <div><x-icon name="spark" /><span><strong>Um inventário com personalidade</strong><small>Skins, avatares e temas para você</small></span></div><div><x-icon name="game" /><span><strong>Sua próxima evolução</strong><small>Aprenda com sessões de coaching</small></span></div><div><x-icon name="store" /><span><strong>Conecte-se à comunidade</strong><small>Compre e venda entre jogadores</small></span></div>
 </div>
+<section class="tm-section" id="jogos" aria-labelledby="games-title">
+    <div class="tm-section-heading"><div><span class="tm-kicker">ESCOLHA SEU UNIVERSO</span><h2 id="games-title">Qual é o seu jogo?</h2></div><a href="{{ route('listings.index') }}" class="tm-section-link">Explorar todos <x-icon /></a></div>
+    <div class="tm-game-grid">
+        @forelse ($games as $game)
+            <a href="{{ route('listings.index', ['jogo' => $game->id]) }}" class="tm-game-card tm-game-{{ $loop->index % 6 }}">
+                @if ($game->cover_image && \Illuminate\Support\Facades\Storage::disk('public')->exists($game->cover_image))
+                    <img src="{{ asset('storage/' . $game->cover_image) }}" alt="" loading="lazy" width="320" height="240">
+                @elseif (in_array($game->slug, ['cs2', 'dota-2']))
+                    <img src="{{ asset('images/marketplace/' . $game->slug . '.jpg') }}" alt="" loading="lazy" width="320" height="240">
+                @else
+                    <span class="tm-game-monogram" aria-hidden="true">{{ \Illuminate\Support\Str::upper(\Illuminate\Support\Str::substr($game->name, 0, 2)) }}</span>
+                @endif
+                <span class="tm-game-info"><strong>{{ $game->name }}</strong><small>{{ $game->listings_count }} {{ $game->listings_count === 1 ? 'anúncio disponível' : 'anúncios disponíveis' }}</small></span><span class="tm-game-arrow"><x-icon name="chevron" /></span>
+            </a>
+        @empty
+            <div class="tm-empty">Os jogos estão chegando. Enquanto isso, conheça o catálogo e prepare seu próximo anúncio.</div>
+        @endforelse
+    </div>
+</section>
+<section class="tm-section" aria-labelledby="listings-title">
+    <div class="tm-section-heading"><div><span class="tm-kicker">DESCUBRA SEU PRÓXIMO DROP</span><h2 id="listings-title">Acabaram de chegar <x-icon name="bolt" /></h2></div><a href="{{ route('listings.index') }}" class="tm-section-link">Ver todos os anúncios <x-icon /></a></div>
+    <div class="tm-filter-links" aria-label="Categorias de anúncios"><a class="tm-filter-active" href="{{ route('listings.index') }}">Todos os anúncios</a><a href="{{ route('listings.index', ['tipo' => 'cosmetic']) }}">Skins e cosméticos</a><a href="{{ route('listings.index', ['tipo' => 'service']) }}">Coaching</a></div>
+    <div class="tm-product-grid">@forelse ($listings as $listing)<x-storefront-listing :listing="$listing" />@empty<div class="tm-empty"><x-icon name="store" /><h3>O próximo drop pode ser seu.</h3><p>Ainda não há anúncios publicados. Seja um dos primeiros a fazer parte.</p><a class="tm-button" href="{{ route('seller.application') }}">Criar meu anúncio <x-icon /></a></div>@endforelse</div>
+</section>
+<section class="tm-promo-grid" aria-label="Mais possibilidades">
+    <a class="tm-promo tm-promo-coaching" href="{{ route('listings.index', ['tipo' => 'service']) }}"><div><span class="tm-kicker">MENOS GG EZ. MAIS EVOLUÇÃO.</span><h2>Seu melhor jogo<br>ainda está por vir.</h2><p>Encontre um coach e dê o próximo passo.</p><span class="tm-promo-link">Explorar coaching <x-icon /></span></div><x-icon name="game" class="tm-promo-icon" /></a>
+    <a class="tm-promo tm-promo-seller" href="{{ route('seller.application') }}"><div><span class="tm-kicker">SEU INVENTÁRIO TEM POTENCIAL</span><h2>Transforme seus itens<br>em novas conquistas.</h2><p>Abra espaço para o próximo upgrade.</p><span class="tm-promo-link">Começar a vender <x-icon /></span></div><x-icon name="store" class="tm-promo-icon" /></a>
+</section>
+<section class="tm-how tm-section" id="como-funciona" aria-labelledby="how-title"><div class="tm-section-heading"><div><span class="tm-kicker">FÁCIL COMO DAR PLAY</span><h2 id="how-title">Do drop ao próximo GG.</h2></div><span class="tm-how-caption">Encontre. Escolha. Acompanhe.</span></div><div class="tm-steps"><div><span>01</span><h3>Encontre seu upgrade</h3><p>Explore os jogos e filtre os anúncios pelo que você procura.</p></div><div><span>02</span><h3>Confira cada detalhe</h3><p>Veja a descrição do item ou serviço antes de adicionar ao carrinho.</p></div><div><span>03</span><h3>Acompanhe seu pedido</h3><p>Acesse sua conta para consultar a compra e o status da entrega.</p></div></div></section>
 @endsection

@@ -20,39 +20,33 @@
             @csrf
             <div>
                 <label class="block text-xs font-semibold text-slate-300 mb-1">Nome Completo</label>
-                <input type="text" name="name" value="{{ old('name') }}" required autofocus class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+                <input type="text" name="name" value="{{ old('name') }}" required autofocus class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500">
             </div>
 
             <div>
                 <label class="block text-xs font-semibold text-slate-300 mb-1">E-mail</label>
-                <input type="email" name="email" value="{{ old('email') }}" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+                <input type="email" name="email" value="{{ old('email') }}" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500">
             </div>
 
-            <div>
-                <label class="block text-xs font-semibold text-slate-300 mb-1">Perfil Principal</label>
-                <select name="role" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
-                    <option value="buyer">Quero Comprar Itens e Serviços (Comprador)</option>
-                    <option value="seller">Quero Vender Cosméticos e Serviços (Vendedor)</option>
-                </select>
-            </div>
+            <p class="text-xs text-slate-400">Uma conta para comprar e vender. Depois do cadastro, solicite a aprovação do seu perfil de vendedor.</p>
 
             <div>
                 <label class="block text-xs font-semibold text-slate-300 mb-1">Senha (Mínimo 8 caracteres)</label>
-                <input type="password" name="password" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+                <input type="password" name="password" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500">
             </div>
 
             <div>
                 <label class="block text-xs font-semibold text-slate-300 mb-1">Confirmar Senha</label>
-                <input type="password" name="password_confirmation" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+                <input type="password" name="password_confirmation" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500">
             </div>
 
-            <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-xs shadow-lg shadow-indigo-600/30 transition">
+            <button type="submit" class="w-full py-3 bg-brand-600 hover:bg-brand-500 text-slate-950 font-bold rounded-xl text-xs shadow-lg shadow-brand-600/10 transition">
                 Finalizar Cadastro
             </button>
         </form>
 
         <p class="text-center text-xs text-slate-400 mt-6">
-            Já possui uma conta? <a href="{{ route('login') }}" class="text-indigo-400 font-bold hover:underline">Fazer login</a>
+            Já possui uma conta? <a href="{{ route('login') }}" class="text-brand-400 font-bold hover:underline">Fazer login</a>
         </p>
     </div>
 </div>

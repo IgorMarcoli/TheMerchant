@@ -37,7 +37,7 @@
                 <div class="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
                         <h3 class="font-bold text-sm text-white">{{ $sale->listing->title }}</h3>
-                        <span class="text-xs text-indigo-400 font-extrabold mt-1 block">
+                        <span class="text-xs text-brand-400 font-extrabold mt-1 block">
                             R$ {{ number_format($sale->unit_price, 2, ',', '.') }}
                         </span>
                     </div>

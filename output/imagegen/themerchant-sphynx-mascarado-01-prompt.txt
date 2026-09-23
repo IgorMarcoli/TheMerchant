@@ -1,0 +1,3 @@
+Tool: built-in image_gen
+
+Edit the provided sphynx cat merchant mascot image with ONE localized change only: raise the existing purple scarf mask to completely cover the cat's nose, entire muzzle, mouth and chin, with the top edge sitting immediately below the eyes across the bridge of the nose. No visible nose or muzzle. Fabric wraps naturally over the hidden feline muzzle with matching purple folds and cel shading, giving a mysterious merchant feel. Preserve exactly the eyes and their expression, forehead wrinkles, huge ears, hood, pose, proportions, paws, backpack, clothing, displayed gems, tail, outlines, colors and framing. Keep the full character and original transparent background with genuine alpha. Do not redesign or add anything. No text or watermark.

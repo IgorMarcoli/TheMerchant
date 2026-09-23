@@ -1,50 +1,52 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ListingPublicController;
-use App\Http\Controllers\Buyer\CartController;
-use App\Http\Controllers\Buyer\CheckoutController;
-use App\Http\Controllers\Buyer\OrderController;
-use App\Http\Controllers\Buyer\ReviewController;
-use App\Http\Controllers\Seller\ListingController as SellerListingController;
-use App\Http\Controllers\Seller\SaleController as SellerSaleController;
-use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\ReportController as AdminReportController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ProfileController;
+use App\Http\Controllers\Buyer\CartController;
+use App\Http\Controllers\Buyer\CheckoutController;
+use App\Http\Controllers\Buyer\OrderController;
+use App\Http\Controllers\Buyer\ReviewController;
+use App\Http\Controllers\ListingPublicController;
+use App\Http\Controllers\Seller\ApplicationController;
+use App\Http\Controllers\Seller\ListingController as SellerListingController;
+use App\Http\Controllers\Seller\SaleController as SellerSaleController;
 use App\Http\Controllers\TableDataController;
+use App\Http\Middleware\EnsureAccountIsActive;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Schema;
 
 /*
 |--------------------------------------------------------------------------
 | Rotas Públicas (Hello World e Teste de BD)
 |--------------------------------------------------------------------------
 */
-Route::get('/', function () {
-    return 'Hello World';
-})->name('home');
+Route::get('/', [ListingPublicController::class, 'home'])->name('home');
 
 Route::get('/test-db', function () {
     try {
-        \Illuminate\Support\Facades\DB::connection()->getPdo();
-        $dbName = \Illuminate\Support\Facades\DB::connection()->getDatabaseName();
-        $userCount = \Illuminate\Support\Facades\Schema::hasTable('users') 
-            ? \App\Models\User::count() 
+        DB::connection()->getPdo();
+        $dbName = DB::connection()->getDatabaseName();
+        $userCount = Schema::hasTable('users')
+            ? User::count()
             : 0;
-        $tablesRaw = \Illuminate\Support\Facades\DB::select('SHOW TABLES');
-        $tables = array_map(fn($t) => array_values((array)$t)[0], $tablesRaw);
+        $tables = Schema::getTableListing();
 
         return response()->json([
             'status' => 'Conexão com o banco de dados OK!',
             'driver' => config('database.default'),
             'database' => $dbName,
-            'tabela_users' => \Illuminate\Support\Facades\Schema::hasTable('users') ? 'OK' : 'Não encontrada',
+            'tabela_users' => Schema::hasTable('users') ? 'OK' : 'Não encontrada',
             'usuarios_cadastrados' => $userCount,
             'total_tabelas' => count($tables),
             'tabelas' => $tables,
         ], 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-    } catch (\Throwable $e) {
+    } catch (Throwable $e) {
         return response()->json([
             'status' => 'Erro de conexão com o banco de dados',
             'erro' => $e->getMessage(),
@@ -78,7 +80,10 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->n
 | Rotas do Comprador (Autenticadas)
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', EnsureAccountIsActive::class])->group(function () {
+    Route::get('/quero-vender', [ApplicationController::class, 'show'])->name('seller.application');
+    Route::post('/quero-vender', [ApplicationController::class, 'store'])->name('seller.application.store');
+
     // Carrinho
     Route::get('/carrinho', [CartController::class, 'index'])->name('cart.index');
     Route::post('/carrinho/adicionar/{listing}', [CartController::class, 'add'])->name('cart.add');
@@ -105,10 +110,10 @@ Route::middleware(['auth'])->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| Rotas do Vendedor (Perfil Vendedor ou Admin)
+| Rotas de gestão de anúncios e entregas (Policies por ação)
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth'])->prefix('vendedor')->name('seller.')->group(function () {
+Route::middleware(['auth', EnsureAccountIsActive::class])->prefix('vendedor')->name('seller.')->group(function () {
     Route::resource('anuncios', SellerListingController::class);
     Route::patch('anuncios/{listing}/status', [SellerListingController::class, 'toggleStatus'])->name('anuncios.status');
     Route::get('vendas', [SellerSaleController::class, 'index'])->name('sales.index');
@@ -120,10 +125,10 @@ Route::middleware(['auth'])->prefix('vendedor')->name('seller.')->group(function
 | Rotas Administrativas (Apenas Admin)
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', EnsureAccountIsActive::class])->middleware('can:viewAny,App\Models\User')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::resource('categorias', AdminCategoryController::class);
-    Route::resource('usuarios', AdminUserController::class);
+    Route::resource('usuarios', AdminUserController::class)->only(['index', 'update']);
     Route::get('denuncias', [AdminReportController::class, 'index'])->name('reports.index');
     Route::patch('denuncias/{report}/moderar', [AdminReportController::class, 'moderate'])->name('reports.moderate');
 });
