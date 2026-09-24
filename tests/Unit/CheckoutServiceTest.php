@@ -2,9 +2,9 @@
 
 namespace Tests\Unit;
 
-use PHPUnit\Framework\TestCase;
 use App\Services\CheckoutService;
 use App\Services\PaymentGatewayService;
+use PHPUnit\Framework\TestCase;
 
 class CheckoutServiceTest extends TestCase
 {

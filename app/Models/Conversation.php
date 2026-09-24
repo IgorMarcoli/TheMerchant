@@ -89,4 +89,3 @@ class Conversation extends Model
             ->count();
     }
 }
-

@@ -7,10 +7,10 @@ use App\Http\Requests\CheckoutRequest;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Services\CheckoutService;
+use Exception;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
-use Exception;
 
 class CheckoutController extends Controller
 {
@@ -24,7 +24,7 @@ class CheckoutController extends Controller
             ->where('user_id', $request->user()->id)
             ->first();
 
-        if (!$cart || $cart->items->isEmpty()) {
+        if (! $cart || $cart->items->isEmpty()) {
             return redirect()->route('cart.index')->with('warning', 'Seu carrinho está vazio para checkout.');
         }
 
@@ -38,7 +38,7 @@ class CheckoutController extends Controller
 
             return redirect($result['checkout_url']);
         } catch (Exception $e) {
-            return back()->with('error', 'Falha ao processar checkout: ' . $e->getMessage());
+            return back()->with('error', 'Falha ao processar checkout: '.$e->getMessage());
         }
     }
 

@@ -115,6 +115,62 @@ UPDATE seller_profiles SET status = 'approved' WHERE user_id IN
 drop index "users_role_index";
 alter table "users" drop column "role";
 
+-- 2026_09_23_000002_create_conversations_and_messages_tables
+CREATE TABLE IF NOT EXISTS conversations (
+            id BIGSERIAL PRIMARY KEY,
+            buyer_id BIGINT NOT NULL REFERENCES users(id),
+            seller_id BIGINT NOT NULL REFERENCES users(id),
+            listing_id BIGINT NOT NULL REFERENCES listings(id),
+            buyer_last_read_message_id BIGINT NULL,
+            seller_last_read_message_id BIGINT NULL,
+            created_at TIMESTAMP NULL,
+            updated_at TIMESTAMP NULL
+        );
+CREATE TABLE IF NOT EXISTS messages (
+            id BIGSERIAL PRIMARY KEY,
+            conversation_id BIGINT NOT NULL REFERENCES conversations(id),
+            sender_id BIGINT NOT NULL REFERENCES users(id),
+            client_uuid VARCHAR(255) NOT NULL,
+            body TEXT NOT NULL,
+            created_at TIMESTAMP NULL,
+            updated_at TIMESTAMP NULL
+        );
+CREATE UNIQUE INDEX IF NOT EXISTS conversations_participants_listing_unique ON conversations (buyer_id, seller_id, listing_id);
+CREATE INDEX IF NOT EXISTS conversations_buyer_id_updated_at_index ON conversations (buyer_id, updated_at);
+CREATE INDEX IF NOT EXISTS conversations_seller_id_updated_at_index ON conversations (seller_id, updated_at);
+CREATE UNIQUE INDEX IF NOT EXISTS messages_client_unique ON messages (conversation_id, sender_id, client_uuid);
+CREATE INDEX IF NOT EXISTS messages_conversation_id_index ON messages (conversation_id, id);
+
+-- 2026_09_24_000001_add_is_active_to_categories_table
+alter table "categories" add column "is_active" boolean not null default '1';
+create index "categories_is_active_index" on "categories" ("is_active");
+
+-- 2026_09_24_000001_create_chat_tables
+CREATE TABLE IF NOT EXISTS conversations (
+            id BIGSERIAL PRIMARY KEY,
+            buyer_id BIGINT NOT NULL REFERENCES users(id),
+            seller_id BIGINT NOT NULL REFERENCES users(id),
+            listing_id BIGINT NOT NULL REFERENCES listings(id),
+            buyer_last_read_message_id BIGINT NULL,
+            seller_last_read_message_id BIGINT NULL,
+            created_at TIMESTAMP NULL,
+            updated_at TIMESTAMP NULL
+        );
+CREATE TABLE IF NOT EXISTS messages (
+            id BIGSERIAL PRIMARY KEY,
+            conversation_id BIGINT NOT NULL REFERENCES conversations(id),
+            sender_id BIGINT NOT NULL REFERENCES users(id),
+            client_uuid VARCHAR(255) NOT NULL,
+            body TEXT NOT NULL,
+            created_at TIMESTAMP NULL,
+            updated_at TIMESTAMP NULL
+        );
+CREATE UNIQUE INDEX IF NOT EXISTS conversations_participants_listing_unique ON conversations (buyer_id, seller_id, listing_id);
+CREATE INDEX IF NOT EXISTS conversations_buyer_id_updated_at_index ON conversations (buyer_id, updated_at);
+CREATE INDEX IF NOT EXISTS conversations_seller_id_updated_at_index ON conversations (seller_id, updated_at);
+CREATE UNIQUE INDEX IF NOT EXISTS messages_client_unique ON messages (conversation_id, sender_id, client_uuid);
+CREATE INDEX IF NOT EXISTS messages_conversation_id_index ON messages (conversation_id, id);
+
 -- Register the exact migrations represented above.
 INSERT INTO migrations (migration, batch) VALUES
     ('2026_01_01_000001_create_users_table', 1),
@@ -130,7 +186,10 @@ INSERT INTO migrations (migration, batch) VALUES
     ('2026_09_21_102914_create_sessions_table', 1),
     ('2026_09_21_102917_create_cache_table', 1),
     ('2026_09_21_102920_create_jobs_table', 1),
-    ('2026_09_23_000001_separate_selling_permissions_from_users', 1);
+    ('2026_09_23_000001_separate_selling_permissions_from_users', 1),
+    ('2026_09_23_000002_create_conversations_and_messages_tables', 1),
+    ('2026_09_24_000001_add_is_active_to_categories_table', 1),
+    ('2026_09_24_000001_create_chat_tables', 1);
 
 COMMIT;
 

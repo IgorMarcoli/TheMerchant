@@ -20,8 +20,11 @@ class AdminTest extends TestCase
     use RefreshDatabase;
 
     protected User $admin;
+
     protected User $user;
+
     protected Game $game;
+
     protected Category $category;
 
     protected function setUp(): void
@@ -45,10 +48,10 @@ class AdminTest extends TestCase
         ]);
 
         $this->category = Category::create([
-            'game_id'   => $this->game->id,
-            'name'      => 'Skins de Rifles',
-            'slug'      => 'skins-de-rifles',
-            'type'      => 'cosmetic',
+            'game_id' => $this->game->id,
+            'name' => 'Skins de Rifles',
+            'slug' => 'skins-de-rifles',
+            'type' => 'cosmetic',
             'is_active' => true,
         ]);
     }
@@ -331,4 +334,3 @@ class AdminTest extends TestCase
             ->assertForbidden();
     }
 }
-

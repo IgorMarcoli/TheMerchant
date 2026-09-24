@@ -23,7 +23,7 @@ class CheckoutService
     {
         $cart = Cart::with(['items.listing'])->where('user_id', $user->id)->first();
 
-        if (!$cart || $cart->items->isEmpty()) {
+        if (! $cart || $cart->items->isEmpty()) {
             throw new RuntimeException('O carrinho está vazio.');
         }
 
@@ -32,7 +32,7 @@ class CheckoutService
 
             // Validação de disponibilidade de cada anúncio
             foreach ($cart->items as $item) {
-                if (!$item->listing || !$item->listing->isAvailable()) {
+                if (! $item->listing || ! $item->listing->isAvailable()) {
                     throw new RuntimeException("O anúncio '{$item->listing?->title}' não está mais disponível.");
                 }
                 $total += $item->unit_price * $item->quantity;
@@ -40,21 +40,21 @@ class CheckoutService
 
             // Criação do pedido consolidado (imutabilidade contábil)
             $order = Order::create([
-                'order_number' => 'ORD-' . strtoupper(Str::random(8)) . '-' . date('Ymd'),
-                'buyer_id'     => $user->id,
+                'order_number' => 'ORD-'.strtoupper(Str::random(8)).'-'.date('Ymd'),
+                'buyer_id' => $user->id,
                 'total_amount' => $total,
-                'status'       => 'pendente',
-                'notes'        => $notes,
+                'status' => 'pendente',
+                'notes' => $notes,
             ]);
 
             // Criação dos itens do pedido preservando os valores históricos
             foreach ($cart->items as $item) {
                 OrderItem::create([
-                    'order_id'        => $order->id,
-                    'listing_id'      => $item->listing_id,
-                    'seller_id'       => $item->listing->seller_id,
-                    'unit_price'      => $item->unit_price,
-                    'quantity'        => $item->quantity,
+                    'order_id' => $order->id,
+                    'listing_id' => $item->listing_id,
+                    'seller_id' => $item->listing->seller_id,
+                    'unit_price' => $item->unit_price,
+                    'quantity' => $item->quantity,
                     'delivery_status' => 'aguardando_pagamento',
                 ]);
 
@@ -69,9 +69,9 @@ class CheckoutService
             $preference = $this->paymentGateway->createPaymentPreference($order);
 
             return [
-                'order'        => $order,
+                'order' => $order,
                 'checkout_url' => $preference['checkout_url'] ?? route('checkout.success', $order),
-                'preference_id'=> $preference['id'] ?? null,
+                'preference_id' => $preference['id'] ?? null,
             ];
         });
     }

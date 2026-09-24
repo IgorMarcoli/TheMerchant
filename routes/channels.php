@@ -17,4 +17,3 @@ Broadcast::channel('chat.{conversationId}', function (User $user, int|string $co
 
     return $conversation->isParticipant($user);
 });
-

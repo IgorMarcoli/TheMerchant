@@ -191,4 +191,3 @@ class ChatService
         return $asBuyer + $asSeller;
     }
 }
-

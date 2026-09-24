@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\ProcessPaymentWebhookJob;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class WebhookController extends Controller
@@ -22,7 +22,7 @@ class WebhookController extends Controller
         ProcessPaymentWebhookJob::dispatch($request->all(), $signature);
 
         return response()->json([
-            'status'  => 'received',
+            'status' => 'received',
             'message' => 'Notificação enfileirada para processamento.',
         ], 200);
     }

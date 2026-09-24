@@ -98,6 +98,10 @@ Desenvolver uma plataforma web de marketplace que permita anunciar, pesquisar, c
 
 ---
 
+## Banco de dados
+
+O ambiente padrão usa PostgreSQL no Supabase. Consulte [a configuração local, diagnóstico e diferenças do XAMPP](docs/SUPABASE.md). Os testes usam SQLite em memória; a migration de adoção do chat não suporta MySQL.
+
 ## 👤 Perfis de Usuário
 
 Uma pessoa usa a mesma conta para comprar e vender. `seller_profiles.status` controla a habilitação de vendas (`pending`, `approved`, `suspended`); `users.is_admin` concede administração separadamente. Administradores também precisam de perfil aprovado para criar seus próprios anúncios. Veja [o fluxo e a atualização do banco](docs/CONTAS_E_VENDEDORES.md).
