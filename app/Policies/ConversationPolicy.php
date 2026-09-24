@@ -42,4 +42,3 @@ class ConversationPolicy
         return $user->isActive() && $conversation->isParticipant($user);
     }
 }
-

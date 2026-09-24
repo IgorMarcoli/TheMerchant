@@ -45,4 +45,3 @@ class Message extends Model
         ];
     }
 }
-

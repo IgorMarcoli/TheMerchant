@@ -28,4 +28,3 @@ class StartChatRequest extends FormRequest
         ];
     }
 }
-

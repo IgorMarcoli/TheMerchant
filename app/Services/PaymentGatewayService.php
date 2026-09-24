@@ -4,8 +4,8 @@ namespace App\Services;
 
 use App\Models\Order;
 use App\Models\Payment;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PaymentGatewayService
 {
@@ -20,10 +20,10 @@ class PaymentGatewayService
 
         // Para ambiente de homologação ou desenvolvimento acadêmico
         return [
-            'id'           => 'pref_' . md5($order->order_number . microtime()),
-            'gateway'      => $gateway,
+            'id' => 'pref_'.md5($order->order_number.microtime()),
+            'gateway' => $gateway,
             'checkout_url' => route('checkout.success', $order),
-            'expires_at'   => now()->addHours(24)->toIso8601String(),
+            'expires_at' => now()->addHours(24)->toIso8601String(),
         ];
     }
 
@@ -32,12 +32,12 @@ class PaymentGatewayService
      */
     public function processWebhook(array $payload, ?string $signature = null): array
     {
-        $transactionId  = $payload['data']['id'] ?? $payload['id'] ?? null;
-        $status         = $payload['action'] ?? $payload['status'] ?? 'approved';
-        $orderNumber    = $payload['external_reference'] ?? $payload['order_number'] ?? null;
+        $transactionId = $payload['data']['id'] ?? $payload['id'] ?? null;
+        $status = $payload['action'] ?? $payload['status'] ?? 'approved';
+        $orderNumber = $payload['external_reference'] ?? $payload['order_number'] ?? null;
         $idempotencyKey = "webhook_{$transactionId}_{$status}";
 
-        if (!$transactionId) {
+        if (! $transactionId) {
             return ['status' => 'ignored', 'message' => 'Nenhum transaction_id fornecido'];
         }
 
@@ -45,25 +45,27 @@ class PaymentGatewayService
         $existingPayment = Payment::where('idempotency_key', $idempotencyKey)->first();
         if ($existingPayment) {
             Log::info("Webhook idempotente já processado anteriormente: {$idempotencyKey}");
+
             return ['status' => 'already_processed', 'payment' => $existingPayment];
         }
 
         return DB::transaction(function () use ($orderNumber, $transactionId, $status, $idempotencyKey, $payload) {
             $order = Order::where('order_number', $orderNumber)->first();
 
-            if (!$order) {
+            if (! $order) {
                 Log::warning("Pedido não localizado para o webhook: {$orderNumber}");
+
                 return ['status' => 'order_not_found'];
             }
 
             $payment = Payment::create([
-                'order_id'        => $order->id,
-                'gateway'         => config('services.payment_gateway', 'mercadopago'),
-                'transaction_id'  => (string) $transactionId,
-                'status'          => $status,
-                'amount'          => $order->total_amount,
+                'order_id' => $order->id,
+                'gateway' => config('services.payment_gateway', 'mercadopago'),
+                'transaction_id' => (string) $transactionId,
+                'status' => $status,
+                'amount' => $order->total_amount,
                 'idempotency_key' => $idempotencyKey,
-                'payload'         => $payload,
+                'payload' => $payload,
             ]);
 
             // Se pagamento aprovado, transiciona status do pedido e itens

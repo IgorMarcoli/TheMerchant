@@ -14,8 +14,8 @@ class CheckoutRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'notes'          => ['nullable', 'string', 'max:500'],
-            'terms_agreed'   => ['accepted'],
+            'notes' => ['nullable', 'string', 'max:500'],
+            'terms_agreed' => ['accepted'],
         ];
     }
 

@@ -287,6 +287,8 @@ Revisão solicitada em 18/09/2026, issues #30 (backend), #31 (UI) e #32 (QA). O 
 
 ### Persistência e autorização
 
+A estrutura das tabelas está versionada em `2026_09_24_000001_create_chat_tables`; isso não implementa o módulo de chat. Para bancos que misturam o protótipo em português e o modelo Laravel, consulte [a consolidação do schema](docs/CONSOLIDACAO_SCHEMA.md).
+
 - `conversations`: id, buyer_id (usuário interessado), seller_id, listing_id, buyer_last_read_message_id e seller_last_read_message_id opcionais, timestamps. UNIQUE(buyer_id, seller_id, listing_id). Impedir participantes iguais.
 - `messages`: id, conversation_id, sender_id, client_uuid, body (texto de 1–2000 caracteres), timestamps. UNIQUE(conversation_id, sender_id, client_uuid); índice (conversation_id, id).
 - Remetente sempre derivado da sessão. Cursor de leitura deve pertencer à conversa e só avançar após exibição.

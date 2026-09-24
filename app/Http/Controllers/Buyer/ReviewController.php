@@ -7,8 +7,8 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Review;
 use App\Models\SellerProfile;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ReviewController extends Controller
@@ -20,7 +20,7 @@ class ReviewController extends Controller
         abort_unless($order->status === 'concluido' || $item->delivery_status === 'entregue', 400, 'A avaliação só pode ser realizada após a conclusão do pedido.');
 
         $validated = $request->validate([
-            'rating'  => ['required', 'integer', 'min:1', 'max:5'],
+            'rating' => ['required', 'integer', 'min:1', 'max:5'],
             'comment' => ['nullable', 'string', 'max:1000'],
         ]);
 
@@ -31,12 +31,12 @@ class ReviewController extends Controller
 
         DB::transaction(function () use ($order, $item, $request, $validated) {
             Review::create([
-                'order_id'      => $order->id,
+                'order_id' => $order->id,
                 'order_item_id' => $item->id,
-                'buyer_id'      => $request->user()->id,
-                'seller_id'     => $item->seller_id,
-                'rating'        => $validated['rating'],
-                'comment'       => $validated['comment'],
+                'buyer_id' => $request->user()->id,
+                'seller_id' => $item->seller_id,
+                'rating' => $validated['rating'],
+                'comment' => $validated['comment'],
             ]);
 
             // Atualização da reputação agregada do vendedor
@@ -47,7 +47,7 @@ class ReviewController extends Controller
 
                 $sellerProfile->update([
                     'reputation_score' => round($avgRating, 2),
-                    'total_reviews'    => $countReviews,
+                    'total_reviews' => $countReviews,
                 ]);
             }
         });

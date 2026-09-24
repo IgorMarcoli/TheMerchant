@@ -11,10 +11,10 @@ Guia da base inspecionada em 18/09/2026. Os comandos partem da raiz do repositó
 | Git | Clonar e versionar |
 | PHP 8.2+ | Executar a versão compatível com `composer.lock`; ambiente verificado: 8.2.33 |
 | Composer 2 | Instalar dependências PHP |
-| MySQL | Caminho local principal; alguns diagnósticos usam `SHOW TABLES` |
+| PostgreSQL / Supabase | Banco principal; conexão pelo Session pooler e schema `laravel` |
 | Node.js/npm | Somente para trabalhar na futura integração de assets; o layout atual usa CDN |
 
-PostgreSQL é uma opção arquitetural prevista, mas os diagnósticos MySQL precisam de adaptação. SQLite em memória é usado no guia de testes; não comprova compatibilidade/concorrência com MySQL.
+O Supabase é configurado como banco PostgreSQL do Laravel. O diagnóstico `php artisan test:db --write` verifica leitura e gravação com rollback. SQLite em memória continua sendo usado nos testes isolados. Veja [o guia de Supabase](SUPABASE.md).
 
 Verifique o terminal:
 
@@ -26,7 +26,7 @@ php -m
 composer --version
 ```
 
-PHP precisa das extensões exigidas pelo Composer e de `pdo_mysql` para MySQL; `pdo_sqlite` é necessária para os testes isolados. Confira também `fileinfo`, `mbstring`, `openssl`, `dom`, `xml` e `xmlwriter`. Se houver mais de um PHP instalado, use `Get-Command php` no PowerShell para identificar o executável.
+PHP precisa das extensões exigidas pelo Composer e de `pdo_pgsql` para Supabase; `pdo_sqlite` é necessária para os testes isolados. Confira também `fileinfo`, `mbstring`, `openssl`, `dom`, `xml` e `xmlwriter`. Se houver mais de um PHP instalado, use `Get-Command php` no PowerShell para identificar o executável.
 
 ## 2. Obter código e dependências
 
@@ -43,13 +43,13 @@ O projeto não versiona um arquivo Compose. A dependência Laravel Sail, sozinha
 
 ## 3. Banco local e arquivo de ambiente
 
-Crie um banco vazio em uma instância local MySQL usando seu cliente SQL:
+No Supabase, obtenha os dados em **Connect → Session pooler**. Para uma instalação nova, crie o schema no SQL Editor:
 
 ```sql
-CREATE DATABASE themerchant CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE SCHEMA IF NOT EXISTS laravel;
 ```
 
-Use um usuário local com acesso apenas ao banco de desenvolvimento. Crie o `.env` sem sobrescrever uma configuração existente:
+Use as credenciais do banco do seu projeto Supabase. Crie o `.env` sem sobrescrever uma configuração existente:
 
 ```powershell
 if (!(Test-Path .env)) { Copy-Item .env.example .env }
@@ -69,12 +69,14 @@ APP_ENV=local
 APP_DEBUG=true
 APP_URL=http://127.0.0.1:8000
 
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=themerchant
-DB_USERNAME=seu_usuario_local
-DB_PASSWORD=sua_senha_local
+DB_CONNECTION=pgsql
+DB_HOST=host_do_session_pooler
+DB_PORT=5432
+DB_DATABASE=postgres
+DB_USERNAME=postgres.referencia_do_projeto
+DB_PASSWORD="senha_do_banco"
+DB_SCHEMA=laravel
+DB_SSLMODE=require
 
 SESSION_DRIVER=file
 CACHE_STORE=file
@@ -84,7 +86,7 @@ MAIL_MAILER=log
 BROADCAST_CONNECTION=log
 ```
 
-O `.env.example` usa sessão, cache e fila em banco, mas as migrations auxiliares de `sessions`, `cache` e `jobs` ainda não estão versionadas. O perfil acima permite iniciar com arquivos locais e jobs síncronos. O Laravel fornece configurações padrão mesmo sem uma pasta `config/` publicada no projeto.
+O `.env.example` usa sessão, cache e fila em banco; as migrations auxiliares de `sessions`, `cache` e `jobs` estão versionadas. O perfil acima permite iniciar com arquivos locais e jobs síncronos. A conexão está definida em `config/database.php`.
 
 Não coloque credenciais reais de pagamento neste primeiro fluxo: `PaymentGatewayService` ainda simula a preferência. Preencher variáveis Mercado Pago/Stripe não implementa a integração.
 
@@ -197,9 +199,9 @@ Antes de repetir um job, confirme que a operação é idempotente e que a causa 
 | `php` ou `composer` não reconhecido | Corrigir PATH e abrir novo terminal; identificar PHP com `Get-Command php` |
 | `vendor/autoload.php` ausente | Executar `composer install` |
 | `No application encryption key` | Preparar `.env` e gerar chave do ambiente novo |
-| `could not find driver` | Habilitar `pdo_mysql` ou `pdo_sqlite` no PHP CLI mostrado por `php --ini` |
+| `could not find driver` | Habilitar `pdo_pgsql` (Supabase) ou `pdo_sqlite` (testes) no PHP CLI mostrado por `php --ini` |
 | `Connection refused` / `Access denied` | Conferir MySQL, porta, credenciais e permissão no banco |
-| Tabela `sessions`, `cache` ou `jobs` ausente | Usar perfil local file/file/sync ou implementar migrations auxiliares |
+| Tabela `sessions`, `cache` ou `jobs` ausente | Executar as migrations auxiliares existentes |
 | E-mail/slug duplicado no seed | Seeder já foi executado; não repetir sem necessidade |
 | Erro 419 em formulário | Conferir sessão/cookies, `@csrf`, URL e consistência entre localhost/127.0.0.1 |
 | Configuração antiga | `php artisan config:clear`; reiniciar servidor/worker |
@@ -214,4 +216,4 @@ Logs locais:
 Get-Content storage/logs/laravel.log -Tail 80
 ```
 
-Revise dados sensíveis antes de compartilhar logs. O comando `php artisan test:db` existe, mas usa SQL específico do MySQL e captura exceções: confira a mensagem exibida, não apenas o código de saída.
+Revise dados sensíveis antes de compartilhar logs. Use `php artisan test:db --write`: o diagnóstico suporta PostgreSQL e SQLite, sanitiza falhas e retorna código diferente de zero em caso de erro. Diagnósticos e consultas genéricas de tabelas por HTTP foram removidos; não há opção de reativá-los por parâmetros da requisição. Em publicação, configure `APP_DEBUG=false` e `APP_ENV=production`.

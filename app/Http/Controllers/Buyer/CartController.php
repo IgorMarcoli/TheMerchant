@@ -6,9 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Listing;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
 
 class CartController extends Controller
 {
@@ -22,7 +22,7 @@ class CartController extends Controller
 
     public function add(Request $request, Listing $listing): RedirectResponse
     {
-        if (!$listing->isAvailable()) {
+        if (! $listing->isAvailable()) {
             return back()->with('error', 'Este anúncio não está mais disponível.');
         }
 
@@ -41,9 +41,9 @@ class CartController extends Controller
         }
 
         CartItem::create([
-            'cart_id'    => $cart->id,
+            'cart_id' => $cart->id,
             'listing_id' => $listing->id,
-            'quantity'   => 1,
+            'quantity' => 1,
             'unit_price' => $listing->price,
         ]);
 
@@ -53,6 +53,7 @@ class CartController extends Controller
     public function remove(CartItem $item): RedirectResponse
     {
         $item->delete();
+
         return back()->with('success', 'Item removido do carrinho.');
     }
 

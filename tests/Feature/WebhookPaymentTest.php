@@ -2,14 +2,8 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use App\Models\User;
-use App\Models\Order;
-use App\Models\OrderItem;
-use App\Models\Listing;
-use App\Models\Game;
-use App\Models\Category;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class WebhookPaymentTest extends TestCase
 {

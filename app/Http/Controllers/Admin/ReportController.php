@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Report;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
 
 class ReportController extends Controller
 {
@@ -26,15 +26,15 @@ class ReportController extends Controller
         abort_unless(auth()->user()->isAdmin(), 403);
 
         $validated = $request->validate([
-            'status'           => ['required', 'in:procedente,improcedente,em_analise'],
+            'status' => ['required', 'in:procedente,improcedente,em_analise'],
             'resolution_notes' => ['required', 'string', 'max:1000'],
-            'block_listing'    => ['nullable', 'boolean'],
+            'block_listing' => ['nullable', 'boolean'],
         ]);
 
         $report->update([
-            'status'           => $validated['status'],
+            'status' => $validated['status'],
             'resolution_notes' => $validated['resolution_notes'],
-            'moderator_id'     => auth()->id(),
+            'moderator_id' => auth()->id(),
         ]);
 
         // Se a denúncia foi procedente e foi solicitado o bloqueio

@@ -1,4 +1,4 @@
-s<?php
+<?php
 
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
@@ -15,12 +15,8 @@ use App\Http\Controllers\ListingPublicController;
 use App\Http\Controllers\Seller\ApplicationController;
 use App\Http\Controllers\Seller\ListingController as SellerListingController;
 use App\Http\Controllers\Seller\SaleController as SellerSaleController;
-use App\Http\Controllers\TableDataController;
 use App\Http\Middleware\EnsureAccountIsActive;
-use App\Models\User;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Schema;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,36 +24,6 @@ use Illuminate\Support\Facades\Schema;
 |--------------------------------------------------------------------------
 */
 Route::get('/', [ListingPublicController::class, 'home'])->name('home');
-
-Route::get('/test-db', function () {
-    try {
-        DB::connection()->getPdo();
-        $dbName = DB::connection()->getDatabaseName();
-        $userCount = Schema::hasTable('users')
-            ? User::count()
-            : 0;
-        $tables = Schema::getTableListing();
-
-        return response()->json([
-            'status' => 'Conexão com o banco de dados OK!',
-            'driver' => config('database.default'),
-            'database' => $dbName,
-            'tabela_users' => Schema::hasTable('users') ? 'OK' : 'Não encontrada',
-            'usuarios_cadastrados' => $userCount,
-            'total_tabelas' => count($tables),
-            'tabelas' => $tables,
-        ], 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-    } catch (Throwable $e) {
-        return response()->json([
-            'status' => 'Erro de conexão com o banco de dados',
-            'erro' => $e->getMessage(),
-        ], 500, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-    }
-})->name('test.db');
-
-// Endpoints diretos de consulta de tabelas em JSON
-Route::get('/tabela', [TableDataController::class, 'index'])->name('tables.index');
-Route::get('/tabela/{table}', [TableDataController::class, 'show'])->name('tables.show');
 
 Route::get('/anuncios', [ListingPublicController::class, 'index'])->name('listings.index');
 Route::get('/anuncios/{slug}', [ListingPublicController::class, 'show'])->name('listings.show');
@@ -135,9 +101,11 @@ Route::middleware(['auth', EnsureAccountIsActive::class])->prefix('vendedor')->n
 | Rotas Administrativas (Apenas Admin)
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', EnsureAccountIsActive::class])->middleware('can:viewAny,App\Models\User')->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', EnsureAccountIsActive::class, 'can:viewAny,App\Models\User'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::resource('categorias', AdminCategoryController::class);
+    Route::patch('categorias/{categoria}/status', [AdminCategoryController::class, 'toggleStatus'])->name('categorias.status');
+    Route::patch('games/{game}/status', [AdminCategoryController::class, 'toggleGameStatus'])->name('games.status');
     Route::resource('usuarios', AdminUserController::class)->only(['index', 'update']);
     Route::get('denuncias', [AdminReportController::class, 'index'])->name('reports.index');
     Route::patch('denuncias/{report}/moderar', [AdminReportController::class, 'moderate'])->name('reports.moderate');

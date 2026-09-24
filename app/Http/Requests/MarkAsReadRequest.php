@@ -22,4 +22,3 @@ class MarkAsReadRequest extends FormRequest
         ];
     }
 }
-
