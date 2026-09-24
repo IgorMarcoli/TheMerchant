@@ -74,6 +74,21 @@ class User extends Authenticatable
             && $this->sellerProfile()->where('status', 'approved')->exists();
     }
 
+    public function isActive(): bool
+    {
+        return $this->status === 'active';
+    }
+
+    public function conversationsAsBuyer(): HasMany
+    {
+        return $this->hasMany(Conversation::class, 'buyer_id');
+    }
+
+    public function conversationsAsSeller(): HasMany
+    {
+        return $this->hasMany(Conversation::class, 'seller_id');
+    }
+
     public function isAdmin(): bool
     {
         return $this->status === 'active' && $this->is_admin;

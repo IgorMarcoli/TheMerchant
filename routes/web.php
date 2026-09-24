@@ -1,4 +1,4 @@
-<?php
+s<?php
 
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
@@ -10,6 +10,7 @@ use App\Http\Controllers\Buyer\CartController;
 use App\Http\Controllers\Buyer\CheckoutController;
 use App\Http\Controllers\Buyer\OrderController;
 use App\Http\Controllers\Buyer\ReviewController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ListingPublicController;
 use App\Http\Controllers\Seller\ApplicationController;
 use App\Http\Controllers\Seller\ListingController as SellerListingController;
@@ -106,6 +107,15 @@ Route::middleware(['auth', EnsureAccountIsActive::class])->group(function () {
     Route::get('/perfil', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/perfil', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/perfil/senha', [ProfileController::class, 'updatePassword'])->name('profile.password');
+
+    // Chat Privado em Tempo Real (RF21, RF22, RF23)
+    Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
+    Route::post('/chat/iniciar', [ChatController::class, 'start'])->name('chat.start');
+    Route::get('/chat/nao-lidas', [ChatController::class, 'unreadCount'])->name('chat.unread-count');
+    Route::get('/chat/{conversation}', [ChatController::class, 'show'])->name('chat.show');
+    Route::get('/chat/{conversation}/mensagens', [ChatController::class, 'messages'])->name('chat.messages');
+    Route::post('/chat/{conversation}/mensagens', [ChatController::class, 'store'])->name('chat.messages.store');
+    Route::patch('/chat/{conversation}/lida', [ChatController::class, 'markAsRead'])->name('chat.read');
 });
 
 /*

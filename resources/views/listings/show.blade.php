@@ -54,6 +54,26 @@
                 </div>
             @endif
 
+            @guest
+                <a href="{{ route('login') }}" class="w-full mt-3 py-3 rounded-xl border border-slate-700 bg-slate-800/80 hover:bg-slate-800 text-slate-200 font-semibold text-xs transition flex items-center justify-center gap-2">
+                    <span>💬</span> Falar com vendedor
+                </a>
+            @else
+                @if(auth()->id() === $listing->seller_id)
+                    <div class="w-full mt-3 py-2.5 rounded-xl bg-slate-950/60 border border-slate-800 text-slate-500 font-medium text-xs text-center">
+                        <span>👤</span> Seu próprio anúncio
+                    </div>
+                @else
+                    <form action="{{ route('chat.start') }}" method="POST" class="mt-3">
+                        @csrf
+                        <input type="hidden" name="listing_id" value="{{ $listing->id }}">
+                        <button type="submit" class="w-full py-3 rounded-xl border border-brand-500/40 bg-brand-950/40 hover:bg-brand-900/40 text-brand-300 font-bold text-xs transition flex items-center justify-center gap-2 shadow-sm">
+                            <span>💬</span> Falar com vendedor
+                        </button>
+                    </form>
+                @endif
+            @endguest
+
             <p class="text-[11px] text-slate-400 text-center mt-4">
                 🛡️ Transação protegida com garantia de entrega TheMerchant.
             </p>

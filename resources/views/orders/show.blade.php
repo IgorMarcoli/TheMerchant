@@ -52,16 +52,26 @@
                             R$ {{ number_format($item->unit_price, 2, ',', '.') }}
                         </span>
 
-                        <!-- Se entregue e ainda não avaliado -->
-                        @if($item->delivery_status === 'entregue' && !$item->review)
-                            <button type="button" onclick="document.getElementById('review-form-{{ $item->id }}').classList.toggle('hidden')" class="text-xs text-amber-400 hover:text-amber-300 font-semibold underline">
-                                ★ Avaliar Vendedor
-                            </button>
-                        @elseif($item->review)
-                            <span class="text-xs text-amber-400">
-                                ★ Avaliado com nota {{ $item->review->rating }}/5
-                            </span>
-                        @endif
+                        <div class="flex items-center gap-3">
+                            <form action="{{ route('chat.start') }}" method="POST" class="inline">
+                                @csrf
+                                <input type="hidden" name="listing_id" value="{{ $item->listing_id }}">
+                                <button type="submit" class="text-xs text-brand-400 hover:text-brand-300 font-semibold flex items-center gap-1 transition">
+                                    <span>💬</span> Falar com vendedor
+                                </button>
+                            </form>
+
+                            <!-- Se entregue e ainda não avaliado -->
+                            @if($item->delivery_status === 'entregue' && !$item->review)
+                                <button type="button" onclick="document.getElementById('review-form-{{ $item->id }}').classList.toggle('hidden')" class="text-xs text-amber-400 hover:text-amber-300 font-semibold underline">
+                                    ★ Avaliar Vendedor
+                                </button>
+                            @elseif($item->review)
+                                <span class="text-xs text-amber-400">
+                                    ★ Avaliado com nota {{ $item->review->rating }}/5
+                                </span>
+                            @endif
+                        </div>
                     </div>
                 </div>
 

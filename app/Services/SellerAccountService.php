@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\SellerProfile;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\ValidationException;
 
 class SellerAccountService
@@ -43,12 +44,15 @@ class SellerAccountService
             if (! empty($data['seller_status']) && ! $profile) {
                 throw ValidationException::withMessages(['seller_status' => 'Esta conta ainda não solicitou um perfil de vendedor.']);
             }
-            // Privileged fields are deliberately excluded from public mass assignment.
             $account->is_admin = (bool) $data['is_admin'];
             $account->status = $data['status'];
             $account->save();
             if ($profile && ! empty($data['seller_status'])) {
                 $profile->update(['status' => $data['seller_status']]);
+            }
+
+            if ($data['status'] === 'suspended' && Schema::hasTable('sessions')) {
+                DB::table('sessions')->where('user_id', $target->id)->delete();
             }
         });
     }

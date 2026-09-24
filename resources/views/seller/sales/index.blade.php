@@ -44,10 +44,16 @@
 
                     @if($sale->delivery_status !== 'entregue')
                         <form action="{{ route('seller.sales.deliver', $sale) }}" method="POST">
+                    <div class="flex items-center gap-3">
+                        <form action="{{ route('chat.start') }}" method="POST" class="inline">
                             @csrf
                             @method('PATCH')
                             <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition shadow-lg shadow-emerald-600/20">
                                 Confirmar Entrega do Item
+                            <input type="hidden" name="listing_id" value="{{ $sale->listing_id }}">
+                            <input type="hidden" name="buyer_id" value="{{ $sale->order->buyer_id }}">
+                            <button type="submit" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition flex items-center gap-1.5 border border-slate-700">
+                                <span>💬</span> Falar com comprador
                             </button>
                         </form>
                     @else
@@ -55,6 +61,21 @@
                             ✓ Entregue em {{ $sale->delivered_at?->format('d/m/Y H:i') }}
                         </span>
                     @endif
+
+                        @if($sale->delivery_status !== 'entregue')
+                            <form action="{{ route('seller.sales.deliver', $sale) }}" method="POST">
+                                @csrf
+                                @method('PATCH')
+                                <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition shadow-lg shadow-emerald-600/20">
+                                    Confirmar Entrega do Item
+                                </button>
+                            </form>
+                        @else
+                            <span class="text-xs text-emerald-400 font-semibold">
+                                ✓ Entregue em {{ $sale->delivered_at?->format('d/m/Y H:i') }}
+                            </span>
+                        @endif
+                    </div>
                 </div>
             </div>
         @empty
