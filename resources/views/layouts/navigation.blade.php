@@ -25,6 +25,20 @@
                         Meus Pedidos
                     </a>
 
+                    <!-- Mensagens / Chat (RF21-RF23) -->
+                    @php
+                        $unreadChatCount = app(\App\Services\ChatService::class)->getUnreadCountForUser(auth()->user());
+                    @endphp
+                    <a href="{{ route('chat.index') }}" class="relative text-sm font-medium text-slate-300 hover:text-white px-3 py-2 rounded-lg hover:bg-slate-800 transition flex items-center gap-1.5" title="Mensagens">
+                        <span>💬</span>
+                        <span class="hidden sm:inline">Mensagens</span>
+                        @if($unreadChatCount > 0)
+                            <span class="inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-extrabold leading-none text-slate-950 bg-brand-400 rounded-full">
+                                {{ $unreadChatCount > 99 ? '99+' : $unreadChatCount }}
+                            </span>
+                        @endif
+                    </a>
+
                     <!-- Painel do Vendedor -->
                     @if(auth()->user()->isSeller())
                         <a href="{{ route('seller.anuncios.index') }}" class="text-sm font-medium text-amber-400 hover:text-amber-300 px-3 py-2 rounded-lg hover:bg-amber-950/40 border border-amber-500/30 transition">

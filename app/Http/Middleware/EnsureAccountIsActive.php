@@ -10,7 +10,7 @@ class EnsureAccountIsActive
 {
     public function handle(Request $request, Closure $next): Response
     {
-        abort_unless($request->user()?->status === 'active', 403, 'Sua conta está suspensa.');
+        abort_unless($request->user()?->fresh()?->status === 'active', 403, 'Sua conta está suspensa.');
 
         return $next($request);
     }
