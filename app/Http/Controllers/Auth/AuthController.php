@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -42,11 +43,13 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request): RedirectResponse
     {
-        $user = User::create($request->validated());
+        $user = User::create($request->validated())->refresh();
         Auth::login($user);
         $request->session()->regenerate();
 
-        return redirect()->route('home')->with('success', 'Conta criada! Você já pode comprar e solicitar seu perfil de vendedor.');
+        event(new Registered($user));
+
+        return redirect()->route('home')->with('success', 'Conta criada! Enviamos um link para confirmar seu e-mail.');
     }
 
     public function logout(Request $request): RedirectResponse

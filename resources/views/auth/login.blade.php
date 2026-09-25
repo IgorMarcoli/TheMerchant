@@ -33,6 +33,7 @@
                     <input type="checkbox" name="remember" class="rounded bg-slate-950 border-slate-700 text-brand-600">
                     Lembrar-me
                 </label>
+                <a href="{{ route('password.request') }}" class="text-brand-400 hover:text-brand-300">Esqueci minha senha</a>
             </div>
 
             <button type="submit" class="w-full py-3 bg-brand-600 hover:bg-brand-500 text-slate-950 font-bold rounded-xl text-xs shadow-lg shadow-brand-600/10 transition">

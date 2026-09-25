@@ -166,16 +166,15 @@ Ao implementar assets locais: adicionar configuração Vite/Laravel, entradas CS
 
 ## 7. Filas, e-mails e chat
 
-**Perfil inicial:** `QUEUE_CONNECTION=sync` executa o job imediatamente, sem worker. `MAIL_MAILER=log` não entrega e-mail real. Recuperação/verificação ainda depende da #27; trocar mailer não cria essas funcionalidades.
+**Autenticação RF03:** verificação de e-mail e recuperação de senha usam o Laravel, com envio em fila. Consulte [AUTENTICACAO.md](AUTENTICACAO.md) para configurar SMTP, worker e validar os fluxos. `MAIL_MAILER=log` não entrega e-mail real; `QUEUE_CONNECTION=sync` executa imediatamente e deve ficar restrito a testes/desenvolvimento.
 
-**Validar fila real:** em branch de implementação, gerar somente migrations ainda ausentes:
+**Validar fila real:** as migrations de `jobs` e `failed_jobs` estão versionadas. Execute:
 
 ```powershell
-php artisan make:queue-table
-php artisan make:queue-failed-table
+php artisan migrate
 ```
 
-Revisar/versionar as migrations, executar `php artisan migrate`, definir `QUEUE_CONNECTION=database` no `.env` e executar:
+Definir `QUEUE_CONNECTION=database` no `.env` e executar:
 
 ```powershell
 php artisan config:clear

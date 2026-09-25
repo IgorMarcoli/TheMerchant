@@ -4,6 +4,14 @@
 
 @section('content')
 <div class="max-w-5xl mx-auto space-y-8">
+    @if (! $user->hasVerifiedEmail())
+        <div class="p-4 rounded-xl bg-sky-950/80 border border-sky-500/40 text-sky-300 text-sm">
+            Seu e-mail ainda não foi confirmado.
+            <a href="{{ route('verification.notice') }}" class="font-bold underline">Confirmar e-mail</a>
+        </div>
+    @else
+        <p class="text-sm text-emerald-300">E-mail confirmado.</p>
+    @endif
     <a href="{{ route('seller.application') }}" class="text-brand-400 font-semibold">Gerenciar meu perfil de vendedor</a>
     <!-- Header da Página -->
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-slate-800/80 pb-6">
@@ -56,9 +64,13 @@
                         <div class="grid grid-cols-2 gap-3">
                             <div class="p-3 rounded-2xl bg-slate-950/70 border border-slate-800 text-center">
                                 <span class="text-xs text-slate-400 block">Reputação</span>
-                                <span class="text-base font-extrabold text-amber-400 flex items-center justify-center gap-1 mt-0.5">
-                                    ⭐ {{ number_format($user->sellerProfile->reputation_score, 1) }}
-                                </span>
+                                @if ($user->sellerProfile->total_reviews > 0)
+                                    <span class="text-base font-extrabold text-amber-400 flex items-center justify-center gap-1 mt-0.5">
+                                        ⭐ {{ number_format($user->sellerProfile->reputation_score, 1) }}
+                                    </span>
+                                @else
+                                    <span class="text-xs text-slate-400 block mt-0.5">Sem avaliações</span>
+                                @endif
                             </div>
                             <div class="p-3 rounded-2xl bg-slate-950/70 border border-slate-800 text-center">
                                 <span class="text-xs text-slate-400 block">Vendas</span>
