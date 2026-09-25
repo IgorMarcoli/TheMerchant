@@ -160,9 +160,9 @@ delivered_at TIMESTAMP NULL,
 created_at, updated_at TIMESTAMP
 ```
 
-### 2.8.1 Disponibilidade e reservas — revisão planejada (#29, #13)
+### 2.8.1 Disponibilidade e reservas — contrato definido (#29), implementação por #5/#13/#14
 
-O dicionário acima descreve a base inicial. Acrescentar `capacity` para sessões disponíveis de serviço e `session_duration_minutes`, com restrições positivas; cosmético único possui capacidade 1. Snapshot de tipo, duração e instruções por item do pedido. Serviço admite múltiplas compras até consumir sua capacidade.
+Contrato normativo, exemplos D01–D14 e rastreabilidade: [Contrato de domínio v1](docs/CONTRATO_DOMINIO.md). A definição não comprova implementação funcional. O dicionário acima descreve a base inicial. Acrescentar `capacity` para sessões disponíveis de serviço e `session_duration_minutes`, com restrições positivas; cosmético único possui capacidade 1. Snapshot de tipo, duração e instruções por item do pedido. Serviço admite múltiplas compras até consumir sua capacidade.
 
 Modelar `listing_reservations`: `id`, `listing_id`, `order_item_id` único, `quantity`, `expires_at`, `status` (active/confirmed/released), timestamps. Reservas ativas reduzem disponibilidade e são adquiridas sob lock; aprovação reduz capacidade e confirma reserva uma única vez. Expiração libera apenas reserva ainda ativa. Suspensão/pausa não pode apagar reservas ou histórico.
 
