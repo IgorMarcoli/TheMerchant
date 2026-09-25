@@ -14,12 +14,17 @@ class SellerAccountService
     {
         DB::transaction(function () use ($user, $data): void {
             $user->fill(['name' => $data['name'], 'email' => $data['email']]);
-            if ($user->isDirty('email')) {
+            $emailChanged = $user->isDirty('email');
+            if ($emailChanged) {
+                DB::table('password_reset_tokens')->whereIn('email', [$user->getOriginal('email'), $user->email])->delete();
                 $user->email_verified_at = null;
             }
             $user->save();
             if (array_key_exists('bio', $data)) {
                 $user->sellerProfile()->update(['bio' => $data['bio']]);
+            }
+            if ($emailChanged) {
+                $user->sendEmailVerificationNotification();
             }
         });
     }

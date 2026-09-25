@@ -2,95 +2,108 @@
 
 @section('title', 'Catálogo de Anúncios')
 
+@push('styles')
+<script src="{{ asset('js/catalog-filters.js') }}"></script>
+@endpush
+
 @section('content')
-<div class="mb-8">
-    <h1 class="text-2xl font-bold text-white mb-2">Explorar Catálogo</h1>
-    <p class="text-sm text-slate-400">Encontre cosméticos raros e serviços digitais verificados.</p>
-</div>
-
-<!-- Filtros e Busca (RF07) -->
-<form method="GET" action="{{ route('listings.index') }}" class="p-6 rounded-2xl bg-slate-900 border border-slate-800 mb-8">
-    <div class="mb-4">
-        <label for="catalog-type" class="block text-xs font-semibold text-slate-300 mb-2">Tipo de anúncio</label>
-        <select id="catalog-type" name="tipo" class="bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white">
-            <option value="">Todos os anúncios</option>
-            <option value="cosmetic" @selected(request('tipo') === 'cosmetic')>Skins e cosméticos</option>
-            <option value="service" @selected(request('tipo') === 'service')>Coaching e serviços</option>
-        </select>
+<div x-data="catalogFilters" @popstate.window="restore()" class="space-y-6">
+    <div>
+        <h1 class="text-2xl font-bold text-white mb-2">Explorar Catálogo</h1>
+        <p class="text-sm text-slate-400">Encontre cosméticos raros e serviços digitais verificados.</p>
     </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
-        <!-- Busca Textual -->
-        <div class="md:col-span-2">
-            <label class="block text-xs font-semibold text-slate-300 mb-2">Buscar por palavra-chave</label>
-            <input type="text" name="busca" value="{{ request('busca') }}" placeholder="Ex: Karambit, Vandal, Coaching..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500">
-        </div>
 
-        <!-- Filtro por Jogo -->
+    <form x-ref="form" method="GET" action="{{ route('listings.index') }}"
+          @submit.prevent="search()" @input="changed($event)" @change="changed($event)"
+          class="p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
         <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-2">Jogo</label>
-            <select name="jogo" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500">
-                <option value="">Todos os Jogos</option>
-                @foreach($games as $game)
-                    <option value="{{ $game->id }}" {{ request('jogo') == $game->id ? 'selected' : '' }}>{{ $game->name }}</option>
-                @endforeach
-            </select>
+            <label for="catalog-search" class="block text-sm mb-2">Buscar por palavra-chave</label>
+            <input id="catalog-search" type="search" name="busca" value="{{ $filters['busca'] ?? '' }}" maxlength="150"
+                   placeholder="Ex: Karambit, Vandal, Coaching..." class="w-full min-h-11 px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white">
         </div>
-
-        <!-- Filtro por Categoria -->
-        <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-2">Categoria</label>
-            <select name="categoria" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500">
-                <option value="">Todas</option>
-                @foreach($categories as $category)
-                    <option value="{{ $category->id }}" {{ request('categoria') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
-                @endforeach
-            </select>
-        </div>
-
-        <!-- Botão Filtrar -->
-        <div class="flex items-end">
-            <button type="submit" class="w-full py-2.5 bg-brand-600 hover:bg-brand-500 text-slate-950 text-sm font-semibold rounded-xl transition shadow-lg shadow-brand-600/10">
-                Filtrar Resultados
-            </button>
-        </div>
-    </div>
-</form>
-
-<!-- Grid de Resultados -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-    @forelse($listings as $listing)
-        <div class="rounded-2xl bg-slate-900 border border-slate-800 overflow-hidden hover:border-brand-500/40 hover:shadow-xl hover:shadow-brand-500/10 transition flex flex-col">
-            <div class="h-44 bg-slate-950 relative flex items-center justify-center text-slate-700">
-                <span class="text-4xl">💎</span>
-                <span class="absolute top-3 left-3 px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-900/90 text-slate-300 border border-slate-700">
-                    {{ $listing->game->name }}
-                </span>
-            </div>
-            <div class="p-5 flex-1 flex flex-col justify-between">
+        <details class="group" @keydown.escape="$el.open = false; $el.querySelector('summary').focus()">
+            <summary class="cursor-pointer min-h-11 flex items-center text-brand-400 font-semibold focus-visible:outline">
+                Filtros e ordenação
+            </summary>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-4">
                 <div>
-                    <span class="text-xs text-slate-400">{{ $listing->category->name }}</span>
-                    <h3 class="font-bold text-sm text-white mt-1 line-clamp-2">{{ $listing->title }}</h3>
+                    <label for="catalog-type" class="block text-sm mb-2">Tipo de anúncio</label>
+                    <select id="catalog-type" name="tipo" class="w-full min-h-11 px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl">
+                        <option value="">Todos os anúncios</option>
+                        <option value="cosmetic" @selected(($filters['tipo'] ?? '') === 'cosmetic')>Skins e cosméticos</option>
+                        <option value="service" @selected(($filters['tipo'] ?? '') === 'service')>Coaching e serviços</option>
+                    </select>
                 </div>
-                <div class="mt-4 pt-4 border-t border-slate-800 flex items-center justify-between">
+                <div>
+                    <label for="catalog-game" class="block text-sm mb-2">Jogo</label>
+                    <select id="catalog-game" name="jogo" class="w-full min-h-11 px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl">
+                        <option value="">Todos os jogos</option>
+                        @foreach($games as $game)
+                            <option value="{{ $game->id }}" @selected(($filters['jogo'] ?? '') == $game->id)>{{ $game->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label for="catalog-category" class="block text-sm mb-2">Categoria</label>
+                    <select id="catalog-category" name="categoria" class="w-full min-h-11 px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl">
+                        <option value="">Todas as categorias</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}" @selected(($filters['categoria'] ?? '') == $category->id)>{{ $category->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                @foreach(['min' => 'mínimo', 'max' => 'máximo'] as $bound => $label)
                     <div>
-                        <span class="text-[10px] text-slate-400 uppercase tracking-wider block">Preço</span>
-                        <span class="text-base font-extrabold text-brand-400">R$ {{ number_format($listing->price, 2, ',', '.') }}</span>
+                        <label for="price-{{ $bound }}" class="block text-sm mb-2">Preço {{ $label }} (R$)</label>
+                        <input id="price-{{ $bound }}" name="preco_{{ $bound }}" type="number" min="0" max="99999999.99" step="0.01"
+                               value="{{ $filters['preco_'.$bound] ?? '' }}" placeholder="Sem limite"
+                               class="w-full min-h-11 px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl">
+                        <input type="range" min="0" :max="rangeMax" step="0.01" value="{{ $filters['preco_'.$bound] ?? ($bound === 'min' ? 0 : 1000) }}"
+                               data-price="{{ $bound }}" aria-label="Ajustar preço {{ $label }}"
+                               class="w-full min-h-11 accent-brand-400">
                     </div>
-                    <a href="{{ route('listings.show', $listing->slug) }}" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-brand-600 hover:bg-brand-500 text-slate-950 transition">
-                        Ver Anúncio
-                    </a>
+                @endforeach
+                <div>
+                    <label for="catalog-rating" class="block text-sm mb-2">Nota mínima do vendedor</label>
+                    <select id="catalog-rating" name="nota_min" class="w-full min-h-11 px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl">
+                        <option value="">Todas, incluindo sem avaliações</option>
+                        @foreach([1, 2, 3, 4, 5] as $rating)
+                            <option value="{{ $rating }}" @selected(($filters['nota_min'] ?? '') == $rating)>{{ $rating }} estrela(s) ou mais</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label for="catalog-sort" class="block text-sm mb-2">Ordenar por</label>
+                    <select id="catalog-sort" name="ordem" class="w-full min-h-11 px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl">
+                        @foreach(['recentes' => 'Mais recentes', 'menor_preco' => 'Menor preço', 'maior_preco' => 'Maior preço', 'reputacao' => 'Reputação do vendedor'] as $value => $label)
+                            <option value="{{ $value }}" @selected(($filters['ordem'] ?? 'recentes') === $value)>{{ $label }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
+        </details>
+        <div class="flex flex-wrap gap-3">
+            <button type="submit" class="min-h-11 px-5 rounded-xl bg-brand-600 text-slate-950 font-semibold">Filtrar resultados</button>
+            <a href="{{ route('listings.index') }}" @click.prevent="clear()" class="min-h-11 inline-flex items-center px-4 rounded-xl border border-slate-600">Limpar todos</a>
         </div>
-    @empty
-        <div class="col-span-full text-center py-16 text-slate-500 text-sm">
-            Nenhum anúncio encontrado para os filtros selecionados.
+        <div class="flex flex-wrap gap-2" aria-label="Filtros ativos">
+            <template x-for="tag in tags" :key="tag.name">
+                <button type="button" @click="remove(tag.name)" :aria-label="'Remover filtro ' + tag.label"
+                        class="min-h-11 px-3 rounded-xl border border-brand-700 text-sm text-brand-300">
+                    <span x-text="tag.label"></span><span aria-hidden="true"> ×</span>
+                </button>
+            </template>
         </div>
-    @endforelse
-</div>
+    </form>
 
-<!-- Paginação (RNF05) -->
-<div class="mt-10">
-    {{ $listings->links() }}
+    <p x-cloak x-show="loading" role="status" class="text-brand-300">Carregando resultados…</p>
+    <div x-cloak x-show="error" role="alert" class="p-4 border border-rose-700 rounded-xl text-rose-300">
+        <span x-text="error"></span>
+        <button type="button" @click="search()" class="underline min-h-11 px-3">Tentar novamente</button>
+    </div>
+    <section x-ref="results" id="catalog-results" aria-live="polite" :aria-busy="loading"
+             @click="paginate($event)" class="space-y-6">
+        @include('listings.partials.results')
+    </section>
 </div>
 @endsection

@@ -89,8 +89,12 @@
                 <div>
                     <h4 class="font-bold text-sm text-white">{{ $listing->seller->name }}</h4>
                     <div class="flex items-center gap-2 mt-1">
-                        <span class="text-amber-400 text-xs font-bold">★ {{ $listing->seller->sellerProfile?->reputation_score ?? '5.00' }}</span>
-                        <span class="text-slate-500 text-xs">({{ $listing->seller->sellerProfile?->total_reviews ?? 0 }} avaliações)</span>
+                        @if (($listing->seller->sellerProfile?->total_reviews ?? 0) > 0)
+                            <span class="text-amber-400 text-xs font-bold">★ {{ $listing->seller->sellerProfile->reputation_score }}</span>
+                            <span class="text-slate-500 text-xs">({{ $listing->seller->sellerProfile->total_reviews }} avaliações)</span>
+                        @else
+                            <span class="text-slate-500 text-xs">Sem avaliações</span>
+                        @endif
                     </div>
                 </div>
             </div>

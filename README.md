@@ -629,6 +629,7 @@ Consulte o GitHub para o estado atualizado; uma issue fechada não substitui evi
 
 - 🚀 [Guia de Execução](docs/EXECUCAO.md) — Instalação, `.env`, banco, filas e problemas frequentes.
 - 🧪 [Guia de Testes](docs/TESTES.md) — Comandos isolados, matriz de validação e evidências.
+- ✉️ [Verificação e Recuperação de Acesso](docs/AUTENTICACAO.md) — Laravel, SMTP, filas e configuração de RF03.
 
 - 📋 [Requisitos Detalhados (`requirements.md`)](./requirements.md) — Matriz completa de Requisitos Funcionais, Não Funcionais e Regras de Negócio.
 - 📐 [Especificações Técnicas & ERD (`specs.md`)](./specs.md) — Dicionário de dados, máquina de estados e contratos dos Services.
