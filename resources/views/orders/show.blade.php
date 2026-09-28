@@ -60,44 +60,11 @@
                                     <span>💬</span> Falar com vendedor
                                 </button>
                             </form>
-
-                            <!-- Se entregue e ainda não avaliado -->
-                            @if($item->delivery_status === 'entregue' && !$item->review)
-                                <button type="button" onclick="document.getElementById('review-form-{{ $item->id }}').classList.toggle('hidden')" class="text-xs text-amber-400 hover:text-amber-300 font-semibold underline">
-                                    ★ Avaliar Vendedor
-                                </button>
-                            @elseif($item->review)
-                                <span class="text-xs text-amber-400">
-                                    ★ Avaliado com nota {{ $item->review->rating }}/5
-                                </span>
-                            @endif
                         </div>
                     </div>
                 </div>
 
-                <!-- Formulário de Avaliação -->
-                @if($item->delivery_status === 'entregue' && !$item->review)
-                    <div id="review-form-{{ $item->id }}" class="hidden p-4 rounded-2xl bg-slate-950 border border-slate-800 my-2">
-                        <form action="{{ route('orders.review.store', [$order, $item]) }}" method="POST">
-                            @csrf
-                            <h4 class="text-xs font-bold text-white mb-2">Avaliar atendimento de {{ $item->seller->name }}</h4>
-                            <div class="flex items-center gap-4 mb-3">
-                                <label class="text-xs text-slate-400">Nota:</label>
-                                <select name="rating" class="bg-slate-900 border border-slate-700 text-xs rounded-lg px-2 py-1 text-white">
-                                    <option value="5">5 - Excelente</option>
-                                    <option value="4">4 - Muito Bom</option>
-                                    <option value="3">3 - Regular</option>
-                                    <option value="2">2 - Ruim</option>
-                                    <option value="1">1 - Péssimo</option>
-                                </select>
-                            </div>
-                            <textarea name="comment" rows="2" placeholder="Deixe um comentário sobre a agilidade e entrega..." class="w-full bg-slate-900 border border-slate-700 text-xs rounded-xl p-2.5 text-white mb-3"></textarea>
-                            <button type="submit" class="px-4 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs">
-                                Publicar Avaliação
-                            </button>
-                        </form>
-                    </div>
-                @endif
+                <x-order-review :order="$order" :item="$item" />
             @endforeach
         </div>
     </div>
