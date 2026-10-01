@@ -16,10 +16,10 @@
         </span>
     </div>
 
-    <div class="rounded-3xl bg-slate-900 border border-slate-800 p-8 mb-8 shadow-xl">
-        <div class="flex justify-between items-start pb-6 border-b border-slate-800">
+    <div class="rounded-xl bg-slate-900 border border-slate-800 p-8 mb-8 shadow-xl">
+        <div class="flex flex-col sm:flex-row justify-between items-start gap-5 pb-6 border-b border-slate-800">
             <div>
-                <h1 class="text-xl font-bold text-white mb-1">Pedido #{{ $order->order_number }}</h1>
+                <x-page-heading :title="'Pedido #'.$order->order_number" eyebrow="ACOMPANHE SUA CONQUISTA" />
                 <span class="text-xs text-slate-400">Realizado em {{ $order->created_at->format('d/m/Y \à\s H:i') }}</span>
             </div>
             <div class="text-right">

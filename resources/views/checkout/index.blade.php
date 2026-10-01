@@ -5,11 +5,10 @@
 @section('content')
 <div class="max-w-3xl mx-auto">
     <div class="mb-8 text-center">
-        <h1 class="text-2xl font-bold text-white mb-2">Finalização do Pedido</h1>
-        <p class="text-xs text-slate-400">Ambiente protegido com pagamento via Gateway oficial.</p>
+        <x-page-heading title="Finalização do Pedido" eyebrow="FALTA POUCO PARA O PRÓXIMO NÍVEL" description="Confira os itens e as instruções de entrega antes de continuar." />
     </div>
 
-    <div class="rounded-3xl bg-slate-900 border border-slate-800 p-8 shadow-2xl">
+    <div class="rounded-xl bg-slate-900 border border-slate-800 p-8 shadow-xl">
         <h2 class="text-sm font-bold text-slate-300 uppercase tracking-wider mb-6">Itens do Pedido</h2>
         <div class="divide-y divide-slate-800 mb-6">
             @foreach($cart->items as $item)

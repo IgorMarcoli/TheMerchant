@@ -9,11 +9,18 @@
     </a>
 </div>
 
+<x-page-heading :title="$listing->title" :eyebrow="$listing->game->name" :description="$listing->category->name" class="mb-8" />
+
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
     <!-- Coluna da Galeria e Detalhes -->
     <div class="lg:col-span-2 space-y-6">
-        <div class="rounded-3xl bg-slate-900 border border-slate-800 p-8 flex items-center justify-center min-h-[350px] relative overflow-hidden">
-            <span class="text-7xl">💎</span>
+        <div class="tm-detail-art rounded-xl bg-slate-900 border border-slate-800 p-8 flex items-center justify-center min-h-[350px] relative overflow-hidden">
+            @php($cover = $listing->images->firstWhere('is_primary', true) ?? $listing->images->first())
+            @if ($cover && \Illuminate\Support\Facades\Storage::disk('public')->exists($cover->image_path))
+                <img src="{{ asset('storage/' . $cover->image_path) }}" alt="{{ $listing->title }}" width="800" height="460">
+            @else
+                <x-icon :name="$listing->category->type === 'service' ? 'game' : 'spark'" />
+            @endif
             <div class="absolute top-4 left-4 flex gap-2">
                 <span class="px-3 py-1 rounded-xl text-xs font-bold bg-slate-950/80 text-white border border-slate-700">
                     {{ $listing->game->name }}
@@ -24,7 +31,7 @@
             </div>
         </div>
 
-        <div class="rounded-3xl bg-slate-900 border border-slate-800 p-8">
+        <div class="rounded-xl bg-slate-900 border border-slate-800 p-8">
             <h2 class="text-lg font-bold text-white mb-4">Descrição do Produto / Serviço</h2>
             <div class="prose prose-invert max-w-none text-slate-300 text-sm leading-relaxed whitespace-pre-line">
                 {{ $listing->description }}
@@ -35,7 +42,7 @@
     <!-- Coluna de Compra e Dados do Vendedor -->
     <div class="space-y-6">
         <!-- Card de Preço e Ação -->
-        <div class="rounded-3xl bg-slate-900 border border-slate-800 p-6 shadow-xl">
+        <div class="rounded-xl bg-slate-900 border border-slate-800 p-6 shadow-xl">
             <span class="text-xs text-slate-400 block mb-1">Preço à vista</span>
             <div class="text-3xl font-black text-brand-400 mb-6">
                 R$ {{ number_format($listing->price, 2, ',', '.') }}
@@ -80,7 +87,7 @@
         </div>
 
         <!-- Card do Vendedor (RF08) -->
-        <div class="rounded-3xl bg-slate-900 border border-slate-800 p-6">
+        <div class="rounded-xl bg-slate-900 border border-slate-800 p-6">
             <h3 class="text-xs uppercase tracking-wider font-bold text-slate-400 mb-4">Informações do Vendedor</h3>
             <div class="flex items-center gap-4 mb-4">
                 <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-xl font-bold text-slate-950">

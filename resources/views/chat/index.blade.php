@@ -15,10 +15,7 @@
 })">
     <div class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-white flex items-center gap-2">
-                <span>💬</span> Mensagens & Negociações
-            </h1>
-            <p class="text-xs text-slate-400">Canal direto de texto entre comprador e vendedor com proteção de dados e privacidade.</p>
+            <x-page-heading title="Mensagens &amp; Negociações" eyebrow="DE PLAYER PARA PLAYER" description="Converse com compradores e vendedores e acompanhe suas negociações." />
         </div>
 
         <div class="flex items-center gap-2 text-xs">
@@ -32,7 +29,7 @@
     <!-- Região acessível para leitores de tela -->
     <div aria-live="polite" class="sr-only" x-text="screenReaderAnnouncement"></div>
 
-    <div class="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl min-h-[620px] grid grid-cols-1 lg:grid-cols-12">
+    <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-xl min-h-[620px] grid grid-cols-1 lg:grid-cols-12">
         <!-- Lista de Conversas (Esquerda) -->
         <div class="lg:col-span-4 border-r border-slate-800 flex flex-col bg-slate-950/40"
              :class="{ 'hidden lg:flex': mobileShowChat && activeConversationId, 'flex': !mobileShowChat || !activeConversationId }">

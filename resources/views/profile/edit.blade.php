@@ -16,10 +16,7 @@
     <!-- Header da Página -->
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-slate-800/80 pb-6">
         <div>
-            <h1 class="text-3xl font-black text-white tracking-tight flex items-center gap-3">
-                <span>👤</span> Meu Perfil
-            </h1>
-            <p class="text-sm text-slate-400 mt-1">Gerencie suas informações cadastrais, preferências de conta e segurança.</p>
+            <x-page-heading title="Meu Perfil" eyebrow="SUA CONTA, SEU UNIVERSO" description="Gerencie suas informações cadastrais, preferências de conta e segurança." />
         </div>
 
         <div class="flex items-center gap-2">
@@ -46,7 +43,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Coluna Esquerda: Resumo do Usuário e Reputação -->
         <div class="space-y-6">
-            <div class="rounded-3xl bg-slate-900 border border-slate-800 p-6 shadow-xl">
+            <div class="rounded-xl bg-slate-900 border border-slate-800 p-6 shadow-xl">
                 <div class="text-center pb-6 border-b border-slate-800">
                     <div class="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center text-3xl font-black text-slate-950 shadow-lg shadow-brand-500/10 mb-3">
                         {{ strtoupper(substr($user->name, 0, 2)) }}
@@ -91,7 +88,7 @@
             </div>
 
             <!-- Dicas de Segurança -->
-            <div class="rounded-3xl bg-slate-900/60 border border-slate-800/80 p-6">
+            <div class="rounded-xl bg-slate-900/60 border border-slate-800/80 p-6">
                 <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2 mb-3">
                     <span>🔒</span> Dicas de Acesso Seguro
                 </h3>
@@ -111,7 +108,7 @@
         <!-- Coluna Direita: Formulários de Edição de Dados e Troca de Senha -->
         <div class="lg:col-span-2 space-y-8">
             <!-- Formulário 1: Dados Pessoais -->
-            <div class="rounded-3xl bg-slate-900 border border-slate-800 p-8 shadow-xl">
+            <div class="rounded-xl bg-slate-900 border border-slate-800 p-8 shadow-xl">
                 <div class="mb-6">
                     <h2 class="text-xl font-black text-white flex items-center gap-2">
                         <span>📝</span> Dados Pessoais
@@ -155,7 +152,7 @@
             </div>
 
             <!-- Formulário 2: Alteração de Senha -->
-            <div class="rounded-3xl bg-slate-900 border border-slate-800 p-8 shadow-xl">
+            <div class="rounded-xl bg-slate-900 border border-slate-800 p-8 shadow-xl">
                 <div class="mb-6">
                     <h2 class="text-xl font-black text-white flex items-center gap-2">
                         <span>🔑</span> Trocar Senha de Acesso

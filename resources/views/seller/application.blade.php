@@ -2,8 +2,7 @@
 @section('title', 'Quero vender')
 @section('content')
 <div class="max-w-2xl mx-auto space-y-6 rounded-2xl bg-slate-900 p-6">
-    <h1 class="text-2xl font-bold">Quero vender</h1>
-    <p>Use sua conta para comprar e vender. Preencha sua apresentação para a equipe aprovar seu perfil.</p>
+    <x-page-heading title="Quero vender" eyebrow="COMECE UMA NOVA CONQUISTA" description="Use sua conta para comprar e vender. Preencha sua apresentação para a equipe aprovar seu perfil." />
     @if ($errors->any())
         <p class="text-rose-300" role="alert">{{ $errors->first() }}</p>
     @endif
