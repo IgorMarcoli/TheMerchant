@@ -28,10 +28,12 @@ Na aba **Environment** do serviço no Render, adicione as seguintes variáveis:
 | `APP_ENV` | `production` | Ambiente de produção |
 | `APP_DEBUG` | `false` | Desabilita mensagens de debug em produção |
 | `APP_KEY` | *(Gerar uma chave)* | Execute localmente `php artisan key:generate --show` e cole aqui |
-| `APP_URL` | `https://themerchant.onrender.com` | Substitua pelo domínio real fornecido pelo Render |
+| `APP_URL` | `https://themerchant-p2be.onrender.com` | Substitua pelo domínio real fornecido pelo Render, sempre com HTTPS |
 | `APP_TIMEZONE` | `America/Sao_Paulo` | Fuso horário |
 | `LOG_CHANNEL` | `stderr` | Envia logs diretamente para o console do Render |
-| `SESSION_DRIVER` | `file` | Sessões locais em arquivo (ou `database`) |
+| `SESSION_DRIVER` | `database` | Sessões persistentes no banco externo; execute a migration da tabela `sessions` |
+| `SESSION_DOMAIN` | `null` | Cookie válido para o host do serviço; não inclua protocolo nem caminho |
+| `SESSION_SECURE_COOKIE` | `true` | Cookie de sessão enviado somente por HTTPS |
 | `CACHE_STORE` | `file` | Cache local em arquivo (ou `database`) |
 | `QUEUE_CONNECTION` | `sync` | Processamento síncrono inicial |
 | `FILESYSTEM_DISK` | `public` | Armazenamento de uploads |

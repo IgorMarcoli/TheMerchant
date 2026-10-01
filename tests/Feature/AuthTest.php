@@ -19,6 +19,16 @@ class AuthTest extends TestCase
         $response->assertSee('Acessar Conta');
     }
 
+    public function test_login_form_uses_https_behind_proxy(): void
+    {
+        $response = $this->withServerVariables(['REMOTE_ADDR' => '10.0.0.1'])
+            ->withHeader('X-Forwarded-Proto', 'https')
+            ->get('http://themerchant-p2be.onrender.com/login');
+
+        $response->assertOk();
+        $response->assertSee('action="https://themerchant-p2be.onrender.com/login"', false);
+    }
+
     public function test_user_can_authenticate_with_valid_credentials(): void
     {
         $user = User::factory()->create([
