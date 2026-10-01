@@ -5,7 +5,7 @@
 @section('content')
 <div class="max-w-6xl mx-auto" x-data="chatInbox({
     authId: {{ auth()->id() }},
-    authName: '{{ addslashes(auth()->user()->name) }}',
+    authName: {{ Js::from(auth()->user()->name) }},
     activeConversationId: {{ $activeConversation ? $activeConversation->id : 'null' }},
     initialMessages: {{ Js::from($messages->map->toSafeArray()) }},
     csrfToken: '{{ csrf_token() }}',
@@ -140,7 +140,7 @@
                         </div>
                     </template>
 
-                    <template x-for="msg in messages" :key="msg.client_uuid || msg.id">
+                    <template x-for="msg in messages" :key="msg.sender_id + ':' + (msg.client_uuid || msg.id)">
                         <div class="flex flex-col" :class="msg.sender_id === authId ? 'items-end' : 'items-start'">
                             <div class="max-w-[85%] sm:max-w-[70%] rounded-2xl p-3 text-xs leading-relaxed shadow-sm transition"
                                  :class="msg.sender_id === authId
@@ -175,13 +175,14 @@
                 <!-- Formulário de Envio de Mensagem (Limitação v1: Apenas Texto, 1-2000 chars) -->
                 <div class="p-4 border-t border-slate-800 bg-slate-950/60">
                     <form @submit.prevent="sendMessage()" class="space-y-2">
+                        @csrf
                         <div class="relative">
                             <label for="chat-message-input" class="sr-only">Digite sua mensagem</label>
                             <textarea id="chat-message-input"
                                       rows="2"
                                       x-model="draftText"
                                       @input="saveDraft()"
-                                      @keydown.enter.prevent="if (!$event.shiftKey) sendMessage()"
+                                      @keydown.enter="if (!$event.shiftKey && !$event.isComposing) { $event.preventDefault(); sendMessage(); }"
                                       maxlength="2000"
                                       placeholder="Digite sua mensagem... (Enter para enviar, Shift+Enter para nova linha)"
                                       class="w-full bg-slate-900 border border-slate-700 rounded-2xl p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 resize-none transition"
@@ -236,11 +237,18 @@ function chatInbox(config) {
         sendUrl: config.sendUrl,
         readUrl: config.readUrl,
         pollInterval: null,
+        lastFetchedId: Math.max(0, ...(config.initialMessages || []).map(message => message.id)),
+        isFetching: false,
 
         init() {
             if (this.activeConversationId) {
                 // Restaurar rascunho salvo localmente
-                const savedDraft = localStorage.getItem('tm_chat_draft_' + this.activeConversationId);
+                let savedDraft = null;
+                try {
+                    savedDraft = localStorage.getItem('tm_chat_draft_' + this.activeConversationId);
+                } catch (err) {
+                    // O navegador pode bloquear o armazenamento local.
+                }
                 if (savedDraft) {
                     this.draftText = savedDraft;
                 }
@@ -260,7 +268,18 @@ function chatInbox(config) {
 
         saveDraft() {
             if (this.activeConversationId) {
-                localStorage.setItem('tm_chat_draft_' + this.activeConversationId, this.draftText);
+                try {
+                    localStorage.setItem('tm_chat_draft_' + this.activeConversationId, this.draftText);
+                } catch (err) {
+                    // O envio continua disponível sem persistência de rascunhos.
+                }
+            }
+        },
+
+        destroy() {
+            clearInterval(this.pollInterval);
+            if (window.Echo && this.activeConversationId) {
+                window.Echo.leave('chat.' + this.activeConversationId);
             }
         },
 
@@ -295,7 +314,7 @@ function chatInbox(config) {
         handleIncomingMessage(incoming) {
             // Deduplicação por client_uuid ou por id
             const existingIndex = this.messages.findIndex(m =>
-                (incoming.client_uuid && m.client_uuid === incoming.client_uuid) ||
+                (incoming.client_uuid && m.client_uuid === incoming.client_uuid && m.sender_id === incoming.sender_id) ||
                 (incoming.id && m.id === incoming.id)
             );
 
@@ -306,8 +325,8 @@ function chatInbox(config) {
                 this.screenReaderAnnouncement = 'Nova mensagem de ' + incoming.sender_name + ': ' + incoming.body;
             }
 
+            this.messages.sort((a, b) => (a.id || Infinity) - (b.id || Infinity));
             this.scrollToBottom();
-            this.markCurrentAsRead();
         },
 
         async sendMessage() {
@@ -332,10 +351,13 @@ function chatInbox(config) {
             this.saveDraft();
             this.scrollToBottom();
 
-            await this.dispatchMessageRequest(pendingMessage);
+            await this.dispatchMessageRequest(this.messages.find(message =>
+                message.sender_id === this.authId && message.client_uuid === clientUuid
+            ));
         },
 
         async retryMessage(msg) {
+            if (this.isSubmitting) return;
             msg.status = 'sending';
             await this.dispatchMessageRequest(msg);
         },
@@ -362,9 +384,7 @@ function chatInbox(config) {
 
                 const data = await response.json();
                 if (data && data.message) {
-                    msg.id = data.message.id;
-                    msg.status = 'sent';
-                    msg.formatted_time = data.message.formatted_time;
+                    this.handleIncomingMessage(data.message);
                 }
             } catch (error) {
                 msg.status = 'error';
@@ -376,31 +396,34 @@ function chatInbox(config) {
         },
 
         async fetchIncrementalMessages() {
-            if (!this.messagesUrl) return;
-
-            const lastMessage = this.messages.filter(m => m.id).slice(-1)[0];
-            const afterId = lastMessage ? lastMessage.id : 0;
+            if (!this.messagesUrl || this.isFetching) return;
+            this.isFetching = true;
 
             try {
-                const response = await fetch(this.messagesUrl + '?after_id=' + afterId, {
+                const response = await fetch(this.messagesUrl + '?after_id=' + this.lastFetchedId, {
                     headers: { 'Accept': 'application/json' }
                 });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data && data.messages && data.messages.length > 0) {
-                        data.messages.forEach(m => this.handleIncomingMessage(m));
-                    }
+                if (!response.ok) throw new Error('Falha HTTP: ' + response.status);
+                const data = await response.json();
+                if (data && data.messages && data.messages.length > 0) {
+                    data.messages.forEach(m => this.handleIncomingMessage(m));
+                    this.lastFetchedId = Math.max(this.lastFetchedId, ...data.messages.map(m => m.id));
                 }
+                this.connectionStatus = 'connected';
+                this.connectionStatusText = 'Sincronizado';
+                await this.markCurrentAsRead();
             } catch (err) {
-                // Silencioso em caso de falha transitória
+                this.connectionStatus = 'reconnecting';
+                this.connectionStatusText = 'Reconectando...';
+            } finally {
+                this.isFetching = false;
             }
         },
 
         async markCurrentAsRead() {
             if (!this.readUrl) return;
-            const lastSentOrReceived = this.messages.filter(m => m.id).slice(-1)[0];
-            if (!lastSentOrReceived) return;
+            if (!this.lastFetchedId) return;
 
             try {
                 await fetch(this.readUrl, {
@@ -411,7 +434,7 @@ function chatInbox(config) {
                         'Accept': 'application/json'
                     },
                     body: JSON.stringify({
-                        last_read_message_id: lastSentOrReceived.id
+                        last_read_message_id: this.lastFetchedId
                     })
                 });
             } catch (err) {
