@@ -4,12 +4,9 @@
 
 @section('content')
 <div class="max-w-5xl mx-auto">
-    <div class="flex items-center justify-between mb-8">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-5 mb-8">
         <div>
-            <h1 class="text-2xl font-bold text-white flex items-center gap-2">
-                <span>📈</span> Gestão de Vendas
-            </h1>
-            <p class="text-xs text-slate-400">Acompanhe os pedidos recebidos e confirme a entrega digital.</p>
+            <x-page-heading title="Gestão de Vendas" eyebrow="DA SUA LOJA PARA O PRÓXIMO PLAYER" description="Acompanhe os pedidos recebidos e confirme a entrega digital." />
         </div>
         <a href="{{ route('seller.anuncios.index') }}" class="px-4 py-2 rounded-xl bg-slate-800 text-xs font-semibold text-slate-300 hover:text-white transition">
             &larr; Meus Anúncios
@@ -79,9 +76,7 @@
                 </div>
             </div>
         @empty
-            <div class="rounded-3xl bg-slate-900 border border-slate-800 p-12 text-center text-slate-500 text-sm">
-                Nenhuma venda registrada até o momento.
-            </div>
+            <x-empty-state title="Nenhuma venda registrada até o momento." description="Seus pedidos recebidos aparecerão aqui. Prepare seus anúncios para o próximo player." icon="store" :href="route('seller.anuncios.index')" action="Ver meus anúncios" />
         @endforelse
     </div>
 

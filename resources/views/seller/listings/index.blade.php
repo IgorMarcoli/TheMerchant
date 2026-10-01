@@ -3,12 +3,9 @@
 @section('title', 'Painel do Vendedor - Meus Anúncios')
 
 @section('content')
-<div class="flex items-center justify-between mb-8">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-5 mb-8">
     <div>
-        <h1 class="text-2xl font-bold text-white flex items-center gap-2">
-            <span>💼</span> Meus Anúncios
-        </h1>
-        <p class="text-xs text-slate-400">Gerencie seus produtos e serviços cadastrados.</p>
+        <x-page-heading title="Meus Anúncios" eyebrow="SEU INVENTÁRIO TEM POTENCIAL" description="Gerencie seus produtos e serviços cadastrados." />
     </div>
     <div class="flex gap-3">
         <a href="{{ route('seller.sales.index') }}" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition">
@@ -70,9 +67,7 @@
             </div>
         </div>
     @empty
-        <div class="rounded-3xl bg-slate-900 border border-slate-800 p-12 text-center text-slate-500 text-sm">
-            Você ainda não cadastrou nenhum anúncio.
-        </div>
+        <x-empty-state title="Você ainda não cadastrou nenhum anúncio." description="Transforme seus itens e sua experiência em novas conquistas." icon="store" :href="route('seller.application')" action="Gerenciar perfil de vendedor" />
     @endforelse
 </div>
 

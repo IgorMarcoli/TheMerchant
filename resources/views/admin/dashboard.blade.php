@@ -7,12 +7,7 @@
     <!-- Cabeçalho e Navegação do Painel -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-6">
         <div>
-            <h1 class="text-2xl font-black text-white flex items-center gap-2">
-                <span>🛡️</span> Painel de Controle Administrativo
-            </h1>
-            <p class="text-xs text-slate-400 mt-1">
-                Visão consolidada de indicadores de transação, catálogo, moderação e controle de contas.
-            </p>
+            <x-page-heading title="Painel de Controle Administrativo" eyebrow="VISÃO GERAL DO MARKETPLACE" description="Acompanhe transações, catálogo, denúncias e contas em um só lugar." />
         </div>
 
         <div class="flex flex-wrap items-center gap-2">
@@ -31,7 +26,7 @@
     <!-- Cards de KPIs (RF17, RF18, RNF03) -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         <!-- KPI 1: Volume Financeiro Transacionado (GMV) -->
-        <div class="p-6 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl flex flex-col justify-between">
+        <div class="p-6 rounded-xl bg-slate-900 border border-slate-800 shadow-xl flex flex-col justify-between">
             <div>
                 <div class="flex items-center justify-between text-slate-400 mb-2">
                     <span class="text-xs uppercase font-bold tracking-wider">Volume Transacionado</span>
@@ -47,7 +42,7 @@
         </div>
 
         <!-- KPI 2: Volume de Pedidos -->
-        <div class="p-6 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl flex flex-col justify-between">
+        <div class="p-6 rounded-xl bg-slate-900 border border-slate-800 shadow-xl flex flex-col justify-between">
             <div>
                 <div class="flex items-center justify-between text-slate-400 mb-2">
                     <span class="text-xs uppercase font-bold tracking-wider">Volume de Pedidos</span>
@@ -71,7 +66,7 @@
         </div>
 
         <!-- KPI 3: Usuários e Contas -->
-        <div class="p-6 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl flex flex-col justify-between">
+        <div class="p-6 rounded-xl bg-slate-900 border border-slate-800 shadow-xl flex flex-col justify-between">
             <div>
                 <div class="flex items-center justify-between text-slate-400 mb-2">
                     <span class="text-xs uppercase font-bold tracking-wider">Usuários Cadastrados</span>
@@ -97,7 +92,7 @@
         </div>
 
         <!-- KPI 4: Catálogo e Anúncios Ativos -->
-        <div class="p-6 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl flex flex-col justify-between">
+        <div class="p-6 rounded-xl bg-slate-900 border border-slate-800 shadow-xl flex flex-col justify-between">
             <div>
                 <div class="flex items-center justify-between text-slate-400 mb-2">
                     <span class="text-xs uppercase font-bold tracking-wider">Anúncios no Catálogo</span>
@@ -116,7 +111,7 @@
     <!-- Seções de Detalhamento e Listagens Recentes -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <!-- Pedidos Recentes -->
-        <div class="rounded-3xl bg-slate-900 border border-slate-800 p-6 shadow-xl">
+        <div class="rounded-xl bg-slate-900 border border-slate-800 p-6 shadow-xl">
             <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
                 <h2 class="text-sm font-bold text-white flex items-center gap-2">
                     <span>🛒</span> Últimos Pedidos Registrados
@@ -154,7 +149,7 @@
         </div>
 
         <!-- Denúncias Pendentes -->
-        <div class="rounded-3xl bg-slate-900 border border-slate-800 p-6 shadow-xl">
+        <div class="rounded-xl bg-slate-900 border border-slate-800 p-6 shadow-xl">
             <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
                 <h2 class="text-sm font-bold text-white flex items-center gap-2">
                     <span>🚩</span> Denúncias Pendentes de Moderação

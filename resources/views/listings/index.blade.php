@@ -9,8 +9,7 @@
 @section('content')
 <div x-data="catalogFilters" @popstate.window="restore()" class="space-y-6">
     <div>
-        <h1 class="text-2xl font-bold text-white mb-2">Explorar Catálogo</h1>
-        <p class="text-sm text-slate-400">Encontre cosméticos raros e serviços digitais verificados.</p>
+        <x-page-heading title="Explorar Catálogo" eyebrow="DESCUBRA SEU PRÓXIMO DROP" description="Skins, cosméticos e coaching para jogar do seu jeito." />
     </div>
 
     <form x-ref="form" method="GET" action="{{ route('listings.index') }}"

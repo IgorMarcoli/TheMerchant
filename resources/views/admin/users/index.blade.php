@@ -2,8 +2,7 @@
 @section('title', 'Contas e vendedores')
 @section('content')
 <div class="space-y-6">
-    <h1 class="text-2xl font-bold">Contas e vendedores</h1>
-    <p>Todas as contas ativas podem comprar. Aprove ou suspenda vendas separadamente do acesso administrativo.</p>
+    <x-page-heading title="Contas e vendedores" eyebrow="CUIDE DA COMUNIDADE" description="Gerencie contas, solicitações de vendedores e permissões de acesso." />
     @if ($errors->any())
         <p class="text-rose-300" role="alert">{{ $errors->first() }}</p>
     @endif

@@ -5,10 +5,7 @@
 @section('content')
 <div class="max-w-5xl mx-auto">
     <div class="mb-8">
-        <h1 class="text-2xl font-bold text-white flex items-center gap-2">
-            <span>🚩</span> Fila de Moderação de Denúncias
-        </h1>
-        <p class="text-xs text-slate-400">Analise denúncias e suspenda anúncios irregulares (RF16, RF19, RF20).</p>
+        <x-page-heading title="Fila de Moderação de Denúncias" eyebrow="UMA COMUNIDADE BEM CUIDADA" description="Analise denúncias e suspenda anúncios irregulares." />
     </div>
 
     <div class="space-y-4">
@@ -59,9 +56,7 @@
                 @endif
             </div>
         @empty
-            <div class="rounded-3xl bg-slate-900 border border-slate-800 p-12 text-center text-slate-500 text-sm">
-                Nenhuma denúncia registrada.
-            </div>
+            <x-empty-state title="Nenhuma denúncia registrada." description="As denúncias recebidas pela comunidade aparecerão aqui para análise." icon="shield" />
         @endforelse
     </div>
 

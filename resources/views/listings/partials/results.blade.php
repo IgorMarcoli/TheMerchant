@@ -13,7 +13,7 @@
             </p>
         </div>
     @empty
-        <p class="col-span-full py-12 text-center text-slate-400">Nenhum anúncio encontrado para os filtros selecionados.</p>
+        <x-empty-state title="Nenhum anúncio encontrado para os filtros selecionados." description="Tente outra busca ou explore o catálogo completo para encontrar seu próximo upgrade." icon="search" :href="route('listings.index')" action="Explorar todos os anúncios" />
     @endforelse
 </div>
 {{ $listings->links('vendor.pagination.catalog') }}

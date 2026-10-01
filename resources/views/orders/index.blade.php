@@ -5,10 +5,7 @@
 @section('content')
 <div class="max-w-5xl mx-auto">
     <div class="mb-8">
-        <h1 class="text-2xl font-bold text-white flex items-center gap-2">
-            <span>📦</span> Histórico de Pedidos
-        </h1>
-        <p class="text-xs text-slate-400">Acompanhe suas compras e realize avaliações pós-entrega.</p>
+        <x-page-heading title="Histórico de Pedidos" eyebrow="CADA CONQUISTA, EM UM LUGAR" description="Acompanhe suas compras e realize avaliações pós-entrega." />
     </div>
 
     <div class="space-y-4">
@@ -50,9 +47,7 @@
                 </div>
             </div>
         @empty
-            <div class="rounded-3xl bg-slate-900 border border-slate-800 p-12 text-center text-slate-500 text-sm">
-                Você ainda não realizou nenhum pedido.
-            </div>
+            <x-empty-state title="Você ainda não realizou nenhum pedido." description="Seu próximo upgrade está no marketplace. Encontre algo com a sua cara." icon="grid" :href="route('listings.index')" action="Explorar marketplace" />
         @endforelse
     </div>
 
