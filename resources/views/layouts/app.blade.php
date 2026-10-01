@@ -75,5 +75,6 @@
     </main>
 
     <x-marketplace-footer />
+    @stack('scripts')
 </body>
 </html>
