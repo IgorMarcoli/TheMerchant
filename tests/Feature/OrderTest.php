@@ -312,13 +312,13 @@ class OrderTest extends TestCase
             'delivery_status' => 'em_entrega',
         ]);
 
-        // Before delivery: review should fail (400)
+        // Before delivery: the review policy denies authorization (403)
         $this->actingAs($this->buyer)
             ->post(route('orders.review.store', [$order, $item]), [
                 'rating' => 5,
                 'comment' => 'Tentativa antecipada de avaliação',
             ])
-            ->assertStatus(400);
+            ->assertForbidden();
 
         $this->assertDatabaseMissing('reviews', [
             'order_item_id' => $item->id,
