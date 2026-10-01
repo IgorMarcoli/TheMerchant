@@ -1,24 +1,28 @@
-<?php
+s<?php
 
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\ReportController as AdminReportController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\Auth\EmailVerificationController;
-use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\Buyer\CartController;
 use App\Http\Controllers\Buyer\CheckoutController;
 use App\Http\Controllers\Buyer\OrderController;
 use App\Http\Controllers\Buyer\ReviewController;
+use App\Http\Controllers\Auth\EmailVerificationController;
+use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ListingPublicController;
 use App\Http\Controllers\Seller\ApplicationController;
 use App\Http\Controllers\Seller\ListingController as SellerListingController;
 use App\Http\Controllers\Seller\SaleController as SellerSaleController;
+use App\Http\Controllers\TableDataController;
 use App\Http\Middleware\EnsureAccountIsActive;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Schema;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +30,36 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 Route::get('/', [ListingPublicController::class, 'home'])->name('home');
+
+Route::get('/test-db', function () {
+    try {
+        DB::connection()->getPdo();
+        $dbName = DB::connection()->getDatabaseName();
+        $userCount = Schema::hasTable('users')
+            ? User::count()
+            : 0;
+        $tables = Schema::getTableListing();
+
+        return response()->json([
+            'status' => 'Conexão com o banco de dados OK!',
+            'driver' => config('database.default'),
+            'database' => $dbName,
+            'tabela_users' => Schema::hasTable('users') ? 'OK' : 'Não encontrada',
+            'usuarios_cadastrados' => $userCount,
+            'total_tabelas' => count($tables),
+            'tabelas' => $tables,
+        ], 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    } catch (Throwable $e) {
+        return response()->json([
+            'status' => 'Erro de conexão com o banco de dados',
+            'erro' => $e->getMessage(),
+        ], 500, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    }
+})->name('test.db');
+
+// Endpoints diretos de consulta de tabelas em JSON
+Route::get('/tabela', [TableDataController::class, 'index'])->name('tables.index');
+Route::get('/tabela/{table}', [TableDataController::class, 'show'])->name('tables.show');
 
 Route::get('/anuncios', [ListingPublicController::class, 'index'])->name('listings.index');
 Route::get('/anuncios/{slug}', [ListingPublicController::class, 'show'])->name('listings.show');
@@ -41,9 +75,9 @@ Route::middleware('guest')->group(function () {
     Route::get('/cadastro', [AuthController::class, 'showRegisterForm'])->name('register');
     Route::post('/cadastro', [AuthController::class, 'register']);
     Route::get('/esqueci-minha-senha', [PasswordResetController::class, 'request'])->name('password.request');
-    Route::post('/esqueci-minha-senha', [PasswordResetController::class, 'send'])->middleware('throttle:account-recovery')->name('password.email');
-    Route::get('/redefinir-senha/{token}', [PasswordResetController::class, 'edit'])->name('password.reset');
-    Route::post('/redefinir-senha', [PasswordResetController::class, 'update'])->middleware('throttle:account-recovery')->name('password.update');
+Route::post('/esqueci-minha-senha', [PasswordResetController::class, 'send'])->middleware('throttle:account-recovery')->name('password.email');
+Route::get('/redefinir-senha/{token}', [PasswordResetController::class, 'edit'])->name('password.reset');
+Route::post('/redefinir-senha', [PasswordResetController::class, 'update'])->middleware('throttle:account-recovery')->name('password.update');
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
@@ -55,7 +89,6 @@ Route::middleware(['auth', EnsureAccountIsActive::class])->group(function () {
     Route::post('/verificar-email/reenviar', [EmailVerificationController::class, 'send'])
         ->middleware('throttle:1,1,resend-email:')->name('verification.send');
 });
-
 /*
 |--------------------------------------------------------------------------
 | Rotas do Comprador (Autenticadas)
@@ -119,7 +152,7 @@ Route::middleware(['auth', EnsureAccountIsActive::class, 'can:viewAny,App\Models
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::resource('categorias', AdminCategoryController::class);
     Route::patch('categorias/{categoria}/status', [AdminCategoryController::class, 'toggleStatus'])->name('categorias.status');
-    Route::patch('games/{game}/status', [AdminCategoryController::class, 'toggleGameStatus'])->name('games.status');
+    Route::patch('jogos/{game}/status', [AdminCategoryController::class, 'toggleGameStatus'])->name('games.status');
     Route::resource('usuarios', AdminUserController::class)->only(['index', 'update']);
     Route::get('denuncias', [AdminReportController::class, 'index'])->name('reports.index');
     Route::patch('denuncias/{report}/moderar', [AdminReportController::class, 'moderate'])->name('reports.moderate');
