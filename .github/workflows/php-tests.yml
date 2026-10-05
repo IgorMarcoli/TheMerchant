@@ -1,0 +1,69 @@
+name: Testes PHP
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: php-tests-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    name: PHP ${{ matrix.php }} / PHPUnit
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.2', '8.3']
+
+    env:
+      APP_ENV: testing
+      APP_DEBUG: 'false'
+      APP_CONFIG_CACHE: /tmp/themerchant-testing-config.php
+      BCRYPT_ROUNDS: '4'
+      DB_URL: ''
+      DB_CONNECTION: sqlite
+      DB_DATABASE: ':memory:'
+      CACHE_STORE: array
+      SESSION_DRIVER: array
+      QUEUE_CONNECTION: sync
+      MAIL_MAILER: array
+      BROADCAST_CONNECTION: log
+
+    steps:
+      - name: Obter código
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Configurar PHP e Composer
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: bcmath, ctype, curl, dom, fileinfo, mbstring, openssl, pdo_sqlite, sqlite3, xml, zip
+          tools: composer:v2
+          coverage: none
+
+      - name: Preparar ambiente de teste
+        run: cp .env.example .env
+
+      - name: Validar dependências
+        run: composer validate --strict --no-check-publish
+
+      - name: Instalar dependências
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Gerar chave da aplicação
+        run: php artisan key:generate --ansi
+
+      - name: Verificar requisitos do PHP
+        run: composer check-platform-reqs
+
+      - name: Executar testes unitários e de feature
+        run: php artisan test

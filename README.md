@@ -483,6 +483,8 @@ Abra [o catálogo local](http://127.0.0.1:8000/anuncios) ou [o login](http://127
 
 ## 🧪 Testes e Validações
 
+O workflow [Testes PHP](.github/workflows/php-tests.yml) executa os testes de `tests/Unit` e `tests/Feature` automaticamente em pushes e pull requests, com PHP 8.2 e 8.3 e SQLite em memória. Consulte os resultados na aba **Actions** do repositório e os detalhes no [guia de testes](docs/TESTES.md#github-actions).
+
 Verificações sem alterar o banco:
 
 ```powershell
