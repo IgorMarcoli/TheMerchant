@@ -34,7 +34,11 @@ class CheckoutController extends Controller
     public function process(CheckoutRequest $request): RedirectResponse
     {
         try {
-            $result = $this->checkoutService->checkout($request->user(), $request->notes);
+            $result = $this->checkoutService->checkout(
+                $request->user(),
+                $request->validated('notes'),
+                $request->validated('item_instructions', [])
+            );
 
             return redirect($result['checkout_url']);
         } catch (Exception $e) {
@@ -44,11 +48,17 @@ class CheckoutController extends Controller
 
     public function success(Order $order): View
     {
+        $this->authorize('view', $order);
+        $order->load(['payment', 'items.listing']);
+
         return view('checkout.success', compact('order'));
     }
 
     public function cancel(Order $order): View
     {
+        $this->authorize('view', $order);
+        $order->load(['payment', 'items.listing']);
+
         return view('checkout.cancel', compact('order'));
     }
 }

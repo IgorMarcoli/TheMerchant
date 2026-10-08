@@ -15,10 +15,12 @@ class Order extends Model
         'total_amount',
         'status', // 'pendente', 'pago', 'em_andamento', 'concluido', 'cancelado'
         'notes',
+        'reservation_expires_at',
     ];
 
     protected $casts = [
         'total_amount' => 'decimal:2',
+        'reservation_expires_at' => 'datetime',
     ];
 
     public function buyer(): BelongsTo
@@ -33,7 +35,7 @@ class Order extends Model
 
     public function payment(): HasOne
     {
-        return $this->hasOne(Payment::class);
+        return $this->hasOne(Payment::class)->latestOfMany();
     }
 
     public function reviews(): HasMany

@@ -15,6 +15,8 @@ class CheckoutRequest extends FormRequest
     {
         return [
             'notes' => ['nullable', 'string', 'max:500'],
+            'item_instructions' => ['nullable', 'array'],
+            'item_instructions.*' => ['nullable', 'string', 'max:1000'],
             'terms_agreed' => ['accepted'],
         ];
     }
@@ -23,6 +25,7 @@ class CheckoutRequest extends FormRequest
     {
         return [
             'terms_agreed.accepted' => 'Você deve concordar com as regras de entrega e conformidade com os termos do jogo.',
+            'item_instructions.*.max' => 'Cada instrução por item deve ter no máximo 1.000 caracteres.',
         ];
     }
 }

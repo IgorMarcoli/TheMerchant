@@ -19,7 +19,7 @@ class CheckoutService
     /**
      * Converte o carrinho do usuário em um pedido imutável e inicia o checkout no gateway.
      */
-    public function checkout(User $user, ?string $notes = null): array
+    public function checkout(User $user, ?string $notes = null, array $itemInstructions = []): array
     {
         $cart = Cart::with(['items.listing'])->where('user_id', $user->id)->first();
 
@@ -27,7 +27,7 @@ class CheckoutService
             throw new RuntimeException('O carrinho está vazio.');
         }
 
-        return DB::transaction(function () use ($cart, $user, $notes) {
+        return DB::transaction(function () use ($cart, $user, $notes, $itemInstructions) {
             $total = 0;
 
             // Validação de disponibilidade de cada anúncio
@@ -45,6 +45,7 @@ class CheckoutService
                 'total_amount' => $total,
                 'status' => 'pendente',
                 'notes' => $notes,
+                'reservation_expires_at' => now()->addHours(24),
             ]);
 
             // Criação dos itens do pedido preservando os valores históricos
@@ -52,9 +53,12 @@ class CheckoutService
                 OrderItem::create([
                     'order_id' => $order->id,
                     'listing_id' => $item->listing_id,
+                    'listing_title' => $item->listing->title,
+                    'listing_description' => $item->listing->description,
                     'seller_id' => $item->listing->seller_id,
                     'unit_price' => $item->unit_price,
                     'quantity' => $item->quantity,
+                    'delivery_instructions' => $itemInstructions[$item->id] ?? null,
                     'delivery_status' => 'aguardando_pagamento',
                 ]);
 

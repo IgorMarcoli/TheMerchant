@@ -12,9 +12,12 @@ class OrderItem extends Model
     protected $fillable = [
         'order_id',
         'listing_id',
+        'listing_title',
+        'listing_description',
         'seller_id',
         'unit_price',
         'quantity',
+        'delivery_instructions',
         'delivery_status', // 'aguardando_pagamento', 'em_entrega', 'entregue'
         'delivered_at',
     ];
