@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Report extends Model
 {
@@ -30,5 +31,10 @@ class Report extends Model
     public function moderator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'moderator_id');
+    }
+
+    public function audits(): HasMany
+    {
+        return $this->hasMany(ModerationAudit::class)->latest();
     }
 }
