@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CatalogRequest;
+use App\Http\Requests\StoreListingReportRequest;
 use App\Models\Listing;
 use App\Models\Report;
 use App\Services\CatalogService;
 use App\Services\StorefrontService;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ListingPublicController extends Controller
@@ -26,27 +27,28 @@ class ListingPublicController extends Controller
     public function show(string $slug): View
     {
         $listing = Listing::with(['game', 'category', 'seller.sellerProfile', 'images'])
-            ->available()
+            ->whereNotIn('status', ['rascunho', 'bloqueado'])
+            ->whereHas('seller', fn ($seller) => $seller->where('status', 'active')
+                ->whereHas('sellerProfile', fn ($profile) => $profile->where('status', 'approved')))
             ->where('slug', $slug)
             ->firstOrFail();
 
         $listing->increment('views_count');
+        $galleryImages = $listing->images
+            ->filter(fn ($image) => Storage::disk('public')->exists($image->image_path))
+            ->sortBy(fn ($image) => [$image->is_primary ? 0 : 1, $image->display_order])
+            ->values()
+            ->map(fn ($image) => Storage::disk('public')->url($image->image_path));
 
-        return view('listings.show', compact('listing'));
+        return view('listings.show', compact('listing', 'galleryImages'));
     }
 
-    public function report(Request $request, Listing $listing): RedirectResponse
+    public function report(StoreListingReportRequest $request, Listing $listing): RedirectResponse
     {
-        $request->validate([
-            'reason' => ['required', 'string', 'max:100'],
-            'details' => ['required', 'string', 'max:1000'],
-        ]);
-
         Report::create([
             'reporter_id' => $request->user()->id,
             'listing_id' => $listing->id,
-            'reason' => $request->reason,
-            'details' => $request->details,
+            ...$request->validated(),
             'status' => 'aberta',
         ]);
 

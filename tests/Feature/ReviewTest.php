@@ -188,7 +188,7 @@ class ReviewTest extends TestCase
         $url = route('listings.show', $item->listing->slug);
         $this->get($url)->assertOk()->assertSee('Sem avaliações')->assertDontSee($item->seller->email);
         app(ReviewService::class)->create($item->order->buyer, $item->order, $item, 4);
-        $this->get($url)->assertOk()->assertSee('4.00')->assertSee('1 avaliações')
+        $this->get($url)->assertOk()->assertSee('4,00/5')->assertSee('1 avaliações')
             ->assertDontSee($item->seller->email)->assertDontSee($item->order->buyer->email);
     }
 
