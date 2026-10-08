@@ -164,6 +164,9 @@
                     <div class="py-3 flex items-center justify-between text-xs">
                         <div class="max-w-[75%]">
                             <span class="font-bold text-rose-300">{{ $rep->reason }}</span>
+                            <span class="ml-1 rounded px-1.5 py-0.5 text-[9px] font-bold uppercase {{ $rep->status === 'em_analise' ? 'bg-amber-950 text-amber-300' : 'bg-rose-950 text-rose-300' }}">
+                                {{ $rep->status === 'em_analise' ? 'Em análise' : 'Aberta' }}
+                            </span>
                             <p class="text-slate-400 text-[11px] truncate mt-0.5">{{ $rep->details }}</p>
                             <span class="text-[10px] text-slate-500">
                                 Anúncio: {{ $rep->listing?->title ?? 'Anúncio removido' }}

@@ -41,10 +41,14 @@ class DashboardController extends Controller
             'approved_sellers' => User::whereHas('sellerProfile', fn ($q) => $q->where('status', 'approved'))->count(),
             'total_listings' => Listing::count(),
             'active_listings' => Listing::where('status', 'publicado')->count(),
-            'open_reports' => Report::where('status', 'aberta')->count(),
+            'open_reports' => Report::whereIn('status', ['aberta', 'em_analise'])->count(),
         ];
 
-        $recentReports = Report::with(['reporter', 'listing'])->where('status', 'aberta')->latest()->take(5)->get();
+        $recentReports = Report::with(['reporter', 'listing'])
+            ->whereIn('status', ['aberta', 'em_analise'])
+            ->latest()
+            ->take(5)
+            ->get();
         $recentOrders = Order::with('buyer')->latest()->take(5)->get();
 
         return view('admin.dashboard', compact('metrics', 'recentReports', 'recentOrders'));
