@@ -19,9 +19,11 @@
         @forelse ($games as $game)
             <a href="{{ route('listings.index', ['jogo' => $game->id]) }}" class="tm-game-card tm-game-{{ $loop->index % 6 }}">
                 @if ($game->cover_image && \Illuminate\Support\Facades\Storage::disk('public')->exists($game->cover_image))
-                    <img src="{{ asset('storage/' . $game->cover_image) }}" alt="" loading="lazy" width="320" height="240">
-                @elseif (in_array($game->slug, ['cs2', 'dota-2']))
-                    <img src="{{ asset('images/marketplace/' . $game->slug . '.jpg') }}" alt="" loading="lazy" width="320" height="240">
+                    <img src="{{ asset('storage/' . $game->cover_image) }}" alt="{{ $game->name }}" loading="lazy" width="320" height="240">
+                @elseif (in_array($game->slug, ['cs2', 'dota-2', 'valorant', 'league-of-legends']))
+                    <img src="{{ asset('images/marketplace/' . $game->slug . '.jpg') }}" alt="{{ $game->name }}" loading="lazy" width="320" height="240">
+                @elseif (file_exists(public_path('images/marketplace/' . $game->slug . '.jpg')))
+                    <img src="{{ asset('images/marketplace/' . $game->slug . '.jpg') }}" alt="{{ $game->name }}" loading="lazy" width="320" height="240">
                 @else
                     <span class="tm-game-monogram" aria-hidden="true">{{ \Illuminate\Support\Str::upper(\Illuminate\Support\Str::substr($game->name, 0, 2)) }}</span>
                 @endif
