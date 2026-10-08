@@ -4,12 +4,9 @@
 
 @section('content')
 <div class="max-w-5xl mx-auto">
-    <div class="flex items-center justify-between mb-8">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-5 mb-8">
         <div>
-            <h1 class="text-2xl font-bold text-white flex items-center gap-2">
-                <span>📈</span> Gestão de Vendas
-            </h1>
-            <p class="text-xs text-slate-400">Acompanhe os pedidos recebidos e confirme a entrega digital.</p>
+            <x-page-heading title="Gestão de Vendas" eyebrow="DA SUA LOJA PARA O PRÓXIMO PLAYER" description="Acompanhe os pedidos recebidos e confirme a entrega digital." />
         </div>
         <a href="{{ route('seller.anuncios.index') }}" class="px-4 py-2 rounded-xl bg-slate-800 text-xs font-semibold text-slate-300 hover:text-white transition">
             &larr; Meus Anúncios
@@ -42,25 +39,15 @@
                         </span>
                     </div>
 
-                    @if($sale->delivery_status !== 'entregue')
-                        <form action="{{ route('seller.sales.deliver', $sale) }}" method="POST">
                     <div class="flex items-center gap-3">
                         <form action="{{ route('chat.start') }}" method="POST" class="inline">
                             @csrf
-                            @method('PATCH')
-                            <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition shadow-lg shadow-emerald-600/20">
-                                Confirmar Entrega do Item
                             <input type="hidden" name="listing_id" value="{{ $sale->listing_id }}">
                             <input type="hidden" name="buyer_id" value="{{ $sale->order->buyer_id }}">
                             <button type="submit" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition flex items-center gap-1.5 border border-slate-700">
                                 <span>💬</span> Falar com comprador
                             </button>
                         </form>
-                    @else
-                        <span class="text-xs text-emerald-400 font-semibold">
-                            ✓ Entregue em {{ $sale->delivered_at?->format('d/m/Y H:i') }}
-                        </span>
-                    @endif
 
                         @if($sale->delivery_status !== 'entregue')
                             <form action="{{ route('seller.sales.deliver', $sale) }}" method="POST">
@@ -79,9 +66,7 @@
                 </div>
             </div>
         @empty
-            <div class="rounded-3xl bg-slate-900 border border-slate-800 p-12 text-center text-slate-500 text-sm">
-                Nenhuma venda registrada até o momento.
-            </div>
+            <x-empty-state title="Nenhuma venda registrada até o momento." description="Seus pedidos recebidos aparecerão aqui. Prepare seus anúncios para o próximo player." icon="store" :href="route('seller.anuncios.index')" action="Ver meus anúncios" />
         @endforelse
     </div>
 

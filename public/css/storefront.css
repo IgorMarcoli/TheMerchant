@@ -1,4 +1,4 @@
-/* TheMerchant storefront: scoped to the homepage to preserve existing flows. */
+/* Shared storefront components. Hero and home spacing remain home-specific. */
 .tm-home {
     background:var(--tm-bg);
     color:var(--tm-text);
@@ -654,6 +654,7 @@
 }
 
 .tm-product {
+    display:block;
     background:var(--tm-panel);
     border:1px solid var(--tm-border);
     border-radius:10px;
@@ -1222,3 +1223,47 @@
     }
 }
 
+
+/* Page composition follows the storefront's spacing, typography and surfaces. */
+.tm-main { max-width:1344px; margin-inline:auto; padding:40px 32px; min-width:0; }
+.tm-page-heading { min-width:0; }
+.tm-page-heading .tm-eyebrow { font-size:9px; letter-spacing:1.7px; line-height:1.7; }
+.tm-page-heading h1 { margin:12px 0 10px; font-size:clamp(24px, 3vw, 34px); line-height:1.2; font-weight:800; letter-spacing:-1px; overflow-wrap:anywhere; text-wrap:balance; }
+.tm-page-heading p { max-width:680px; color:var(--tm-muted); font-size:13px; line-height:1.8; }
+.text-center .tm-page-heading .tm-eyebrow { justify-content:center; }
+.text-center .tm-page-heading p { margin-inline:auto; }
+.tm-workspace-nav { border-bottom:1px solid var(--tm-border); background:var(--tm-bg); }
+.tm-workspace-links { display:flex; flex-wrap:wrap; gap:0 24px; padding-block:6px; scrollbar-width:thin; scrollbar-color:var(--tm-border) transparent; }
+.tm-workspace-links a { display:inline-flex; align-items:center; gap:8px; min-height:44px; color:var(--tm-muted); font-size:12px; font-weight:600; }
+.tm-workspace-links a:hover, .tm-header [aria-current="page"] { color:var(--tm-accent); }
+.tm-header [aria-current="page"] { box-shadow:inset 0 -2px var(--tm-accent); }
+.tm-empty-state { text-align:center; padding:48px 24px; background:var(--tm-panel); }
+.tm-empty-state h2 { margin:16px 0 8px; color:var(--tm-text); font-size:21px; font-weight:800; letter-spacing:-.5px; }
+.tm-empty-state p { max-width:440px; margin-inline:auto; font-size:13px; }
+.tm-empty-symbol { display:grid; place-items:center; width:56px; height:56px; margin-inline:auto; border:1px solid rgb(var(--tm-brand-800)); border-radius:14px; background:rgb(var(--tm-brand-600) / .08); color:var(--tm-accent); }
+.tm-empty-symbol .tm-icon { width:26px; height:26px; }
+.tm-main :where(input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not([type="range"]), select, textarea) { min-height:44px; font-size:14px; }
+.tm-main :where(button, a[class*="bg-brand"], a[class*="bg-slate-800"]) { min-height:44px; }
+.tm-main :where(button:disabled) { opacity:.55; cursor:not-allowed; }
+.tm-main :where(h2, h3) { text-wrap:balance; }
+.tm-detail-art { background:radial-gradient(ellipse at center,#313b2c,#191e21 72%); }
+.tm-detail-art > .tm-icon { width:100px; height:100px; color:var(--tm-accent); stroke-width:1; }
+.tm-detail-art img { max-height:460px; width:100%; object-fit:contain; }
+@media (max-width:767px) {
+    .tm-main { padding:28px 20px; }
+    .tm-topbar { column-gap:12px; }
+    .tm-topbar .tm-logo { font-size:20px; }
+    .tm-account { gap:10px; }
+    .tm-workspace-links { gap:0 18px; flex-wrap:nowrap; overflow-x:auto; }
+    .tm-workspace-links a { flex-shrink:0; }
+}
+@media (max-width:400px) {
+    .tm-topbar .tm-logo { font-size:18px; gap:6px; }
+    .tm-logomark { width:29px; height:32px; }
+    .tm-account { gap:8px; }
+    .tm-account .tm-button-small { padding:10px; }
+    .tm-account .tm-login .tm-icon { display:none; }
+}
+@media (prefers-reduced-motion:reduce) {
+    .tm-home *, .tm-header *, .tm-main * { transition:none !important; animation:none !important; scroll-behavior:auto !important; }
+}

@@ -13,7 +13,21 @@ Este guia separa verificações disponíveis hoje dos critérios das próximas e
 
 ## 2. Testes automatizados no estado atual
 
-Não há `phpunit.xml` nem `tests/Pest.php` versionado nesta revisão. `php artisan test` existe, mas não configura sozinho isolamento e descoberta. Use bootstrap e caminho explícitos.
+O `phpunit.xml` versionado configura bootstrap, as suítes `Unit` e `Feature` e SQLite em memória. Os comandos abaixo também permitem executar os testes em um terminal isolado, sem reutilizar a configuração do banco de desenvolvimento.
+
+### GitHub Actions
+
+O workflow [Testes PHP](../.github/workflows/php-tests.yml) executa `php artisan test` em PHP 8.2 e 8.3 a cada push e pull request. Ele também permite execução manual pela aba **Actions → Testes PHP → Run workflow**, depois que o arquivo estiver na branch padrão.
+
+Cada execução instala as dependências do `composer.lock`, valida os requisitos do PHP e prepara um ambiente novo com chave própria, SQLite em memória, cache/sessão em array e e-mails em array. Não são necessários secrets ou acesso ao Supabase. As migrations são executadas pelos testes que usam `RefreshDatabase`.
+
+Os arquivos `*Test.php` em `tests/Unit` e `tests/Feature` são descobertos automaticamente; basta adicionar novos testes nessas pastas. Uma falha faz o check da versão correspondente falhar, com detalhes no log da etapa de testes. Os testes JavaScript e os roteiros manuais deste guia ficam fora desse workflow.
+
+Para executar a mesma suíte localmente, no terminal isolado preparado abaixo:
+
+```powershell
+php artisan test
+```
 
 ### Teste unitário sem banco
 
@@ -62,7 +76,11 @@ php vendor/phpunit/phpunit/phpunit --no-configuration --bootstrap vendor/autoloa
 
 SQLite em memória serve ao primeiro diagnóstico. Locks/concorrência e SQL específicos também precisam ser testados em MySQL com banco exclusivo, por exemplo `themerchant_testing`, e credencial restrita a ele. Não reutilize `themerchant` para esses testes.
 
-### Resultado observado em 18/09/2026
+### Resultados observados
+
+Validação da suíte para o CI em **05/10/2026**, com PHP 8.3.33 e SQLite em memória: `php artisan test` passou com **110 testes e 568 assertions**; `composer validate --strict --no-check-publish` e `composer check-platform-reqs` também passaram. A execução em PHP 8.2 e no runner Linux será verificada pelo próprio Actions após o envio do workflow.
+
+O registro abaixo corresponde à revisão anterior de 18/09/2026:
 
 | Verificação | Resultado |
 | :--- | :--- |
@@ -77,12 +95,12 @@ Não foram executados migrations/seeds no banco de desenvolvimento, build Vite, 
 
 ### Pendências da infraestrutura
 
-- [ ] Criar `database/factories/UserFactory.php` compatível com o schema.
-- [ ] Versionar configuração PHPUnit com bootstrap, suites e isolamento explícito.
+- [x] Criar `database/factories/UserFactory.php` compatível com o schema.
+- [x] Versionar configuração PHPUnit com bootstrap, suites e isolamento explícito.
 - [ ] Revisar campos obrigatórios dos dados de teste de categorias/anúncios.
 - [ ] Separar testes de dispatch (fila simulada) de processamento do job.
 - [ ] Validar integração com worker real e banco exclusivo.
-- [ ] Após configurar a suíte, padronizar `php artisan test` no CI.
+- [x] Após configurar a suíte, padronizar `php artisan test` no CI.
 
 ## 3. Validação estática e inicialização
 

@@ -10,9 +10,8 @@
         </a>
     </div>
 
-    <div class="rounded-3xl bg-slate-900 border border-slate-800 p-8 shadow-xl">
-        <h1 class="text-xl font-bold text-white mb-2">Publicar Novo Anúncio</h1>
-        <p class="text-xs text-slate-400 mb-6">Preencha as informações do item ou serviço digital.</p>
+    <div class="rounded-xl bg-slate-900 border border-slate-800 p-8 shadow-xl">
+        <x-page-heading title="Publicar Novo Anúncio" eyebrow="PREPARE SEU PRÓXIMO DROP" description="Preencha as informações do item ou serviço digital." />
 
         @if ($errors->any())
             <div class="mb-6 p-4 rounded-xl bg-rose-950/80 border border-rose-500/40 text-rose-300 text-xs">

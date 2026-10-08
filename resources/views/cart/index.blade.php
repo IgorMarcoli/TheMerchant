@@ -4,10 +4,8 @@
 
 @section('content')
 <div class="max-w-4xl mx-auto">
-    <div class="flex items-center justify-between mb-8">
-        <h1 class="text-2xl font-bold text-white flex items-center gap-2">
-            <span>🛒</span> Meu Carrinho de Compras
-        </h1>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-5 mb-8">
+        <x-page-heading title="Meu Carrinho de Compras" eyebrow="SEU PRÓXIMO UPGRADE" description="Confira os itens que vão fazer parte da sua próxima conquista." />
         @if($cart && $cart->items->isNotEmpty())
             <form action="{{ route('cart.clear') }}" method="POST">
                 @csrf
@@ -20,19 +18,12 @@
     </div>
 
     @if(!$cart || $cart->items->isEmpty())
-        <div class="rounded-3xl bg-slate-900 border border-slate-800 p-12 text-center">
-            <span class="text-5xl block mb-4">🛍️</span>
-            <h2 class="text-lg font-bold text-white mb-2">Seu carrinho está vazio</h2>
-            <p class="text-sm text-slate-400 mb-6">Nenhum cosmético ou serviço adicionado até agora.</p>
-            <a href="{{ route('listings.index') }}" class="px-6 py-3 rounded-xl bg-brand-600 hover:bg-brand-500 text-slate-950 font-bold text-sm shadow-lg shadow-brand-600/10 transition">
-                Explorar Anúncios
-            </a>
-        </div>
+        <x-empty-state title="Seu carrinho está vazio" description="Nenhum cosmético ou serviço adicionado até agora." icon="cart" :href="route('listings.index')" action="Explorar Anúncios" />
     @else
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div class="md:col-span-2 space-y-4">
                 @foreach($cart->items as $item)
-                    <div class="rounded-2xl bg-slate-900 border border-slate-800 p-4 flex items-center justify-between gap-4">
+                    <div class="rounded-2xl bg-slate-900 border border-slate-800 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         <div class="flex items-center gap-4">
                             <div class="w-14 h-14 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center text-xl">
                                 💎
@@ -60,7 +51,7 @@
 
             <!-- Resumo do Pedido -->
             <div>
-                <div class="rounded-3xl bg-slate-900 border border-slate-800 p-6">
+                <div class="rounded-xl bg-slate-900 border border-slate-800 p-6">
                     <h3 class="font-bold text-sm text-white mb-4">Resumo do Pedido</h3>
                     <div class="flex justify-between text-xs text-slate-400 mb-2">
                         <span>Quantidade de Itens</span>

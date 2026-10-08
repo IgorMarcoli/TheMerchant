@@ -39,6 +39,7 @@
             }
         }
     </script>
+    <link rel="stylesheet" href="{{ asset('css/storefront.css') }}">
     @stack('styles')
 </head>
 <body class="min-h-screen flex flex-col antialiased selection:bg-brand-600 selection:text-slate-950 @yield('body-class')">
@@ -51,7 +52,8 @@
     @endif
 
     <!-- Flash Messages -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full mt-4">
+    @if (session('success') || session('error') || session('info'))
+    <div class="tm-container w-full mt-4" role="status">
         @if (session('success'))
             <div class="p-4 rounded-xl bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-sm flex items-center gap-2">
                 <span>✅</span> {{ session('success') }}
@@ -68,9 +70,10 @@
             </div>
         @endif
     </div>
+    @endif
 
     <!-- Main Content -->
-    <main id="main-content" class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-8">
+    <main id="main-content" class="tm-main flex-1 w-full">
         @yield('content')
     </main>
 

@@ -23,14 +23,10 @@
     </div>
 
     <!-- Card de Resumo Principal -->
-    <div class="rounded-3xl bg-slate-900 border border-slate-800 p-6 sm:p-8 shadow-xl">
-        <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4 pb-6 border-b border-slate-800">
+    <div class="rounded-xl bg-slate-900 border border-slate-800 p-6 sm:p-8 shadow-xl">
+        <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-5 pb-6 border-b border-slate-800">
             <div>
-                <span class="text-xs text-brand-400 font-bold uppercase tracking-wider block mb-1">Comprovante de Compra</span>
-                <h1 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
-                    <span>Pedido</span>
-                    <span class="font-mono text-brand-300">#{{ $order->order_number }}</span>
-                </h1>
+                <x-page-heading :title="'Pedido #'.$order->order_number" eyebrow="Comprovante de Compra" />
                 <span class="text-xs text-slate-400 mt-1 block">
                     Realizado em {{ $order->created_at->format('d/m/Y \à\s H:i:s') }}
                 </span>

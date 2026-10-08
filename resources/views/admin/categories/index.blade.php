@@ -12,12 +12,7 @@
                 <span class="text-slate-600">/</span>
                 <span class="text-xs text-brand-400 font-semibold">Catálogo</span>
             </div>
-            <h1 class="text-2xl font-black text-white flex items-center gap-2">
-                <span>🏷️</span> Gestão de Categorias e Jogos
-            </h1>
-            <p class="text-xs text-slate-400">
-                Cadastre e inative categorias e jogos com integridade referencial protegida (RF18).
-            </p>
+            <x-page-heading title="Gestão de Categorias e Jogos" eyebrow="ORGANIZE CADA UNIVERSO" description="Cadastre e gerencie os jogos e as categorias do marketplace." />
         </div>
 
         <div class="flex items-center gap-3">
@@ -30,7 +25,7 @@
     <!-- Grid: Formulário de Cadastro + Gestão Rápida de Jogos -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Card 1: Criar Nova Categoria (2 colunas) -->
-        <div id="form-nova-categoria" class="lg:col-span-2 rounded-3xl bg-slate-900 border border-slate-800 p-6 shadow-xl">
+        <div id="form-nova-categoria" class="lg:col-span-2 rounded-xl bg-slate-900 border border-slate-800 p-6 shadow-xl">
             <h2 class="text-base font-bold text-white mb-4 flex items-center gap-2">
                 <span>✨</span> Cadastrar Nova Categoria
             </h2>
@@ -92,7 +87,7 @@
         </div>
 
         <!-- Card 2: Controle de Jogos (Ativação / Inativação) -->
-        <div class="rounded-3xl bg-slate-900 border border-slate-800 p-6 shadow-xl">
+        <div class="rounded-xl bg-slate-900 border border-slate-800 p-6 shadow-xl">
             <h2 class="text-base font-bold text-white mb-2 flex items-center gap-2">
                 <span>🎮</span> Jogos no Sistema
             </h2>
@@ -156,7 +151,7 @@
     </div>
 
     <!-- Tabela de Categorias -->
-    <div class="rounded-3xl bg-slate-900 border border-slate-800 overflow-hidden shadow-xl">
+    <div class="rounded-xl bg-slate-900 border border-slate-800 overflow-hidden shadow-xl">
         <div class="p-6 border-b border-slate-800 flex items-center justify-between">
             <h2 class="text-base font-bold text-white flex items-center gap-2">
                 <span>📋</span> Categorias Cadastradas

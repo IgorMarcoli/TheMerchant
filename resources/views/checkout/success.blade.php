@@ -7,7 +7,7 @@
     <div class="w-20 h-20 rounded-full bg-emerald-950/80 border border-emerald-500/30 text-emerald-400 text-3xl flex items-center justify-center mx-auto mb-6 shadow-xl shadow-emerald-950">
         ✓
     </div>
-    <h1 class="text-3xl font-black text-white mb-2">Pedido Registrado com Sucesso!</h1>
+    <x-page-heading title="Pedido Registrado com Sucesso!" eyebrow="MAIS UMA ETAPA CONCLUÍDA" />
     <p class="text-sm text-slate-400 mb-6">
         Número do Pedido: <span class="font-mono text-brand-400 font-bold">{{ $order->order_number }}</span>
     </p>

@@ -3,29 +3,18 @@
 @section('title', 'Acessar Conta')
 
 @section('content')
-<div class="max-w-md mx-auto py-8">
-    <div class="rounded-3xl bg-slate-900 border border-slate-800 p-8 shadow-2xl">
-        <div class="text-center mb-6">
-            <h1 class="text-2xl font-black text-white">Bem-vindo de volta!</h1>
-            <p class="text-xs text-slate-400 mt-1">Entre com seu e-mail e senha para continuar.</p>
-        </div>
-
-        @if ($errors->any())
-            <div class="mb-4 p-3 rounded-xl bg-rose-950/80 border border-rose-500/30 text-rose-300 text-xs">
-                {{ $errors->first() }}
-            </div>
-        @endif
+<x-auth-card title="Bem-vindo de volta!" eyebrow="BOM TER VOCÊ DE VOLTA" description="Entre com seu e-mail e senha para continuar.">
 
         <form action="{{ route('login') }}" method="POST" class="space-y-4">
             @csrf
             <div>
-                <label class="block text-xs font-semibold text-slate-300 mb-1">E-mail</label>
-                <input type="email" name="email" value="{{ old('email') }}" required autofocus class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500">
+                <label for="login-email" class="block text-xs font-semibold text-slate-300 mb-1">E-mail</label>
+                <input id="login-email" type="email" name="email" value="{{ old('email') }}" required autofocus class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500">
             </div>
 
             <div>
-                <label class="block text-xs font-semibold text-slate-300 mb-1">Senha</label>
-                <input type="password" name="password" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500">
+                <label for="login-password" class="block text-xs font-semibold text-slate-300 mb-1">Senha</label>
+                <input id="login-password" type="password" name="password" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500">
             </div>
 
             <div class="flex items-center justify-between text-xs">
@@ -44,6 +33,5 @@
         <p class="text-center text-xs text-slate-400 mt-6">
             Não possui uma conta? <a href="{{ route('register') }}" class="text-brand-400 font-bold hover:underline">Cadastre-se</a>
         </p>
-    </div>
-</div>
+</x-auth-card>
 @endsection

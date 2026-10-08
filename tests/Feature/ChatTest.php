@@ -13,6 +13,7 @@ use App\Models\OrderItem;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Js;
 use Tests\TestCase;
 
 class ChatTest extends TestCase
@@ -395,5 +396,72 @@ class ChatTest extends TestCase
         $this->actingAs($this->buyer)
             ->get(route('chat.index'))
             ->assertForbidden();
+    }
+
+    public function test_chat_page_loads_its_interactive_script_and_safely_encodes_names(): void
+    {
+        $this->buyer->update(['name' => "Player \"D'Ávila\" <teste>"]);
+        $this->actingAs($this->buyer)->post(route('chat.start'), ['listing_id' => $this->listing->id]);
+
+        $this->get(route('chat.index'))
+            ->assertOk()
+            ->assertSee('function chatInbox(config)', false)
+            ->assertSee('authName: '.Js::from($this->buyer->name), false);
+    }
+
+    public function test_buyer_and_seller_exchange_messages_without_mocking_broadcasts(): void
+    {
+        $this->actingAs($this->buyer)->post(route('chat.start'), ['listing_id' => $this->listing->id]);
+        $conversation = Conversation::sole();
+
+        $first = $this->postJson(route('chat.messages.store', $conversation), [
+            'body' => 'Olá, podemos combinar a entrega?',
+            'client_uuid' => 'buyer-message',
+        ])->assertCreated()->json('message.id');
+
+        $this->actingAs($this->seller)->getJson(route('chat.messages', $conversation))
+            ->assertOk()->assertJsonPath('messages.0.id', $first);
+
+        $second = $this->postJson(route('chat.messages.store', $conversation), [
+            'body' => 'Sim, já estou disponível.',
+            'client_uuid' => 'seller-message',
+        ])->assertCreated()->json('message.id');
+
+        $this->actingAs($this->buyer)->getJson(route('chat.messages', [$conversation, 'after_id' => $first]))
+            ->assertOk()->assertJsonCount(1, 'messages')->assertJsonPath('messages.0.id', $second);
+        $this->assertDatabaseCount('messages', 2);
+    }
+
+    public function test_seller_chat_form_is_independent_of_delivery_before_and_after_delivery(): void
+    {
+        $order = Order::create([
+            'buyer_id' => $this->buyer->id,
+            'order_number' => 'ORD-CHAT-FORM',
+            'total_amount' => 250,
+            'status' => 'pago',
+        ]);
+        $sale = OrderItem::create([
+            'order_id' => $order->id,
+            'listing_id' => $this->listing->id,
+            'seller_id' => $this->seller->id,
+            'unit_price' => 250,
+            'quantity' => 1,
+            'delivery_status' => 'em_entrega',
+        ]);
+
+        foreach (['em_entrega', 'entregue'] as $status) {
+            $sale->update(['delivery_status' => $status]);
+            $html = $this->actingAs($this->seller)->get(route('seller.sales.index'))->assertOk()->getContent();
+            $document = new \DOMDocument;
+            @$document->loadHTML('<?xml encoding="UTF-8">'.$html);
+            $xpath = new \DOMXPath($document);
+            $forms = $xpath->query('//form[@action="'.route('chat.start').'"]');
+            $this->assertCount(1, $forms);
+            $form = $forms->item(0);
+            $this->assertSame('POST', $form->getAttribute('method'));
+            $this->assertSame(0, $xpath->query('.//input[@name="_method"]', $form)->length);
+            $this->assertSame((string) $this->buyer->id, $xpath->query('.//input[@name="buyer_id"]', $form)->item(0)->getAttribute('value'));
+            $this->assertSame((string) $this->listing->id, $xpath->query('.//input[@name="listing_id"]', $form)->item(0)->getAttribute('value'));
+        }
     }
 }

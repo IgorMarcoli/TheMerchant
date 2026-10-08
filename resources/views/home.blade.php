@@ -2,12 +2,8 @@
 @section('title', 'Seu próximo nível começa aqui')
 @section('body-class', 'tm-home')
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('css/storefront.css') }}">
     <meta name="description" content="Explore skins, cosméticos e coaching para seus jogos favoritos. Compre e venda no TheMerchant, o marketplace feito para quem joga.">
 @endpush
-@section('navigation')
-    <x-storefront-header />
-@endsection
 @section('content')
 <div class="tm-welcome"><span><span class="tm-status-dot"></span> DE PLAYER PARA PLAYER</span><span>Seu universo gamer. Um só lugar.</span></div>
 <section class="tm-hero" aria-labelledby="hero-title">
