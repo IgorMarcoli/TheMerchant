@@ -138,8 +138,16 @@
                     </div>
                     <div>
                         <span class="text-slate-500 block text-[10px] uppercase font-semibold">Status do Gateway</span>
-                        <span class="font-semibold text-emerald-400">
-                            ● {{ ucfirst($order->payment->status) }}
+                        @php($paymentStatus = strtolower($order->payment->status))
+                        <span class="font-semibold {{ in_array($paymentStatus, ['approved', 'paid']) ? 'text-emerald-400' : (in_array($paymentStatus, ['rejected', 'expired', 'cancelled', 'canceled']) ? 'text-rose-400' : 'text-amber-300') }}">
+                            ● {{ match ($paymentStatus) {
+                                'approved', 'paid' => 'Confirmado',
+                                'rejected', 'payment.rejected' => 'Recusado',
+                                'expired', 'payment.expired' => 'Expirado',
+                                'cancelled', 'canceled', 'payment.cancelled' => 'Cancelado',
+                                'pending', 'payment.created', 'in_process' => 'Aguardando / em análise',
+                                default => ucfirst(str_replace(['_', '.'], ' ', $paymentStatus)),
+                            } }}
                         </span>
                     </div>
                     <div>
@@ -195,10 +203,10 @@
                                         <h3 class="font-bold text-sm text-white">
                                             @if($item->listing)
                                                 <a href="{{ route('listings.show', $item->listing->slug) }}" target="_blank" class="hover:text-brand-300 transition hover:underline">
-                                                    {{ $item->listing->title }}
+                                                    {{ $item->listing_title ?: $item->listing->title }}
                                                 </a>
                                             @else
-                                                Item Indisponível
+                                                {{ $item->listing_title ?: 'Item indisponível' }}
                                             @endif
                                         </h3>
                                         <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase
@@ -254,6 +262,18 @@
                                 </span>
                             </div>
                         </div>
+
+                        @if($item->delivery_instructions)
+                            <div class="p-3 mb-3 rounded-xl bg-slate-900/70 border border-slate-800 text-xs text-slate-200 whitespace-pre-wrap">
+                                <strong class="block text-slate-400 mb-1">Instruções deste item</strong>{{ $item->delivery_instructions }}
+                            </div>
+                        @endif
+
+                        @if($item->listing_description)
+                            <div class="p-3 mb-3 rounded-xl bg-slate-900/50 border border-slate-800 text-xs text-slate-300 whitespace-pre-wrap">
+                                <strong class="block text-slate-400 mb-1">Descrição e condições salvas no pedido</strong>{{ $item->listing_description }}
+                            </div>
+                        @endif
 
                         <!-- Instruções e Duração do Item -->
                         <div class="py-3 text-xs leading-relaxed text-slate-300">
