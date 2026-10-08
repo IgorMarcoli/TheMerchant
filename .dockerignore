@@ -16,3 +16,4 @@ AI_ROLES.md
 .phpunit.result.cache
 *.sqlite
 *.sqlite-journal
+public/storage
