@@ -14,7 +14,7 @@ class OrderItemPolicy
 
     public function deliver(User $user, OrderItem $item): bool
     {
-        // Selling suspension must not prevent fulfilling existing purchases.
-        return $user->status === 'active' && ($user->id === $item->seller_id || $user->isAdmin());
+        // A suspended seller may still fulfill existing purchases, but only for their own items.
+        return $user->status === 'active' && (int) $user->id === (int) $item->seller_id;
     }
 }
