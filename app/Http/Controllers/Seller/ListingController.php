@@ -57,7 +57,7 @@ class ListingController extends Controller
             // Upload de imagens
             if ($request->hasFile('images')) {
                 foreach ($request->file('images') as $index => $file) {
-                    $path = $file->store("listings/{$listing->id}", 'public');
+                    $path = $file->store("listings/{$listing->id}");
 
                     ListingImage::create([
                         'listing_id' => $listing->id,

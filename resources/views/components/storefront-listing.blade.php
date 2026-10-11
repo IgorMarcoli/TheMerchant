@@ -1,8 +1,8 @@
 @props(['listing'])
 <a class="tm-product" href="{{ route('listings.show', $listing->slug) }}">
     <div class="tm-product-art {{ $listing->category?->type === 'service' ? 'tm-product-service' : '' }}">
-        @if ($listing->primaryImage && \Illuminate\Support\Facades\Storage::disk('public')->exists($listing->primaryImage->image_path))
-            <img src="{{ asset('storage/' . $listing->primaryImage->image_path) }}" alt="{{ $listing->title }}" width="400" height="240" loading="lazy">
+        @if ($listing->primaryImage?->url)
+            <img src="{{ $listing->primaryImage->url }}" alt="{{ $listing->title }}" width="400" height="240" loading="lazy">
         @else
             <x-icon :name="$listing->category?->type === 'service' ? 'game' : 'spark'" class="tm-product-symbol" /><span class="tm-art-caption">{{ $listing->category?->type === 'service' ? 'COACHING' : 'COSMÉTICOS' }}</span>
         @endif
