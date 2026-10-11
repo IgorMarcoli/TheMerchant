@@ -18,8 +18,8 @@
     <div class="tm-game-grid">
         @forelse ($games as $game)
             <a href="{{ route('listings.index', ['jogo' => $game->id]) }}" class="tm-game-card tm-game-{{ $loop->index % 6 }}">
-                @if ($game->cover_image && \Illuminate\Support\Facades\Storage::disk('public')->exists($game->cover_image))
-                    <img src="{{ asset('storage/' . $game->cover_image) }}" alt="{{ $game->name }}" loading="lazy" width="320" height="240">
+                @if ($game->cover_image_url)
+                    <img src="{{ $game->cover_image_url }}" alt="{{ $game->name }}" loading="lazy" width="320" height="240">
                 @elseif (in_array($game->slug, ['cs2', 'dota-2', 'valorant', 'league-of-legends']))
                     <img src="{{ asset('images/marketplace/' . $game->slug . '.jpg') }}" alt="{{ $game->name }}" loading="lazy" width="320" height="240">
                 @elseif (file_exists(public_path('images/marketplace/' . $game->slug . '.jpg')))

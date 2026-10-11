@@ -9,7 +9,6 @@ use App\Models\Report;
 use App\Services\CatalogService;
 use App\Services\StorefrontService;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ListingPublicController extends Controller
@@ -35,10 +34,9 @@ class ListingPublicController extends Controller
 
         $listing->increment('views_count');
         $galleryImages = $listing->images
-            ->filter(fn ($image) => Storage::disk('public')->exists($image->image_path))
             ->sortBy(fn ($image) => [$image->is_primary ? 0 : 1, $image->display_order])
             ->values()
-            ->map(fn ($image) => Storage::disk('public')->url($image->image_path));
+            ->map(fn ($image) => $image->url);
 
         return view('listings.show', compact('listing', 'galleryImages'));
     }

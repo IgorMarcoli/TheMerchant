@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use App\Models\Category;
 use App\Models\Game;
 use App\Models\Listing;
-use App\Models\Report;
+use App\Models\ListingImage;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
@@ -47,10 +47,17 @@ class ListingDetailTest extends TestCase
     public function test_public_detail_shows_carousel_data_reputation_and_sales(): void
     {
         $listing = $this->listing();
+        ListingImage::create([
+            'listing_id' => $listing->id,
+            'image_path' => 'listings/'.$listing->id.'/cover.jpg',
+            'is_primary' => true,
+            'display_order' => 0,
+        ]);
 
         $this->get(route('listings.show', $listing->slug))
             ->assertOk()
             ->assertSee('Fotos do anúncio')
+            ->assertSee('cover.jpg')
             ->assertSee('visualizações')
             ->assertSee('4,75/5')
             ->assertSee('12')
@@ -83,9 +90,9 @@ class ListingDetailTest extends TestCase
 
         $this->from(route('listings.show', $listing->slug))
             ->post(route('listings.report', $listing), [
-            'reason' => 'fraude',
-            'details' => 'Descrição detalhada da denúncia.',
-        ])->assertRedirect(route('login'));
+                'reason' => 'fraude',
+                'details' => 'Descrição detalhada da denúncia.',
+            ])->assertRedirect(route('login'));
 
         $this->assertDatabaseCount('reports', 0);
     }
