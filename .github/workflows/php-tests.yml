@@ -47,7 +47,7 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           extensions: bcmath, ctype, curl, dom, fileinfo, mbstring, openssl, pdo_sqlite, sqlite3, xml, zip
-          tools: composer:v2
+          tools: composer:2.11.0
           coverage: none
 
       - name: Preparar ambiente de teste
@@ -55,6 +55,9 @@ jobs:
 
       - name: Validar dependências
         run: composer validate --strict --no-check-publish
+
+      - name: Auditar dependências PHP
+        run: composer audit --locked
 
       - name: Instalar dependências
         run: composer install --no-interaction --prefer-dist --no-progress
@@ -65,5 +68,33 @@ jobs:
       - name: Verificar requisitos do PHP
         run: composer check-platform-reqs
 
+      - name: Verificar formatação PSR-12
+        run: php vendor/bin/pint --test
+
       - name: Executar testes unitários e de feature
         run: php artisan test
+
+  frontend:
+    name: JavaScript e build Vite
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Obter código
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Executar testes JavaScript
+        run: npm test
+
+      - name: Compilar assets
+        run: npm run build

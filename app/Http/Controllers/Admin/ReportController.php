@@ -7,7 +7,6 @@ use App\Http\Requests\ModerateReportRequest;
 use App\Models\Report;
 use App\Services\ReportModerationService;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class ReportController extends Controller

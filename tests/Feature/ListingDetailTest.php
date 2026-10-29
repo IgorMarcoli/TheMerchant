@@ -8,6 +8,7 @@ use App\Models\Listing;
 use App\Models\ListingImage;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -46,13 +47,17 @@ class ListingDetailTest extends TestCase
 
     public function test_public_detail_shows_carousel_data_reputation_and_sales(): void
     {
+        config(['filesystems.default' => 'public']);
+        Storage::fake('public');
         $listing = $this->listing();
-        ListingImage::create([
+        $image = ListingImage::create([
             'listing_id' => $listing->id,
             'image_path' => 'listings/'.$listing->id.'/cover.jpg',
             'is_primary' => true,
             'display_order' => 0,
         ]);
+
+        $this->assertSame(Storage::disk('public')->url($image->image_path), $image->url);
 
         $this->get(route('listings.show', $listing->slug))
             ->assertOk()
@@ -64,6 +69,24 @@ class ListingDetailTest extends TestCase
             ->assertSee('Adicionar ao carrinho');
 
         $this->assertDatabaseHas('listings', ['id' => $listing->id, 'views_count' => 1]);
+    }
+
+    public function test_listing_image_uses_the_configured_s3_disk(): void
+    {
+        config(['filesystems.default' => 's3']);
+        Storage::fake('s3');
+        $listing = $this->listing();
+        $image = $listing->images()->create(['image_path' => 'listings/'.$listing->id.'/cover.jpg']);
+
+        $this->assertSame(Storage::disk('s3')->url($image->image_path), $image->url);
+        $this->get(route('listings.show', $listing->slug))->assertOk()->assertSee('cover.jpg');
+    }
+
+    public function test_listing_image_preserves_an_absolute_image_url(): void
+    {
+        $image = new ListingImage(['image_path' => 'https://images.example.test/cover.jpg']);
+
+        $this->assertSame('https://images.example.test/cover.jpg', $image->url);
     }
 
     public function test_unavailable_listing_is_visible_with_purchase_disabled(): void

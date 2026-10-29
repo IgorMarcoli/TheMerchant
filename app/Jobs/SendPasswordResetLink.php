@@ -14,13 +14,18 @@ use Illuminate\Support\Facades\Password;
 
 class SendPasswordResetLink implements ShouldBeEncrypted, ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     public int $tries = 3;
 
     public int $backoff = 30;
 
-    public function __construct(public string $email) {}
+    public function __construct(public string $email)
+    {
+    }
 
     public function handle(): void
     {

@@ -19,9 +19,9 @@ O `phpunit.xml` versionado configura bootstrap, as suítes `Unit` e `Feature` e 
 
 O workflow [Testes PHP](../.github/workflows/php-tests.yml) executa `php artisan test` em PHP 8.2 e 8.3 a cada push e pull request. Ele também permite execução manual pela aba **Actions → Testes PHP → Run workflow**, depois que o arquivo estiver na branch padrão.
 
-Cada execução instala as dependências do `composer.lock`, valida os requisitos do PHP e prepara um ambiente novo com chave própria, SQLite em memória, cache/sessão em array e e-mails em array. Não são necessários secrets ou acesso ao Supabase. As migrations são executadas pelos testes que usam `RefreshDatabase`.
+Cada execução audita e instala as dependências do `composer.lock`, valida os requisitos do PHP, verifica a formatação PSR-12 com Pint e prepara um ambiente novo com chave própria, SQLite em memória, cache/sessão em array e e-mails em array. Não são necessários secrets ou acesso ao Supabase. As migrations são executadas pelos testes que usam `RefreshDatabase`. A plataforma de resolução do Composer é PHP 8.2.0, compatível com o mínimo do projeto e com o Dockerfile; `composer check-platform-reqs` continua verificando o PHP e as extensões reais. A base usa Laravel 12, Pest 3 e PHPUnit 11; a atualização segue o [guia oficial do Laravel](https://laravel.com/docs/12.x/upgrade).
 
-Os arquivos `*Test.php` em `tests/Unit` e `tests/Feature` são descobertos automaticamente; basta adicionar novos testes nessas pastas. Uma falha faz o check da versão correspondente falhar, com detalhes no log da etapa de testes. Os testes JavaScript e os roteiros manuais deste guia ficam fora desse workflow.
+Os arquivos `*Test.php` em `tests/Unit` e `tests/Feature` são descobertos automaticamente; basta adicionar novos testes nessas pastas. Uma falha faz o check da versão correspondente falhar, com detalhes no log da etapa de testes. Um job independente com Node.js 22 instala o `package-lock.json` com `npm ci`, executa `npm test` e valida `npm run build`. Os roteiros manuais deste guia ficam fora do workflow.
 
 Para executar a mesma suíte localmente, no terminal isolado preparado abaixo:
 
@@ -77,6 +77,29 @@ php vendor/phpunit/phpunit/phpunit --no-configuration --bootstrap vendor/autoloa
 SQLite em memória serve ao primeiro diagnóstico. Locks/concorrência e SQL específicos também precisam ser testados em MySQL com banco exclusivo, por exemplo `themerchant_testing`, e credencial restrita a ele. Não reutilize `themerchant` para esses testes.
 
 ### Resultados observados
+
+Validação das correções em **29/10/2026**, na branch `João`, com PHP 8.3.33, Laravel 12.70.2, PHPUnit 11.5.56 e Node.js 24.19.0:
+
+| Verificação | Resultado |
+| :--- | :--- |
+| `php artisan test --compact` | 118 testes aprovados, 602 assertions, SQLite em memória |
+| `npm ci` / `npm test` | Instalação reproduzível e 18 testes JavaScript aprovados |
+| `npm run build` | Manifest e bundles CSS/JS gerados em `public/build` |
+| `composer validate --strict --no-check-publish` | Aprovado sem avisos |
+| `composer check-platform-reqs` | Aprovado no PHP instalado |
+| `composer audit --locked` | Nenhum aviso de vulnerabilidade encontrado |
+| `php vendor/bin/pint --test` | Aprovado com o preset PSR-12 versionado |
+| `git diff --check` | Aprovado |
+
+O [run #30 do Actions](https://github.com/IgorMarcoli/TheMerchant/actions/runs/40928942542), no commit `1fb3709`, falhou em `Validar dependências` nos dois jobs (PHP 8.2 e 8.3). Os logs indicam lock desatualizado e aviso sobre a restrição exata `3.28` do adaptador S3; os testes não chegaram a executar.
+
+O Composer 2.11.0 usado pelo runner inclui `config.policy` no cálculo do [hash do lockfile](https://github.com/composer/composer/blob/2.11.0/src/Composer/Package/Locker.php#L123). Por isso, o lock gerado com Composer 2.10.3 também precisava de ajuste. A configuração explícita da política foi removida para usar o [bloqueio de versões vulneráveis habilitado por padrão](https://getcomposer.org/doc/06-config.md#policy), e o lock foi regenerado com Composer 2.11.0, sem alterar novamente as versões dos pacotes. A validação estrita agora passa em 2.10.3 e 2.11.0; o workflow fixa a versão 2.11.0.
+
+Revalidação local do pipeline: actionlint 1.7.12 sem erros, Composer 2.11.0 com validação/auditoria/requisitos aprovados e instalação em dry-run sem alterações, 118 testes PHP/602 assertions, 18 testes JavaScript e build Vite aprovados. A validação estrita permanece ativa no CI. A execução remota depende da publicação dessas correções.
+
+Foram corrigidos o arquivo de configuração de e-mail incompleto, a dependência incompatível com PHP 8.2/8.3, o pipeline Vite sem configuração e a geração de URLs de imagens que ignorava o disco usado no upload. A atualização para Laravel 12/Pest 3 e os patches de CommonMark/Mime eliminam os avisos identificados pela auditoria PHP nesta data. A resolução de dependências volta a bloquear versões com avisos de segurança.
+
+Os testes de imagens usam discos simulados e cobrem armazenamento público, S3 e URLs externas. Os testes de notificações usam o mailer em memória; SMTP, S3, gateway e banco Supabase reais não foram exercitados. O `.env` e o banco configurado para desenvolvimento foram preservados. A execução em PHP 8.2/Linux fica a cargo do CI; o layout segue usando CDN, conforme [o guia de execução e assets](EXECUCAO.md).
 
 Validação da suíte para o CI em **05/10/2026**, com PHP 8.3.33 e SQLite em memória: `php artisan test` passou com **110 testes e 568 assertions**; `composer validate --strict --no-check-publish` e `composer check-platform-reqs` também passaram. A execução em PHP 8.2 e no runner Linux será verificada pelo próprio Actions após o envio do workflow.
 

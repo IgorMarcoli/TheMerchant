@@ -11,7 +11,9 @@ use Illuminate\Queue\SerializesModels;
 
 class MessageSent implements ShouldBroadcastNow
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable;
+    use InteractsWithSockets;
+    use SerializesModels;
 
     public Message $message;
 

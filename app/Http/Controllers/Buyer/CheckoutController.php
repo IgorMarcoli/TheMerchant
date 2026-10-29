@@ -16,7 +16,8 @@ class CheckoutController extends Controller
 {
     public function __construct(
         protected CheckoutService $checkoutService
-    ) {}
+    ) {
+    }
 
     public function index(Request $request): View|RedirectResponse
     {

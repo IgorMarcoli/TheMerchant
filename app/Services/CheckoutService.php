@@ -14,7 +14,8 @@ class CheckoutService
 {
     public function __construct(
         protected PaymentGatewayService $paymentGateway
-    ) {}
+    ) {
+    }
 
     /**
      * Converte o carrinho do usuário em um pedido imutável e inicia o checkout no gateway.

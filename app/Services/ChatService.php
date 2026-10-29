@@ -69,7 +69,7 @@ class ChatService
                 ->where('seller_id', $listing->seller_id)
                 ->exists();
 
-            if ($listing->status !== 'publicado' && ! $hasOrder && ! $hasConversation) {
+            if (($listing->status !== 'publicado' || $listing->archived_at !== null) && ! $hasOrder && ! $hasConversation) {
                 throw ValidationException::withMessages([
                     'conversation' => 'Este anúncio não está mais disponível para novas conversas.',
                 ]);

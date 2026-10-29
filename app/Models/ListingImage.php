@@ -11,6 +11,7 @@ class ListingImage extends Model
     protected $fillable = [
         'listing_id',
         'image_path',
+        'disk',
         'is_primary',
         'display_order',
     ];
@@ -31,6 +32,6 @@ class ListingImage extends Model
             return $this->image_path;
         }
 
-return Storage::disk('s3')->url($this->image_path);
+        return Storage::disk($this->disk ?? config('filesystems.default'))->url($this->image_path);
     }
 }

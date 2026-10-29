@@ -13,7 +13,8 @@ class OrderPaidNotification extends Notification
 
     public function __construct(
         public Order $order
-    ) {}
+    ) {
+    }
 
     public function via(object $notifiable): array
     {
@@ -22,7 +23,7 @@ class OrderPaidNotification extends Notification
 
     public function toMail(object $notifiable): MailMessage
     {
-        return (new MailMessage)
+        return (new MailMessage())
             ->subject("Pagamento Aprovado — Pedido #{$this->order->order_number}")
             ->greeting("Olá, {$notifiable->name}!")
             ->line("O pagamento do seu pedido #{$this->order->order_number} foi confirmado com sucesso.")

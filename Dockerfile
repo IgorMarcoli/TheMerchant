@@ -5,6 +5,8 @@
 
 FROM php:8.2-apache
 
+COPY docker/php-uploads.ini /usr/local/etc/php/conf.d/uploads.ini
+
 # 1. Instalar dependências do sistema
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git \

@@ -11,12 +11,16 @@ use Illuminate\Queue\SerializesModels;
 
 class ProcessPaymentWebhookJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     public function __construct(
         public array $payload,
         public ?string $signature = null
-    ) {}
+    ) {
+    }
 
     public function handle(PaymentGatewayService $gatewayService): void
     {
