@@ -103,7 +103,7 @@ Route::middleware(['auth', EnsureAccountIsActive::class])->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', EnsureAccountIsActive::class])->prefix('vendedor')->name('seller.')->group(function () {
-    Route::resource('anuncios', SellerListingController::class);
+    Route::resource('anuncios', SellerListingController::class)->except('show');
     Route::patch('anuncios/{listing}/status', [SellerListingController::class, 'toggleStatus'])->name('anuncios.status');
     Route::get('vendas', [SellerSaleController::class, 'index'])->name('sales.index');
     Route::patch('vendas/{item}/entregar', [SellerSaleController::class, 'markAsDelivered'])->name('sales.deliver');

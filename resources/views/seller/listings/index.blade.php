@@ -3,6 +3,9 @@
 @section('title', 'Painel do Vendedor - Meus Anúncios')
 
 @section('content')
+@if($errors->any())
+    <p role="alert" class="mb-4 rounded-xl border border-rose-800 p-4 text-rose-300">{{ $errors->first() }}</p>
+@endif
 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-5 mb-8">
     <div>
         <x-page-heading title="Meus Anúncios" eyebrow="SEU INVENTÁRIO TEM POTENCIAL" description="Gerencie seus produtos e serviços cadastrados." />
@@ -24,7 +27,11 @@
         <div class="rounded-2xl bg-slate-900 border border-slate-800 p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div class="flex items-center gap-4">
                 <div class="w-14 h-14 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center text-xl">
-                    💎
+                    @if($listing->primaryImage)
+                        <img src="{{ $listing->primaryImage->url }}" alt="Capa de {{ $listing->title }}" width="56" height="56" class="w-14 h-14 rounded-xl object-cover">
+                    @else
+                        💎
+                    @endif
                 </div>
                 <div>
                     <h3 class="font-bold text-sm text-white">{{ $listing->title }}</h3>
@@ -44,7 +51,9 @@
                 </span>
 
                 @can('update', $listing)
-                @if (in_array($listing->status, ['publicado', 'pausado'], true))
+                    <a href="{{ route('seller.anuncios.edit', $listing) }}" class="text-xs text-brand-300 px-3 py-2 rounded-lg bg-slate-800">Editar</a>
+                @endcan
+                @can('changeStatus', $listing)
                 <form action="{{ route('seller.anuncios.status', $listing) }}" method="POST">
                     @csrf
                     @method('PATCH')
@@ -53,14 +62,13 @@
                     </button>
                 </form>
 
-                @endif
                 @endcan
                 @can('delete', $listing)
-                <form action="{{ route('seller.anuncios.destroy', $listing) }}" method="POST" onsubmit="return confirm('Deseja realmente excluir este anúncio?')">
+                <form action="{{ route('seller.anuncios.destroy', $listing) }}" method="POST" onsubmit="return confirm('Arquivar este anúncio e removê-lo da vitrine? Pedidos e conversas serão preservados.')">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="text-xs text-rose-400 hover:text-rose-300 px-3 py-1.5 rounded-lg bg-rose-950/40 border border-rose-800/40 transition">
-                        Excluir
+                        Arquivar
                     </button>
                 </form>
                 @endcan

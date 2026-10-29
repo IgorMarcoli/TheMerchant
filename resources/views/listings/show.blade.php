@@ -60,6 +60,14 @@
                     <span class="text-xs text-slate-500" aria-label="{{ number_format($listing->views_count, 0, ',', '.') }} visualizações">{{ number_format($listing->views_count, 0, ',', '.') }} visualizações</span>
                 </div>
                 <div class="prose prose-invert max-w-none text-slate-300 text-sm leading-relaxed whitespace-pre-line">{{ $listing->description }}</div>
+                @if($listing->delivery_conditions)
+                    <h3 class="font-bold text-white mt-6 mb-2">Condições de entrega</h3>
+                    <p class="text-sm text-slate-300 whitespace-pre-line">{{ $listing->delivery_conditions }}</p>
+                @endif
+                @if($listing->category->type === 'service' && $listing->session_duration_minutes)
+                    <p class="mt-4 text-sm text-brand-300">Preço por sessão de {{ $listing->session_duration_minutes }} minutos. {{ $listing->capacity }} sessão(ões) disponíveis.</p>
+                    <p class="mt-2 text-xs text-slate-400">Horário a combinar pelo chat · Fuso: {{ $listing->timezone }}</p>
+                @endif
                 <dl class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6 text-xs">
                     <div class="rounded-lg bg-slate-950 border border-slate-800 p-3"><dt class="text-slate-500">Jogo</dt><dd class="font-semibold text-slate-200 mt-1">{{ $listing->game->name }}</dd></div>
                     <div class="rounded-lg bg-slate-950 border border-slate-800 p-3"><dt class="text-slate-500">Categoria / tipo</dt><dd class="font-semibold text-slate-200 mt-1">{{ $listing->category->name }} · {{ $listing->category->type === 'service' ? 'Serviço' : 'Item digital' }}</dd></div>

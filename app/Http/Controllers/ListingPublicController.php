@@ -26,6 +26,7 @@ class ListingPublicController extends Controller
     public function show(string $slug): View
     {
         $listing = Listing::with(['game', 'category', 'seller.sellerProfile', 'images'])
+            ->whereNull('archived_at')
             ->whereNotIn('status', ['rascunho', 'bloqueado'])
             ->whereHas('seller', fn ($seller) => $seller->where('status', 'active')
                 ->whereHas('sellerProfile', fn ($profile) => $profile->where('status', 'approved')))
