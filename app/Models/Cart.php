@@ -24,8 +24,15 @@ class Cart extends Model
 
     public function total(): float
     {
-        return (float) $this->items->sum(function ($item) {
-            return $item->unit_price * $item->quantity;
+        $totalCents = $this->items->sum(static function (CartItem $item): int {
+            return $item->subtotalCents();
         });
+
+        return $totalCents / 100;
+    }
+
+    public function hasUnavailableItems(): bool
+    {
+        return $this->items->contains(static fn (CartItem $item): bool => ! $item->isAvailableForPurchase());
     }
 }
