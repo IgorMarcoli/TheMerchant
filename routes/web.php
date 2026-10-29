@@ -67,6 +67,7 @@ Route::middleware(['auth', EnsureAccountIsActive::class])->group(function () {
     // Carrinho
     Route::get('/carrinho', [CartController::class, 'index'])->name('cart.index');
     Route::post('/carrinho/adicionar/{listing}', [CartController::class, 'add'])->name('cart.add');
+    Route::patch('/carrinho/itens/{item}', [CartController::class, 'update'])->name('cart.update');
     Route::delete('/carrinho/remover/{item}', [CartController::class, 'remove'])->name('cart.remove');
     Route::delete('/carrinho/limpar', [CartController::class, 'clear'])->name('cart.clear');
 
