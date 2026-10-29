@@ -14,7 +14,7 @@ Projeto acadêmico de Laboratório de Engenharia de Software III · FATEC Praia 
 
 <p>
   <img src="https://img.shields.io/badge/PHP-8.2%2B-777BB4?style=for-the-badge&amp;logo=php&amp;logoColor=white" alt="PHP 8.2 ou superior">
-  <img src="https://img.shields.io/badge/Laravel-11-FF2D20?style=for-the-badge&amp;logo=laravel&amp;logoColor=white" alt="Laravel 11">
+  <img src="https://img.shields.io/badge/Laravel-12-FF2D20?style=for-the-badge&amp;logo=laravel&amp;logoColor=white" alt="Laravel 12">
   <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&amp;logo=javascript&amp;logoColor=black" alt="JavaScript">
   <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&amp;logo=html5&amp;logoColor=white" alt="HTML5">
   <img src="https://img.shields.io/badge/CSS-663399?style=for-the-badge&amp;logo=css&amp;logoColor=white" alt="CSS">
@@ -187,11 +187,11 @@ Incluído na v1 em 18/09/2026. A implementação está planejada nas issues #30�
 
 ## 🛠️ Stack Tecnológica
 
-**Linguagens:** PHP no backend; JavaScript nas interações; HTML e CSS na apresentação. O ambiente inspecionado utiliza Laravel 11.56.1. Composer admite 11/12; MySQL é o caminho local documentado.
+**Linguagens:** PHP no backend; JavaScript nas interações; HTML e CSS na apresentação. O projeto utiliza Laravel 12, com dependências resolvidas para PHP 8.2. PostgreSQL/Supabase é o banco principal; os testes usam SQLite em memória.
 
 | Camada / Função | Tecnologia | Descrição |
 | :--- | :--- | :--- |
-| **Linguagem & Back-end** | **PHP 8.2+ / Laravel 11/12** | Monólito modular baseado no padrão MVC do Laravel. |
+| **Linguagem & Back-end** | **PHP 8.2+ / Laravel 12** | Monólito modular baseado no padrão MVC do Laravel. |
 | **Camada de Apresentação** | **Blade + Tailwind CSS + Alpine.js** | Renderização server-side rápida, estilização moderna e componentes interativos leves. |
 | **Banco de Dados** | **MySQL / PostgreSQL previsto** | Migrations e Eloquent; os diagnósticos atuais usam SQL específico de MySQL. |
 | **Autenticação & Autorização** | **Laravel Sessions & Policies** | Sessões seguras com cookies HTTP-only, CSRF e Laravel Policies/Gates. |

@@ -12,7 +12,7 @@ Guia da base inspecionada em 18/09/2026. Os comandos partem da raiz do repositó
 | PHP 8.2+ | Executar a versão compatível com `composer.lock`; ambiente verificado: 8.2.33 |
 | Composer 2 | Instalar dependências PHP |
 | PostgreSQL / Supabase | Banco principal; conexão pelo Session pooler e schema `laravel` |
-| Node.js/npm | Somente para trabalhar na futura integração de assets; o layout atual usa CDN |
+| Node.js 22+/npm | Testes JavaScript e compilação dos assets; o layout atual usa CDN |
 
 O Supabase é configurado como banco PostgreSQL do Laravel. O diagnóstico `php artisan test:db --write` verifica leitura e gravação com rollback. SQLite em memória continua sendo usado nos testes isolados. Veja [o guia de Supabase](SUPABASE.md).
 
@@ -160,9 +160,15 @@ Mantenha o servidor vinculado a `127.0.0.1`: há uma pendência conhecida de exp
 
 O layout `resources/views/layouts/app.blade.php` carrega Tailwind e Alpine por CDN e fontes externas. Uma página sem estilo pode indicar ausência de internet ou bloqueio do CDN.
 
-`package.json` contém `npm run dev` e `npm run build`, mas não existe `vite.config.*` versionado, e o layout não utiliza `@vite`. Por isso, esses comandos não são pré-requisito para executar a interface atual nem são apresentados como build homologado.
+O pipeline Vite/Laravel está configurado em `vite.config.js`, com entradas em `resources/css/app.css` e `resources/js/app.js`, Tailwind/PostCSS e as mesmas cores do layout. Instale as dependências pelo lockfile e valide:
 
-Ao implementar assets locais: adicionar configuração Vite/Laravel, entradas CSS/JS, Tailwind/PostCSS e `@vite`; substituir os CDNs evitando carregar Alpine duas vezes. Então instalar com `npm install`, versionar o lockfile e verificar `npm run build`. Depois de existir lockfile, usar `npm ci` em instalações reproduzíveis.
+```powershell
+npm ci
+npm test
+npm run build
+```
+
+O build gera `public/build/manifest.json` e os bundles CSS/JS. `npm run dev` inicia o servidor Vite. O layout ainda usa os CDNs e não carrega esses bundles; a compilação não é um pré-requisito para executar a interface atual. Ao integrar `@vite`, substitua os scripts de CDN para não inicializar Alpine duas vezes.
 
 ## 7. Filas, e-mails e chat
 

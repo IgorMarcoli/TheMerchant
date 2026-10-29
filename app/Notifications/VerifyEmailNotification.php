@@ -31,7 +31,7 @@ class VerifyEmailNotification extends VerifyEmail implements ShouldBeEncrypted, 
 
     protected function buildMailMessage(mixed $url): MailMessage
     {
-        return (new MailMessage)
+        return (new MailMessage())
             ->subject('Confirme seu e-mail — TheMerchant')
             ->greeting('Olá!')
             ->line('Confirme seu endereço de e-mail para sua conta no TheMerchant.')

@@ -41,9 +41,9 @@ Route::middleware('guest')->group(function () {
     Route::get('/cadastro', [AuthController::class, 'showRegisterForm'])->name('register');
     Route::post('/cadastro', [AuthController::class, 'register']);
     Route::get('/esqueci-minha-senha', [PasswordResetController::class, 'request'])->name('password.request');
-Route::post('/esqueci-minha-senha', [PasswordResetController::class, 'send'])->middleware('throttle:account-recovery')->name('password.email');
-Route::get('/redefinir-senha/{token}', [PasswordResetController::class, 'edit'])->name('password.reset');
-Route::post('/redefinir-senha', [PasswordResetController::class, 'update'])->middleware('throttle:account-recovery')->name('password.update');
+    Route::post('/esqueci-minha-senha', [PasswordResetController::class, 'send'])->middleware('throttle:account-recovery')->name('password.email');
+    Route::get('/redefinir-senha/{token}', [PasswordResetController::class, 'edit'])->name('password.reset');
+    Route::post('/redefinir-senha', [PasswordResetController::class, 'update'])->middleware('throttle:account-recovery')->name('password.update');
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');

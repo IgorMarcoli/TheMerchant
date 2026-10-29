@@ -31,6 +31,6 @@ class ListingImage extends Model
             return $this->image_path;
         }
 
-return Storage::disk('s3')->url($this->image_path);
+        return Storage::url($this->image_path);
     }
 }

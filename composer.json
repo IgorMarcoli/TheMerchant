@@ -8,18 +8,18 @@
     "require": {
         "php": "^8.2",
         "composer/ca-bundle": "^1.5",
-        "laravel/framework": "^11.0|^12.0",
+        "laravel/framework": "^12.69",
         "laravel/tinker": "^2.9",
-        "league/flysystem-aws-s3-v3": "3.28"
+        "league/flysystem-aws-s3-v3": "~3.28.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
         "laravel/pint": "^1.13",
         "laravel/sail": "^1.26",
         "mockery/mockery": "^1.6",
-        "nunomaduro/collision": "^8.1",
-        "pestphp/pest": "^2.34",
-        "pestphp/pest-plugin-laravel": "^2.4"
+        "nunomaduro/collision": "^8.8",
+        "pestphp/pest": "^3.0",
+        "pestphp/pest-plugin-laravel": "^3.0"
     },
     "autoload": {
         "psr-4": {
@@ -54,16 +54,14 @@
         }
     },
     "config": {
+        "platform": {
+            "php": "8.2.0"
+        },
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
             "pestphp/pest-plugin": true
-        },
-        "policy": {
-            "advisories": {
-                "block": false
-            }
         }
     },
     "minimum-stability": "stable",

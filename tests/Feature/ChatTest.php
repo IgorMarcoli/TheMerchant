@@ -452,7 +452,7 @@ class ChatTest extends TestCase
         foreach (['em_entrega', 'entregue'] as $status) {
             $sale->update(['delivery_status' => $status]);
             $html = $this->actingAs($this->seller)->get(route('seller.sales.index'))->assertOk()->getContent();
-            $document = new \DOMDocument;
+            $document = new \DOMDocument();
             @$document->loadHTML('<?xml encoding="UTF-8">'.$html);
             $xpath = new \DOMXPath($document);
             $forms = $xpath->query('//form[@action="'.route('chat.start').'"]');

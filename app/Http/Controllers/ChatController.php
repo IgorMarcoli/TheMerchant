@@ -19,7 +19,8 @@ class ChatController extends Controller
 
     public function __construct(
         protected ChatService $chatService
-    ) {}
+    ) {
+    }
 
     /**
      * Display chat inbox and responsive conversation view.

@@ -39,6 +39,6 @@ class Game extends Model
             return $this->cover_image;
         }
 
-return Storage::disk('public')->url($this->cover_image);
+        return Storage::disk('public')->url($this->cover_image);
     }
 }

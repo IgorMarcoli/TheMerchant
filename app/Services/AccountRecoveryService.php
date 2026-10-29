@@ -21,7 +21,7 @@ class AccountRecoveryService
     public function reset(array $credentials): bool
     {
         // Keep missing/suspended accounts from returning faster than invalid tokens.
-        return (new Timebox)->call(fn (): bool => $this->resetAccount($credentials), 300000);
+        return (new Timebox())->call(fn (): bool => $this->resetAccount($credentials), 300000);
     }
 
     private function resetAccount(array $credentials): bool

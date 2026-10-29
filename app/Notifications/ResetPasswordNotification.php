@@ -33,7 +33,7 @@ class ResetPasswordNotification extends ResetPassword implements ShouldBeEncrypt
 
     protected function buildMailMessage(mixed $url): MailMessage
     {
-        return (new MailMessage)
+        return (new MailMessage())
             ->subject('Redefina sua senha — TheMerchant')
             ->greeting('Olá!')
             ->line('Recebemos uma solicitação para redefinir a senha da sua conta.')
