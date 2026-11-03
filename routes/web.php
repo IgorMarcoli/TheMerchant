@@ -76,6 +76,9 @@ Route::middleware(['auth', EnsureAccountIsActive::class])->group(function () {
     Route::post('/checkout/processar', [CheckoutController::class, 'process'])->name('checkout.process');
     Route::get('/checkout/sucesso/{order}', [CheckoutController::class, 'success'])->name('checkout.success');
     Route::get('/checkout/cancelado/{order}', [CheckoutController::class, 'cancel'])->name('checkout.cancel');
+    Route::post('/checkout/{order}/pagamento', [CheckoutController::class, 'retryPayment'])->middleware('throttle:6,1')->name('checkout.payment.retry');
+    Route::post('/checkout/{order}/atualizar', [CheckoutController::class, 'refresh'])->middleware('throttle:12,1')->name('checkout.payment.refresh');
+    Route::post('/checkout/{order}/simular-pagamento', [CheckoutController::class, 'simulate'])->middleware('throttle:6,1')->name('checkout.payment.simulate');
 
     // Histórico de Pedidos & Avaliação
     Route::get('/pedidos', [OrderController::class, 'index'])->name('orders.index');

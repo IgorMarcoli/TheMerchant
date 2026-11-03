@@ -28,7 +28,7 @@ O **TheMerchant** segue o padrão de **Monólito Modular em Camadas**, tirando p
        ├──────────────────────────────┬──────────────────────────────┐
        ▼                              ▼                              ▼
 [ Eloquent Models & DB ]      [ Jobs & Queues ]             [ Gateway Externo ]
-(PostgreSQL / MySQL)          (Webhooks / E-mails)          (Mercado Pago / Stripe)
+(PostgreSQL / MySQL)          (Webhooks / E-mails)          (AbacatePay PIX)
 ```
 
 ---
@@ -164,7 +164,7 @@ created_at, updated_at TIMESTAMP
 
 Contrato normativo, exemplos D01–D14 e rastreabilidade: [Contrato de domínio v1](docs/CONTRATO_DOMINIO.md). A definição não comprova implementação funcional. O dicionário acima descreve a base inicial. Acrescentar `capacity` para sessões disponíveis de serviço e `session_duration_minutes`, com restrições positivas; cosmético único possui capacidade 1. Snapshot de tipo, duração e instruções por item do pedido. Serviço admite múltiplas compras até consumir sua capacidade.
 
-Modelar `listing_reservations`: `id`, `listing_id`, `order_item_id` único, `quantity`, `expires_at`, `status` (active/confirmed/released), timestamps. Reservas ativas reduzem disponibilidade e são adquiridas sob lock; aprovação reduz capacidade e confirma reserva uma única vez. Expiração libera apenas reserva ainda ativa. Suspensão/pausa não pode apagar reservas ou histórico.
+Tabela `reservations` (implementada em #13): `id`, `listing_id`, `order_item_id` único, `quantity`, `expires_at`, `status` (active/confirmed/released), `released_reason`, timestamps. Reservas ativas reduzem disponibilidade e são adquiridas sob lock; aprovação reduz capacidade e confirma reserva uma única vez. Expiração libera apenas reserva ainda ativa. Suspensão/pausa não pode apagar reservas ou histórico.
 
 ### 2.9 Tabela `payments`
 Registro de auditoria e status retornado pelo gateway de pagamento.
@@ -173,12 +173,18 @@ Registro de auditoria e status retornado pelo gateway de pagamento.
 | :--- | :--- | :---: | :--- |
 | `id` | `BIGINT UNSIGNED AUTO_INCREMENT` | Não | Chave primária |
 | `order_id` | `BIGINT UNSIGNED` | Não | FK para `orders.id` |
-| `gateway` | `VARCHAR(50)` | Não | Nome do provedor (ex: `mercadopago`, `stripe`) |
+| `gateway` | `VARCHAR(50)` | Não | Nome do provedor (`abacatepay`) |
 | `transaction_id` | `VARCHAR(100)` | Não | ID externo da transação no provedor |
-| `status` | `VARCHAR(50)` | Não | Status bruto do gateway (ex: `approved`, `pending`, `rejected`) |
+| `method` | `VARCHAR(16)` | Sim | Meio de pagamento (`PIX`) |
+| `status` | `VARCHAR(50)` | Não | Status normalizado: `pending`, `paid`, `expired`, `cancelled`, `failed`, `refunded`, `disputed` |
 | `amount` | `DECIMAL(10,2)` | Não | Valor processado |
-| `idempotency_key` | `VARCHAR(128)` | Não | Chave de idempotência para evitar duplicidade |
-| `payload` | `JSON` | Sim | Resposta bruta recebida no webhook |
+| `idempotency_key` | `VARCHAR(128)` | Não | Idempotência da criação da cobrança (`abacatepay:<nº do pedido>`) |
+| `payload` | `JSON` | Sim | Campos operacionais da cobrança, sem dados do pagador |
+| `br_code` / `br_code_base64` | `TEXT` | Sim | PIX copia e cola e QR Code |
+| `expires_at` / `paid_at` | `TIMESTAMP` | Sim | Vencimento do PIX e confirmação verificada |
+| `refund_status` / `refund_id` / `refund_attempts` / `last_error` | | Sim | Estorno de pagamento tardio |
+
+Eventos de webhook ficam em `payment_events` (`event_id` único, payload sanitizado, `result`, `processed_at`). Estados e transições: [docs/PAGAMENTOS.md](docs/PAGAMENTOS.md).
 | `created_at` / `updated_at` | `TIMESTAMP` | Sim | Timestamps do Eloquent |
 
 ### 2.10 Tabela `reviews`

@@ -178,7 +178,7 @@ Incluído na v1 em 18/09/2026. A implementação está planejada nas issues #30�
 | ✅ Catálogo, carrinho, checkout e webhook assíncrono | ❌ Integração direta com APIs oficiais de jogos (Steam, Riot) |
 | ✅ Reputação pós-compra e chat privado de texto com vendedor | ❌ Anexos, áudio/vídeo e grupos no chat |
 | ✅ Painel administrativo de moderação e denúncias | ❌ Múltiplos idiomas e múltiplas moedas (foco BRL) |
-| ✅ Gateway externo (Mercado Pago / Stripe / PagSeguro) | ❌ Carteira financeira própria ou custódia interna de valores |
+| ✅ Gateway externo (AbacatePay — PIX) | ❌ Carteira financeira própria ou custódia interna de valores |
 | ✅ Coaching com sessões, capacidade e combinação de horários | ❌ Agenda automática de coaching |
 
 ---
@@ -195,7 +195,7 @@ Incluído na v1 em 18/09/2026. A implementação está planejada nas issues #30�
 | **Camada de Apresentação** | **Blade + Tailwind CSS + Alpine.js** | Renderização server-side rápida, estilização moderna e componentes interativos leves. |
 | **Banco de Dados** | **MySQL / PostgreSQL previsto** | Migrations e Eloquent; os diagnósticos atuais usam SQL específico de MySQL. |
 | **Autenticação & Autorização** | **Laravel Sessions & Policies** | Sessões seguras com cookies HTTP-only, CSRF e Laravel Policies/Gates. |
-| **Integração de Pagamentos** | **Mercado Pago / Stripe / PagSeguro** | Camada de serviço desacoplada (`PaymentGatewayService`) com suporte a webhooks assíncronos e idempotência. |
+| **Integração de Pagamentos** | **AbacatePay (PIX, API v2)** | Camada de serviço desacoplada (`PaymentGatewayService` + `PaymentGateway`) com webhooks autenticados, reservas com expiração e idempotência. Detalhes em [docs/PAGAMENTOS.md](docs/PAGAMENTOS.md). |
 | **Armazenamento de Arquivos** | **Laravel Storage (Disk Local / S3)** | Armazenamento de imagens de anúncios e perfis com links simbólicos públicos. |
 | **Filas & Tarefas Assíncronas** | **Laravel Queues / Jobs** | Processamento em segundo plano para envio de e-mails, confirmação de webhooks e logs de auditoria. |
 | **Testes Automatizados** | **Pest / PHPUnit** | Cobertura de testes unitários para Services e testes de feature para fluxos HTTP críticos. |
@@ -241,7 +241,7 @@ flowchart TD
     end
 
     subgraph ExternalInfra["Infraestrutura & Integrações Externas"]
-        Gateway["Gateway de Pagamento (Mercado Pago / Stripe)"]
+        Gateway["Gateway de Pagamento (AbacatePay PIX)"]
         Storage["Storage de Imagens"]
         MailService["Servidor de E-mail / Notificações"]
     end

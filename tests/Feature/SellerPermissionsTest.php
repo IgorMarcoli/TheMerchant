@@ -68,9 +68,9 @@ class SellerPermissionsTest extends TestCase
         $this->actingAs($buyer)->post(route('cart.add', $listing))->assertRedirect(route('cart.index'));
         $seller->sellerProfile()->update(['status' => 'suspended']);
         $gateway = $this->createMock(PaymentGatewayService::class);
-        $gateway->expects($this->never())->method('createPaymentPreference');
+        $gateway->expects($this->never())->method('startPayment');
         try {
-            (new CheckoutService($gateway))->checkout($buyer);
+            (new CheckoutService($gateway))->checkout($buyer, (string) \Illuminate\Support\Str::uuid());
             $this->fail('Checkout must reject a suspended seller.');
         } catch (\RuntimeException $exception) {
             $this->assertStringContainsString('não está mais disponível', $exception->getMessage());
