@@ -35,7 +35,12 @@ Na aba **Environment** do serviço no Render, adicione as seguintes variáveis:
 | `SESSION_DOMAIN` | `null` | Cookie válido para o host do serviço; não inclua protocolo nem caminho |
 | `SESSION_SECURE_COOKIE` | `true` | Cookie de sessão enviado somente por HTTPS |
 | `CACHE_STORE` | `file` | Cache local em arquivo (ou `database`) |
-| `QUEUE_CONNECTION` | `sync` | Processamento síncrono inicial |
+| `QUEUE_CONNECTION` | `sync` | Processamento síncrono inicial (com `database`, o entrypoint sobe `queue:work`) |
+| `RUN_SCHEDULER` | `true` | Sobe `schedule:work` (expira reservas, reconcilia PIX e reenvia estornos) |
+| `PAYMENT_GATEWAY` | `abacatepay` | Gateway de pagamento |
+| `ABACATEPAY_API_KEY` | *(chave do painel)* | Chave de API (dev ou produção) |
+| `ABACATEPAY_WEBHOOK_SECRET` | *(segredo forte)* | Mesmo valor usado na URL do webhook: `/api/webhooks/payment?webhookSecret=...` |
+| `ABACATEPAY_DEV_MODE` | `false` | `true` apenas com chave de desenvolvimento |
 | `FILESYSTEM_DISK` | `public` | Armazenamento de uploads |
 | `RUN_MIGRATIONS` | `true` | Executa `php artisan migrate --force` automaticamente ao iniciar |
 

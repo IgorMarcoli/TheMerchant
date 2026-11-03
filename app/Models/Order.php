@@ -5,14 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Order extends Model
 {
     protected $fillable = [
         'order_number',
+        'checkout_key',
         'buyer_id',
         'total_amount',
+        'currency',
         'status', // 'pendente', 'pago', 'em_andamento', 'concluido', 'cancelado'
         'notes',
         'reservation_expires_at',
@@ -41,6 +44,16 @@ class Order extends Model
     public function reviews(): HasMany
     {
         return $this->hasMany(Review::class);
+    }
+
+    public function reservations(): HasManyThrough
+    {
+        return $this->hasManyThrough(Reservation::class, OrderItem::class);
+    }
+
+    public function totalCents(): int
+    {
+        return (int) round((float) $this->total_amount * 100);
     }
 
     public function isPaid(): bool

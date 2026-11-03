@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Services\Payments\AbacatePayGateway;
+use App\Services\Payments\PaymentGateway;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -9,6 +11,11 @@ use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
+    public function register(): void
+    {
+        $this->app->bind(PaymentGateway::class, AbacatePayGateway::class);
+    }
+
     public function boot(): void
     {
         if ($this->app->environment('production') || str_starts_with((string) config('app.url'), 'https://')) {
