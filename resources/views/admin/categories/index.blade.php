@@ -17,7 +17,7 @@
 
         <div class="flex items-center gap-3">
             <a href="#form-nova-categoria" class="px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-slate-950 font-bold text-xs transition flex items-center gap-1.5 shadow-lg shadow-brand-600/10">
-                <span>➕</span> Nova Categoria
+                <span aria-hidden="true">➕</span> Nova Categoria
             </a>
         </div>
     </div>
@@ -27,7 +27,7 @@
         <!-- Card 1: Criar Nova Categoria (2 colunas) -->
         <div id="form-nova-categoria" class="lg:col-span-2 rounded-xl bg-slate-900 border border-slate-800 p-6 shadow-xl">
             <h2 class="text-base font-bold text-white mb-4 flex items-center gap-2">
-                <span>✨</span> Cadastrar Nova Categoria
+                <span aria-hidden="true">✨</span> Cadastrar Nova Categoria
             </h2>
 
             <form action="{{ route('admin.categorias.store') }}" method="POST" class="space-y-4">
@@ -89,7 +89,7 @@
         <!-- Card 2: Controle de Jogos (Ativação / Inativação) -->
         <div class="rounded-xl bg-slate-900 border border-slate-800 p-6 shadow-xl">
             <h2 class="text-base font-bold text-white mb-2 flex items-center gap-2">
-                <span>🎮</span> Jogos no Sistema
+                <span aria-hidden="true">🎮</span> Jogos no Sistema
             </h2>
             <p class="text-xs text-slate-400 mb-4 leading-relaxed">
                 Inative jogos para ocultá-los do catálogo público mantendo o histórico de pedidos seguro.
@@ -154,7 +154,7 @@
     <div class="rounded-xl bg-slate-900 border border-slate-800 overflow-hidden shadow-xl">
         <div class="p-6 border-b border-slate-800 flex items-center justify-between">
             <h2 class="text-base font-bold text-white flex items-center gap-2">
-                <span>📋</span> Categorias Cadastradas
+                <span aria-hidden="true">📋</span> Categorias Cadastradas
             </h2>
             <span class="text-xs text-slate-400 font-semibold">{{ $categories->total() }} categorias encontradas</span>
         </div>

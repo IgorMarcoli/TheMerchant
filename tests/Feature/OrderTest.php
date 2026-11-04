@@ -183,6 +183,7 @@ class OrderTest extends TestCase
         $response->assertSee('ORD-PAG-012');
         // Oldest (ORD-PAG-001) should be on page 2 (paginate 10)
         $response->assertDontSee('ORD-PAG-001');
+        $response->assertSee('aria-label="Paginação"', false);
 
         $page2 = $this->actingAs($this->buyer)->get(route('orders.index', ['page' => 2]));
         $page2->assertOk();
@@ -241,6 +242,9 @@ class OrderTest extends TestCase
         $response->assertSee('Cosmético Digital');
         $response->assertSee('Serviço');
         $response->assertSee('Vendedor Oficial');
+        // O vendedor do fixture não tem avaliações; a nota não pode aparecer como 5,00.
+        $response->assertSee('Sem avaliações');
+        $response->assertDontSee('★ 5.00');
     }
 
     public function test_buyer_cannot_view_details_of_another_buyers_order(): void

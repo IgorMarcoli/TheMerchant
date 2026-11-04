@@ -48,7 +48,7 @@
 
             @if($order->status === 'cancelado')
                 <div class="p-4 rounded-2xl bg-rose-950/40 border border-rose-800/60 text-xs text-rose-300 flex items-center gap-3">
-                    <span class="text-2xl">⚠️</span>
+                    <span aria-hidden="true" class="text-2xl">⚠️</span>
                     <div>
                         <strong class="font-bold block text-sm">Pedido Cancelado</strong>
                         <span>Este pedido foi cancelado ou expirou antes da confirmação de pagamento pelo gateway. Nenhum valor pendente será cobrado.</span>
@@ -65,20 +65,20 @@
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 relative">
                     <!-- Etapa 1: Pedido Realizado -->
                     <div class="flex flex-col items-center text-center p-3 rounded-2xl {{ $isPending ? 'bg-slate-950/60 border border-slate-800' : 'opacity-40' }}">
-                        <div class="w-8 h-8 rounded-full mb-2 flex items-center justify-center text-xs font-bold {{ $isPaid ? 'bg-emerald-500 text-slate-950' : 'bg-brand-500 text-slate-950 animate-pulse' }}">
+                        <div class="w-8 h-8 rounded-full mb-2 flex items-center justify-center text-xs font-bold {{ $isPaid ? 'bg-emerald-500 text-slate-950' : 'bg-brand-500 text-slate-950 animate-pulse' }}" aria-hidden="true">
                             {{ $isPaid ? '✓' : '1' }}
                         </div>
-                        <span class="text-xs font-bold text-white">1. Pedido Criado</span>
+                        <span class="text-xs font-bold text-white">1. Pedido Criado @if($isPaid)<span class="sr-only"> (etapa concluída)</span>@endif</span>
                         <span class="text-[10px] text-slate-400 mt-0.5">Pendente</span>
                         <span class="text-[9px] text-slate-500 mt-1 font-mono">{{ $order->created_at->format('d/m H:i') }}</span>
                     </div>
 
                     <!-- Etapa 2: Pagamento Aprovado -->
                     <div class="flex flex-col items-center text-center p-3 rounded-2xl {{ $isPaid ? 'bg-slate-950/60 border border-slate-800' : 'bg-slate-950/20 border border-slate-900 opacity-50' }}">
-                        <div class="w-8 h-8 rounded-full mb-2 flex items-center justify-center text-xs font-bold {{ $isPaid ? ($isInProgress ? 'bg-emerald-500 text-slate-950' : 'bg-brand-500 text-slate-950') : 'bg-slate-800 text-slate-400' }}">
+                        <div class="w-8 h-8 rounded-full mb-2 flex items-center justify-center text-xs font-bold {{ $isPaid ? ($isInProgress ? 'bg-emerald-500 text-slate-950' : 'bg-brand-500 text-slate-950') : 'bg-slate-800 text-slate-400' }}" aria-hidden="true">
                             {{ $isPaid ? '✓' : '2' }}
                         </div>
-                        <span class="text-xs font-bold text-white">2. Pagamento</span>
+                        <span class="text-xs font-bold text-white">2. Pagamento @if($isPaid)<span class="sr-only"> (etapa concluída)</span>@endif</span>
                         <span class="text-[10px] text-slate-400 mt-0.5">
                             {{ $isPaid ? 'Pago via Gateway' : 'Aguardando' }}
                         </span>
@@ -89,10 +89,10 @@
 
                     <!-- Etapa 3: Em Andamento / Em Entrega -->
                     <div class="flex flex-col items-center text-center p-3 rounded-2xl {{ $isInProgress || ($order->status === 'pago') ? 'bg-slate-950/60 border border-slate-800' : 'bg-slate-950/20 border border-slate-900 opacity-50' }}">
-                        <div class="w-8 h-8 rounded-full mb-2 flex items-center justify-center text-xs font-bold {{ $isCompleted ? 'bg-emerald-500 text-slate-950' : ($isPaid ? 'bg-cyan-500 text-slate-950 animate-pulse' : 'bg-slate-800 text-slate-400') }}">
+                        <div class="w-8 h-8 rounded-full mb-2 flex items-center justify-center text-xs font-bold {{ $isCompleted ? 'bg-emerald-500 text-slate-950' : ($isPaid ? 'bg-cyan-500 text-slate-950 animate-pulse' : 'bg-slate-800 text-slate-400') }}" aria-hidden="true">
                             {{ $isCompleted ? '✓' : '3' }}
                         </div>
-                        <span class="text-xs font-bold text-white">3. Em Andamento</span>
+                        <span class="text-xs font-bold text-white">3. Em Andamento @if($isCompleted)<span class="sr-only"> (etapa concluída)</span>@endif</span>
                         <span class="text-[10px] text-slate-400 mt-0.5">
                             {{ $isCompleted ? 'Itens Prontos' : ($isPaid ? 'Em Entrega Digital' : 'Pendente') }}
                         </span>
@@ -101,10 +101,10 @@
 
                     <!-- Etapa 4: Concluído -->
                     <div class="flex flex-col items-center text-center p-3 rounded-2xl {{ $isCompleted ? 'bg-slate-950/60 border border-emerald-800/50' : 'bg-slate-950/20 border border-slate-900 opacity-50' }}">
-                        <div class="w-8 h-8 rounded-full mb-2 flex items-center justify-center text-xs font-bold {{ $isCompleted ? 'bg-emerald-400 text-slate-950' : 'bg-slate-800 text-slate-400' }}">
+                        <div class="w-8 h-8 rounded-full mb-2 flex items-center justify-center text-xs font-bold {{ $isCompleted ? 'bg-emerald-400 text-slate-950' : 'bg-slate-800 text-slate-400' }}" aria-hidden="true">
                             {{ $isCompleted ? '✓' : '4' }}
                         </div>
-                        <span class="text-xs font-bold text-white">4. Concluído</span>
+                        <span class="text-xs font-bold text-white">4. Concluído @if($isCompleted)<span class="sr-only"> (etapa concluída)</span>@endif</span>
                         <span class="text-[10px] text-slate-400 mt-0.5">
                             {{ $isCompleted ? 'Entrega Finalizada' : 'Aguardando Entrega' }}
                         </span>
@@ -113,7 +113,7 @@
                 </div>
 
                 <div class="mt-3 p-2.5 rounded-xl bg-slate-950/40 border border-slate-800/80 text-[11px] text-slate-400 text-center">
-                    💡 <em>A timeline acima reflete o estado do pedido. A entrega de cada cosmético ou serviço é gerenciada e rastreada de forma independente pelos vendedores nos itens abaixo.</em>
+                    <span aria-hidden="true">💡</span> <em>A timeline acima reflete o estado do pedido. A entrega de cada cosmético ou serviço é gerenciada e rastreada de forma independente pelos vendedores nos itens abaixo.</em>
                 </div>
             @endif
         </div>
@@ -121,7 +121,7 @@
         <!-- 💳 Detalhes de Pagamento do Gateway (RF11, RF12, RNF04) -->
         <div class="py-6 border-b border-slate-800">
             <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-1.5">
-                <span>🛡️</span> Detalhes do Pagamento
+                <span aria-hidden="true">🛡️</span> Detalhes do Pagamento
             </h2>
 
             @if($order->payment)
@@ -165,7 +165,7 @@
                         <span class="font-semibold text-white block mb-0.5">Aguardando Confirmação do Provedor de Pagamento</span>
                         <span>O processamento é realizado pelo gateway credenciado. Assim que o webhook assíncrono confirmar o pagamento, o status mudará para <strong>Pago</strong>.</span>
                     </div>
-                    <span class="text-2xl">⏳</span>
+                    <span aria-hidden="true" class="text-2xl">⏳</span>
                 </div>
             @endif
         </div>
@@ -174,7 +174,7 @@
         @if($order->notes)
             <div class="py-6 border-b border-slate-800">
                 <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <span>📌</span> Instruções do Comprador para Entrega
+                    <span aria-hidden="true">📌</span> Instruções do Comprador para Entrega
                 </h2>
                 <div class="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 text-xs text-slate-200 leading-relaxed font-mono whitespace-pre-wrap">
                     {{ $order->notes }}
@@ -186,7 +186,7 @@
         <div class="pt-6">
             <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center justify-between">
                 <span class="flex items-center gap-1.5">
-                    <span>💎</span> Itens Contratados ({{ $order->items->count() }})
+                    <span aria-hidden="true">💎</span> Itens Contratados ({{ $order->items->count() }})
                 </span>
                 <span class="text-[11px] text-slate-500 font-normal">Entrega individual por item</span>
             </h2>
@@ -197,7 +197,7 @@
                         <!-- Topo do Item: Identificação, Tipo e Status de Entrega -->
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800/80">
                             <div class="flex items-start sm:items-center gap-4">
-                                <div class="w-12 h-12 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center text-2xl shrink-0">
+                                <div class="w-12 h-12 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center text-2xl shrink-0" aria-hidden="true">
                                     {{ ($item->listing?->category?->type === 'service') ? '🎓' : '💎' }}
                                 </div>
                                 <div>
@@ -222,7 +222,11 @@
                                         <span>Categoria: <strong class="text-slate-300">{{ $item->listing?->category?->name ?? 'Geral' }}</strong></span>
                                         <span>•</span>
                                         <span>Vendedor: <strong class="text-white">{{ $item->seller->name }}</strong></span>
-                                        <span class="text-amber-400 text-xs font-semibold">★ {{ $item->seller->sellerProfile?->reputation_score ?? '5.00' }}</span>
+                                        @if(($item->seller->sellerProfile?->total_reviews ?? 0) > 0)
+                                            <span class="text-amber-400 text-xs font-semibold"><span aria-hidden="true">★</span> <span class="sr-only">Avaliação média:</span> {{ number_format($item->seller->sellerProfile->reputation_score, 2, ',', '.') }}/5</span>
+                                        @else
+                                            <span class="text-xs text-slate-400">Sem avaliações</span>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -282,7 +286,7 @@
                             @if($item->listing?->category?->type === 'service')
                                 <div class="p-3 rounded-xl bg-purple-950/30 border border-purple-900/40 text-purple-200">
                                     <strong class="font-bold flex items-center gap-1 text-purple-300 mb-1">
-                                        <span>🎓</span> Duração e Condições do Serviço / Coaching:
+                                        <span aria-hidden="true">🎓</span> Duração e Condições do Serviço / Coaching:
                                     </strong>
                                     <p class="text-[11px] text-slate-300">
                                         A duração de cada sessão segue as especificações do anúncio. Utilize o chat direto abaixo para alinhar horário, link de Discord ou sala personalizada com o mentor.
@@ -291,7 +295,7 @@
                             @else
                                 <div class="p-3 rounded-xl bg-slate-900/50 border border-slate-800 text-slate-300">
                                     <strong class="font-bold flex items-center gap-1 text-brand-300 mb-1">
-                                        <span>💎</span> Instruções de Envio do Cosmético Digital:
+                                        <span aria-hidden="true">💎</span> Instruções de Envio do Cosmético Digital:
                                     </strong>
                                     <p class="text-[11px] text-slate-400">
                                         O envio é feito via troca direta na plataforma do jogo ou pelo Trade URL informado no pedido. Fique atento às notificações no chat.
@@ -309,7 +313,7 @@
                                 <button type="submit"
                                         class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs transition flex items-center gap-1.5 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500"
                                         aria-label="Falar com {{ $item->seller->name }}">
-                                    <span>💬</span> Falar com Vendedor
+                                    <span aria-hidden="true">💬</span> Falar com Vendedor
                                 </button>
                             </form>
                         </div>

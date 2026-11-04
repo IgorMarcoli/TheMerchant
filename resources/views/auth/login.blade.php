@@ -3,18 +3,20 @@
 @section('title', 'Acessar Conta')
 
 @section('content')
-<x-auth-card title="Bem-vindo de volta!" eyebrow="BOM TER VOCÊ DE VOLTA" description="Entre com seu e-mail e senha para continuar.">
+<x-auth-card title="Bem-vindo de volta!" eyebrow="BOM TER VOCÊ DE VOLTA" description="Entre com seu e-mail e senha para continuar." :fields="['email', 'password']">
 
         <form action="{{ route('login') }}" method="POST" class="space-y-4">
             @csrf
             <div>
                 <label for="login-email" class="block text-xs font-semibold text-slate-300 mb-1">E-mail</label>
-                <input id="login-email" type="email" name="email" value="{{ old('email') }}" required autofocus class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500">
+                <input id="login-email" type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="email" @error('email') aria-invalid="true" aria-describedby="login-email-error" @enderror class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500">
+                <x-field-error name="email" id="login-email-error" />
             </div>
 
             <div>
                 <label for="login-password" class="block text-xs font-semibold text-slate-300 mb-1">Senha</label>
-                <input id="login-password" type="password" name="password" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500">
+                <input id="login-password" type="password" name="password" required autocomplete="current-password" @error('password') aria-invalid="true" aria-describedby="login-password-error" @enderror class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500">
+                <x-field-error name="password" id="login-password-error" />
             </div>
 
             <div class="flex items-center justify-between text-xs">

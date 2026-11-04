@@ -45,6 +45,22 @@ class StorefrontTest extends TestCase
             ->assertSee('Skin publicada')->assertDontSee('Aula de coaching');
     }
 
+    public function test_game_cover_has_a_local_fallback_and_decorative_alt(): void
+    {
+        Game::create(['name' => 'Counter-Strike 2', 'slug' => 'cs2', 'active' => true, 'cover_image' => 'games/cs2.jpg']);
+
+        $this->get('/')->assertOk()
+            ->assertSee('data-fallback="'.asset('images/marketplace/cs2.jpg').'"', false)
+            ->assertSee('alt="" loading="lazy"', false);
+    }
+
+    public function test_unknown_page_uses_the_marketplace_404(): void
+    {
+        $this->get('/pagina-que-nao-existe')->assertNotFound()
+            ->assertSee('Esta página não foi encontrada.')
+            ->assertSee('Explorar o catálogo');
+    }
+
     private function createListing(string $title, string $type, string $status): Listing
     {
         $slug = Str::slug($title);

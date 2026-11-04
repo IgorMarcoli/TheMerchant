@@ -24,12 +24,13 @@
         <div class="lg:col-span-2 space-y-6">
             <section class="rounded-xl bg-slate-900 border border-slate-800 p-4 sm:p-6" aria-label="Fotos do anúncio"
                      x-data="{ images: @js($galleryImages), current: 0, transitioning: false, changeImage(index) { this.transitioning = true; setTimeout(() => { this.current = index; this.transitioning = false }, 120) } }">
-                <div class="relative overflow-hidden rounded-xl bg-slate-950 min-h-[300px] sm:min-h-[440px] flex items-center justify-center">
+                <div @class(['relative overflow-hidden rounded-xl bg-slate-950 min-h-[300px] sm:min-h-[440px] flex flex-col items-center justify-center', 'tm-detail-art' => $galleryImages->isEmpty()])>
                     <template x-if="images.length > 0">
                         <img :src="images[current]" :class="transitioning ? 'opacity-40' : 'opacity-100'" alt="{{ $listing->title }}" width="1200" height="800" fetchpriority="high" class="max-h-[70vh] w-full object-contain transition-opacity duration-300">
                     </template>
                     @if($galleryImages->isEmpty())
                         <x-icon :name="$listing->category->type === 'service' ? 'game' : 'spark'" />
+                        <p class="mt-4 text-sm text-slate-300">Este anúncio ainda não tem fotos.</p>
                     @endif
 
                     <div class="absolute top-4 left-4 flex flex-wrap gap-2">
@@ -142,7 +143,7 @@
 
                 @auth
                     @if(! $isOwnListing)
-                        <button type="button" @click="reportOpen = true" class="w-full text-xs text-rose-400 hover:text-rose-300 transition text-center mt-4">🚩 Denunciar este anúncio</button>
+                        <button type="button" @click="reportOpen = true" class="w-full text-xs text-rose-400 hover:text-rose-300 transition text-center mt-4"><span aria-hidden="true">🚩</span> Denunciar este anúncio</button>
                     @endif
                 @endauth
             </section>
@@ -152,7 +153,7 @@
     @auth
         @if(! $isOwnListing)
             <div x-cloak x-show="reportOpen" x-transition.opacity class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center z-50 p-4" role="presentation" @click.self="reportOpen = false">
-                <section x-show="reportOpen" x-transition class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6" role="dialog" aria-modal="true" aria-labelledby="report-modal-title" @keydown.escape.stop="reportOpen = false">
+                <section x-show="reportOpen" x-transition x-trap.inert.noscroll="reportOpen" class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6" role="dialog" aria-modal="true" aria-labelledby="report-modal-title" @keydown.escape.stop="reportOpen = false">
                     <h3 id="report-modal-title" class="text-base font-bold text-white mb-2">Denunciar anúncio</h3>
                     <p class="text-xs text-slate-400 mb-4">Informe o motivo e descreva a situação para a equipe de moderação.</p>
                     <form action="{{ route('listings.report', $listing) }}" method="POST" class="space-y-4">

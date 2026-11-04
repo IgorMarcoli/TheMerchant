@@ -30,7 +30,7 @@
                     @if($listing->primaryImage)
                         <img src="{{ $listing->primaryImage->url }}" alt="Capa de {{ $listing->title }}" width="56" height="56" class="w-14 h-14 rounded-xl object-cover">
                     @else
-                        💎
+                        <span aria-hidden="true">💎</span>
                     @endif
                 </div>
                 <div>

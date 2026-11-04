@@ -3,18 +3,20 @@
 @section('title', 'Redefinir senha')
 
 @section('content')
-<x-auth-card title="Redefinir senha">
+<x-auth-card title="Redefinir senha" :fields="['email', 'password']">
     <p class="text-sm text-slate-400 mb-6">Escolha uma nova senha com pelo menos 8 caracteres.</p>
     <form action="{{ route('password.update') }}" method="POST" class="space-y-4">
         @csrf
         <input type="hidden" name="token" value="{{ $token }}">
         <div>
             <label for="email" class="block text-sm text-slate-300 mb-1">E-mail</label>
-            <input id="email" type="email" name="email" value="{{ $email }}" required autocomplete="email" maxlength="150" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white">
+            <input id="email" type="email" name="email" value="{{ $email }}" required autocomplete="email" maxlength="150" @error('email') aria-invalid="true" aria-describedby="email-error" @enderror class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white">
+            <x-field-error name="email" id="email-error" />
         </div>
         <div>
             <label for="password" class="block text-sm text-slate-300 mb-1">Nova senha</label>
-            <input id="password" type="password" name="password" required minlength="8" autocomplete="new-password" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white">
+            <input id="password" type="password" name="password" required minlength="8" autocomplete="new-password" @error('password') aria-invalid="true" aria-describedby="password-error" @enderror class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white">
+            <x-field-error name="password" id="password-error" />
         </div>
         <div>
             <label for="password_confirmation" class="block text-sm text-slate-300 mb-1">Confirme a nova senha</label>

@@ -406,7 +406,9 @@ class ChatTest extends TestCase
         $this->get(route('chat.index'))
             ->assertOk()
             ->assertSee('function chatInbox(config)', false)
-            ->assertSee('authName: '.Js::from($this->buyer->name), false);
+            ->assertSee('authName: '.Js::from($this->buyer->name), false)
+            ->assertSee('Mensagens &amp; Negociações', false)
+            ->assertDontSee('&amp;amp;', false);
     }
 
     public function test_buyer_and_seller_exchange_messages_without_mocking_broadcasts(): void
