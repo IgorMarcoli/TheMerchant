@@ -26,7 +26,7 @@ O **TheMerchant** é uma plataforma web intermediadora para a compra e venda de 
 2. Catálogo público com busca textual e filtros combinados (jogo, categoria, faixa de preço, ordenação por preço/avaliação).
 3. Gestão completa de anúncios por vendedores credenciados (criação, edição, upload de fotos, pausa e remoção).
 4. Carrinho de compras com retenção de sessão para compradores.
-5. Checkout com delegação do processamento de pagamento a gateway externo (Mercado Pago, Stripe ou PagSeguro).
+5. Checkout com delegação do processamento de pagamento a gateway externo (decisão registrada em #14: AbacatePay, PIX).
 6. Confirmação assíncrona de pagamento via webhook e garantia de idempotência.
 7. Rastreamento e acompanhamento de histórico de pedidos para o comprador e vendas para o vendedor.
 8. Módulo de avaliação do vendedor (nota de 1 a 5 e comentário textual), restrito a pedidos com entrega concluída.

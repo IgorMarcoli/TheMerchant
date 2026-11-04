@@ -19,4 +19,12 @@ class OrderPolicy
         // Verifica se o usuário é vendedor de algum dos itens deste pedido
         return $order->items()->where('seller_id', $user->id)->exists();
     }
+
+    /**
+     * Somente o comprador gera, consulta ou simula o pagamento do próprio pedido.
+     */
+    public function pay(User $user, Order $order): bool
+    {
+        return $user->id === $order->buyer_id;
+    }
 }

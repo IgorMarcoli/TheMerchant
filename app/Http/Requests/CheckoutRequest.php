@@ -18,6 +18,7 @@ class CheckoutRequest extends FormRequest
             'item_instructions' => ['nullable', 'array'],
             'item_instructions.*' => ['nullable', 'string', 'max:1000'],
             'terms_agreed' => ['accepted'],
+            'checkout_key' => ['required', 'uuid'],
         ];
     }
 
@@ -25,6 +26,8 @@ class CheckoutRequest extends FormRequest
     {
         return [
             'terms_agreed.accepted' => 'Você deve concordar com as regras de entrega e conformidade com os termos do jogo.',
+            'checkout_key.required' => 'Sessão de checkout inválida. Recarregue a página e tente novamente.',
+            'checkout_key.uuid' => 'Sessão de checkout inválida. Recarregue a página e tente novamente.',
             'item_instructions.*.max' => 'Cada instrução por item deve ter no máximo 1.000 caracteres.',
         ];
     }
