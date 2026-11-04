@@ -139,12 +139,14 @@
                     <div>
                         <span class="text-slate-500 block text-[10px] uppercase font-semibold">Status do Gateway</span>
                         @php($paymentStatus = strtolower($order->payment->status))
-                        <span class="font-semibold {{ in_array($paymentStatus, ['approved', 'paid']) ? 'text-emerald-400' : (in_array($paymentStatus, ['rejected', 'expired', 'cancelled', 'canceled']) ? 'text-rose-400' : 'text-amber-300') }}">
+                        <span class="font-semibold {{ in_array($paymentStatus, ['approved', 'paid']) ? 'text-emerald-400' : (in_array($paymentStatus, ['rejected', 'expired', 'cancelled', 'canceled', 'failed', 'refunded', 'disputed']) ? 'text-rose-400' : 'text-amber-300') }}">
                             ● {{ match ($paymentStatus) {
-                                'approved', 'paid' => 'Confirmado',
-                                'rejected', 'payment.rejected' => 'Recusado',
+                                'approved', 'paid' => $order->payment->refund_status ? 'Pago após a reserva (estorno)' : 'Confirmado',
+                                'rejected', 'payment.rejected', 'failed' => 'Recusado',
                                 'expired', 'payment.expired' => 'Expirado',
                                 'cancelled', 'canceled', 'payment.cancelled' => 'Cancelado',
+                                'refunded' => 'Estornado',
+                                'disputed' => 'Em contestação',
                                 'pending', 'payment.created', 'in_process' => 'Aguardando / em análise',
                                 default => ucfirst(str_replace(['_', '.'], ' ', $paymentStatus)),
                             } }}

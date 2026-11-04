@@ -84,5 +84,16 @@ if [ "$APP_ENV" = "production" ]; then
     php artisan view:cache || true
 fi
 
+# 11. Agendador (expira reservas, reconcilia PIX e reenvia estornos) e worker da fila
+if [ "$RUN_SCHEDULER" != "false" ]; then
+    echo "⏱️ Iniciando agendador do Laravel (payments:reconcile a cada minuto)..."
+    runuser -u www-data -- php artisan schedule:work > /proc/1/fd/1 2>&1 &
+fi
+
+if [ "$QUEUE_CONNECTION" != "sync" ] && [ "$RUN_QUEUE_WORKER" != "false" ]; then
+    echo "📬 Iniciando worker da fila ($QUEUE_CONNECTION)..."
+    runuser -u www-data -- php artisan queue:work --tries=5 --backoff=10 > /proc/1/fd/1 2>&1 &
+fi
+
 echo "Iniciando Apache na porta $PORT..."
 exec apache2-foreground

@@ -70,6 +70,21 @@ class Listing extends Model
         return $this->hasMany(OrderItem::class, 'listing_id');
     }
 
+    public function reservations(): HasMany
+    {
+        return $this->hasMany(Reservation::class);
+    }
+
+    /**
+     * available(now) = capacity - reserved(now), nunca negativo (contrato #29, seção 2).
+     */
+    public function availableQuantity(): int
+    {
+        $reserved = (int) $this->reservations()->holding()->sum('quantity');
+
+        return max(0, $this->capacity - $reserved);
+    }
+
     public function scopeAvailable(Builder $query): Builder
     {
         return $query->whereNull('archived_at')->where('status', 'publicado')->where('capacity', '>', 0)

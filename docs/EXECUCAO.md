@@ -88,7 +88,7 @@ BROADCAST_CONNECTION=log
 
 O `.env.example` usa sessão, cache e fila em banco; as migrations auxiliares de `sessions`, `cache` e `jobs` estão versionadas. O perfil acima permite iniciar com arquivos locais e jobs síncronos. A conexão está definida em `config/database.php`.
 
-Não coloque credenciais reais de pagamento neste primeiro fluxo: `PaymentGatewayService` ainda simula a preferência. Preencher variáveis Mercado Pago/Stripe não implementa a integração.
+Pagamentos usam a AbacatePay (PIX). Para testar localmente, preencha `ABACATEPAY_API_KEY` com a chave de **desenvolvimento** e `ABACATEPAY_DEV_MODE=true`; a página do pedido oferece "Simular pagamento". Nunca use a chave de produção em ambiente local. Detalhes em [PAGAMENTOS.md](PAGAMENTOS.md).
 
 ```powershell
 php artisan config:clear

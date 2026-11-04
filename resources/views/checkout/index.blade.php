@@ -33,6 +33,8 @@
 
         <form id="checkout-form" action="{{ route('checkout.process') }}" method="POST" class="space-y-6">
             @csrf
+            {{-- Chave idempotente: reenvio do mesmo formulário devolve o mesmo pedido. --}}
+            <input type="hidden" name="checkout_key" value="{{ old('checkout_key', (string) \Illuminate\Support\Str::uuid()) }}">
             <div>
                 <label for="checkout-notes" class="block text-xs font-semibold text-slate-300 mb-2">Instruções para o Vendedor / Trade URL (Opcional)</label>
                 <textarea id="checkout-notes" name="notes" rows="2" maxlength="500" placeholder="Observações gerais para o pedido" @error('notes') aria-invalid="true" aria-describedby="checkout-notes-error" @enderror class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-brand-500">{{ old('notes') }}</textarea>
@@ -51,8 +53,9 @@
             @endif
 
             <button type="submit" class="w-full py-4 bg-brand-600 hover:bg-brand-500 text-slate-950 font-bold rounded-xl shadow-lg shadow-brand-600/15 transition text-sm flex items-center justify-center gap-2">
-                <span aria-hidden="true">🔒</span> Confirmar Pedido e Pagar
+                <span aria-hidden="true">🔒</span> Confirmar Pedido e Pagar com PIX
             </button>
+            <p class="text-[11px] text-slate-500 text-center">Os itens ficam reservados por {{ \App\Models\Reservation::TTL_MINUTES }} minutos enquanto o PIX é pago. Pagamento processado pela AbacatePay.</p>
         </form>
     </div>
 </div>

@@ -11,4 +11,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/webhooks/payment', [WebhookController::class, 'handlePaymentWebhook'])
+    ->middleware('throttle:120,1')
     ->name('api.webhooks.payment');

@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\PaymentEvent;
 use App\Services\PaymentGatewayService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -16,14 +17,27 @@ class ProcessPaymentWebhookJob implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
+    public int $tries = 5;
+
     public function __construct(
-        public array $payload,
-        public ?string $signature = null
+        public int $paymentEventId
     ) {
+    }
+
+    /**
+     * @return array<int, int>
+     */
+    public function backoff(): array
+    {
+        return [10, 60, 300, 900];
     }
 
     public function handle(PaymentGatewayService $gatewayService): void
     {
-        $gatewayService->processWebhook($this->payload, $this->signature);
+        $event = PaymentEvent::find($this->paymentEventId);
+
+        if ($event !== null) {
+            $gatewayService->handleEvent($event);
+        }
     }
 }
