@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Console\ServeCommand;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 
@@ -21,6 +22,9 @@ class AppServiceProvider extends ServiceProvider
         if (! in_array('SystemRoot', ServeCommand::$passthroughVariables, true)) {
             ServeCommand::$passthroughVariables[] = 'SystemRoot';
         }
+
+        // A view padrão do Laravel usa fundo branco; todas as listagens seguem o tema escuro do catálogo.
+        Paginator::defaultView('vendor.pagination.catalog');
 
         RateLimiter::for('account-recovery', function (Request $request): array {
             $email = $request->input('email');

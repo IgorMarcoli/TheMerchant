@@ -45,11 +45,11 @@
                         @csrf
                         @method('PATCH')
                         <div class="flex-1 w-full">
-                            <label class="block text-[11px] text-slate-400 mb-1">Parecer da Moderação</label>
-                            <input type="text" name="resolution_notes" required minlength="10" maxlength="1000" value="{{ old('resolution_notes') }}" placeholder="Justificativa da decisão..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white">
+                            <label for="resolution-{{ $report->id }}" class="block text-[11px] text-slate-400 mb-1">Parecer da Moderação</label>
+                            <input id="resolution-{{ $report->id }}" type="text" name="resolution_notes" required minlength="10" maxlength="1000" value="{{ old('resolution_notes') }}" placeholder="Justificativa da decisão..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white">
                         </div>
                         <div>
-                            <select name="status" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white">
+                            <select name="status" aria-label="Decisão da moderação" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white">
                                 <option value="em_analise">Em análise</option>
                                 <option value="procedente">Procedente</option>
                                 <option value="improcedente">Improcedente</option>

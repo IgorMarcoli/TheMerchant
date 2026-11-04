@@ -11,7 +11,7 @@
                 <button type="button" @click="confirmClear = true" class="rounded-lg px-3 py-2 text-sm font-semibold text-rose-300 transition hover:bg-rose-400/10 hover:text-rose-200">
                     Esvaziar carrinho
                 </button>
-                <div x-cloak x-show="confirmClear" x-transition.opacity class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4" @keydown.escape.window="confirmClear = false" @click.self="confirmClear = false" role="dialog" aria-modal="true" aria-labelledby="clear-cart-title">
+                <div x-cloak x-show="confirmClear" x-transition.opacity x-trap.inert.noscroll="confirmClear" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4" @keydown.escape.window="confirmClear = false" @click.self="confirmClear = false" role="dialog" aria-modal="true" aria-labelledby="clear-cart-title">
                     <div class="w-full max-w-sm rounded-2xl border border-slate-700 bg-slate-900 p-6 shadow-2xl">
                         <h2 id="clear-cart-title" class="text-lg font-bold text-white">Esvaziar seu carrinho?</h2>
                         <p class="mt-2 text-sm text-slate-400">Todos os anúncios serão removidos. Você pode adicioná-los novamente depois.</p>
@@ -41,7 +41,7 @@
 
     @if(!$cart || $cart->items->isEmpty())
         <div class="rounded-3xl border border-slate-800 bg-slate-900/70 px-6 py-14 text-center sm:py-20">
-            <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-brand-400/20 bg-brand-400/10 text-3xl text-brand-300">🛒</div>
+            <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-brand-400/20 bg-brand-400/10 text-3xl text-brand-300" aria-hidden="true">🛒</div>
             <p class="mt-6 text-xs font-bold uppercase tracking-[0.2em] text-brand-300">Ainda dá tempo de encontrar algo incrível</p>
             <h2 class="mt-2 text-2xl font-black text-white">Seu carrinho está vazio</h2>
             <p class="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-400">Explore os anúncios e adicione cosméticos ou serviços para continuar.</p>
