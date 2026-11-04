@@ -15,7 +15,7 @@
 })">
     <div class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-            <x-page-heading title="Mensagens &amp; Negociações" eyebrow="DE PLAYER PARA PLAYER" description="Converse com compradores e vendedores e acompanhe suas negociações." />
+            <x-page-heading title="Mensagens & Negociações" eyebrow="DE PLAYER PARA PLAYER" description="Converse com compradores e vendedores e acompanhe suas negociações." />
         </div>
 
         <div class="flex items-center gap-2 text-xs">
@@ -60,7 +60,7 @@
                         </div>
 
                         <div class="flex items-center gap-1.5 text-[11px] text-brand-400 font-medium mb-1 truncate">
-                            <span>🎮</span>
+                            <span aria-hidden="true">🎮</span>
                             <span class="truncate">{{ $conversation->listing->title }}</span>
                         </div>
 
@@ -77,7 +77,7 @@
                     </a>
                 @empty
                     <div class="p-8 text-center text-slate-500 text-xs">
-                        <span class="text-3xl block mb-2">📭</span>
+                        <span aria-hidden="true" class="text-3xl block mb-2">📭</span>
                         Nenhuma conversa iniciada.<br>
                         Acesse o catálogo e converse com um vendedor.
                     </div>
@@ -109,7 +109,7 @@
                                 </span>
                             </div>
                             <div class="text-[11px] text-slate-400 flex items-center gap-2">
-                                <span>🔒 Chat Privado</span>
+                                <span><span aria-hidden="true">🔒</span> Chat Privado</span>
                                 <span>•</span>
                                 <span>Dados pessoais protegidos</span>
                             </div>
@@ -134,7 +134,7 @@
                 <div class="flex-1 p-4 sm:p-6 overflow-y-auto space-y-4 max-h-[460px] min-h-[380px]" x-ref="messagesContainer">
                     <template x-if="messages.length === 0">
                         <div class="h-full flex flex-col items-center justify-center text-center p-8 text-slate-500">
-                            <span class="text-4xl mb-2">💬</span>
+                            <span aria-hidden="true" class="text-4xl mb-2">💬</span>
                             <p class="text-sm font-semibold text-slate-400">Inicie a conversa!</p>
                             <p class="text-xs mt-1 max-w-sm">Tire dúvidas sobre o produto, entrega ou combine detalhes com respeito e segurança.</p>
                         </div>
@@ -151,13 +151,13 @@
                                 <div class="mt-1 flex items-center justify-end gap-1.5 text-[9px] opacity-75">
                                     <span x-text="msg.formatted_time"></span>
                                     <template x-if="msg.status === 'sending'">
-                                        <span>⏳</span>
+                                        <span><span aria-hidden="true">⏳</span><span class="sr-only">Enviando</span></span>
                                     </template>
                                     <template x-if="msg.status === 'sent' || (!msg.status && msg.id)">
-                                        <span>✓</span>
+                                        <span><span aria-hidden="true">✓</span><span class="sr-only">Enviada</span></span>
                                     </template>
                                     <template x-if="msg.status === 'error'">
-                                        <span class="text-rose-950 font-bold">⚠️ Falha</span>
+                                        <span class="text-rose-950 font-bold"><span aria-hidden="true">⚠️</span> Falha</span>
                                     </template>
                                 </div>
                             </div>
@@ -165,7 +165,7 @@
                             <!-- Botão de Retry para mensagens com erro -->
                             <template x-if="msg.status === 'error'">
                                 <button type="button" @click="retryMessage(msg)" class="mt-1 text-[10px] text-rose-400 hover:text-rose-300 underline font-semibold flex items-center gap-1 focus:outline-none focus:ring-1 focus:ring-rose-500">
-                                    <span>🔄</span> Tentar novamente
+                                    <span aria-hidden="true">🔄</span> Tentar novamente
                                 </button>
                             </template>
                         </div>
@@ -209,7 +209,7 @@
             @else
                 <!-- Estado vazio quando nenhuma conversa foi selecionada -->
                 <div class="h-full flex flex-col items-center justify-center text-center p-12 text-slate-500">
-                    <span class="text-5xl mb-3">💬</span>
+                    <span aria-hidden="true" class="text-5xl mb-3">💬</span>
                     <h3 class="text-base font-bold text-white mb-1">Selecione uma conversa</h3>
                     <p class="text-xs max-w-sm">Escolha uma conversa na lista à esquerda ou inicie uma nova na página de qualquer anúncio disponível.</p>
                 </div>

@@ -21,7 +21,8 @@
 
         <div class="flex items-center gap-2">
             <span class="text-xs uppercase tracking-wider font-bold px-3 py-1.5 rounded-xl border {{ $user->isAdmin() ? 'bg-rose-950/60 border-rose-500/40 text-rose-300' : ($user->isSeller() ? 'bg-amber-950/60 border-amber-500/40 text-amber-300' : 'bg-brand-950/60 border-brand-500/40 text-brand-300') }}">
-                {{ $user->isAdmin() ? '🛡️ Administrador' : ($user->isSeller() ? '💼 Comprador e vendedor' : '🛒 Comprador') }}
+                <span aria-hidden="true">{{ $user->isAdmin() ? '🛡️' : ($user->isSeller() ? '💼' : '🛒') }}</span>
+                {{ $user->isAdmin() ? 'Administrador' : ($user->isSeller() ? 'Comprador e vendedor' : 'Comprador') }}
             </span>
             <span class="text-xs px-3 py-1.5 rounded-xl bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 font-semibold">
                 ● Conta Ativa
@@ -30,13 +31,17 @@
     </div>
 
     @if ($errors->any())
-        <div class="p-4 rounded-2xl bg-rose-950/80 border border-rose-500/40 text-rose-200 text-sm">
-            <p class="font-bold mb-1">Por favor, corrija os erros abaixo:</p>
-            <ul class="list-disc list-inside space-y-1 text-xs">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
+        {{-- Os erros dos campos aparecem junto a cada campo; aqui ficam só os que não pertencem a nenhum. --}}
+        @php($otherErrors = collect($errors->getMessages())->except(['name', 'email', 'bio', 'current_password', 'password'])->flatten())
+        <div role="alert" class="p-4 rounded-2xl bg-rose-950/80 border border-rose-500/40 text-rose-200 text-sm">
+            <p class="font-bold mb-1">Por favor, corrija os erros indicados nos campos abaixo.</p>
+            @if ($otherErrors->isNotEmpty())
+                <ul class="list-disc list-inside space-y-1 text-xs">
+                    @foreach ($otherErrors as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            @endif
         </div>
     @endif
 
@@ -63,7 +68,7 @@
                                 <span class="text-xs text-slate-400 block">Reputação</span>
                                 @if ($user->sellerProfile->total_reviews > 0)
                                     <span class="text-base font-extrabold text-amber-400 flex items-center justify-center gap-1 mt-0.5">
-                                        ⭐ {{ number_format($user->sellerProfile->reputation_score, 1) }}
+                                        <span aria-hidden="true">⭐</span> {{ number_format($user->sellerProfile->reputation_score, 1) }}
                                     </span>
                                 @else
                                     <span class="text-xs text-slate-400 block mt-0.5">Sem avaliações</span>
@@ -90,7 +95,7 @@
             <!-- Dicas de Segurança -->
             <div class="rounded-xl bg-slate-900/60 border border-slate-800/80 p-6">
                 <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2 mb-3">
-                    <span>🔒</span> Dicas de Acesso Seguro
+                    <span aria-hidden="true">🔒</span> Dicas de Acesso Seguro
                 </h3>
                 <ul class="text-xs text-slate-400 space-y-2">
                     <li class="flex items-start gap-2">
@@ -111,7 +116,7 @@
             <div class="rounded-xl bg-slate-900 border border-slate-800 p-8 shadow-xl">
                 <div class="mb-6">
                     <h2 class="text-xl font-black text-white flex items-center gap-2">
-                        <span>📝</span> Dados Pessoais
+                        <span aria-hidden="true">📝</span> Dados Pessoais
                     </h2>
                     <p class="text-xs text-slate-400 mt-1">Mantenha seu nome e endereço de e-mail atualizados.</p>
                 </div>
@@ -122,30 +127,36 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1">Nome Completo</label>
-                            <input type="text" name="name" value="{{ old('name', $user->name) }}" required maxlength="120"
+                            <label for="profile-name" class="block text-xs font-semibold text-slate-300 mb-1">Nome Completo</label>
+                            <input id="profile-name" type="text" name="name" value="{{ old('name', $user->name) }}" required maxlength="120" autocomplete="name"
+                                @error('name') aria-invalid="true" aria-describedby="profile-name-error" @enderror
                                 class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-brand-500 transition">
+                            <x-field-error name="name" id="profile-name-error" />
                         </div>
 
                         <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1">Endereço de E-mail</label>
-                            <input type="email" name="email" value="{{ old('email', $user->email) }}" required maxlength="150"
+                            <label for="profile-email" class="block text-xs font-semibold text-slate-300 mb-1">Endereço de E-mail</label>
+                            <input id="profile-email" type="email" name="email" value="{{ old('email', $user->email) }}" required maxlength="150" autocomplete="email"
+                                @error('email') aria-invalid="true" aria-describedby="profile-email-error" @enderror
                                 class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-brand-500 transition">
+                            <x-field-error name="email" id="profile-email-error" />
                         </div>
                     </div>
 
                     @if ($user->sellerProfile)
                         <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1">Biografia do Vendedor (Aparece em seus anúncios)</label>
-                            <textarea name="bio" rows="3" maxlength="500"
+                            <label for="profile-bio" class="block text-xs font-semibold text-slate-300 mb-1">Biografia do Vendedor (Aparece em seus anúncios)</label>
+                            <textarea id="profile-bio" name="bio" rows="3" maxlength="500"
+                                @error('bio') aria-invalid="true" aria-describedby="profile-bio-error" @enderror
                                 class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-brand-500 transition"
                                 placeholder="Conte um pouco sobre seu histórico de negociações, horários de entrega ou especialidades...">{{ old('bio', optional($user->sellerProfile)->bio) }}</textarea>
+                            <x-field-error name="bio" id="profile-bio-error" />
                         </div>
                     @endif
 
                     <div class="pt-2 flex justify-end">
                         <button type="submit" class="px-6 py-2.5 bg-brand-600 hover:bg-brand-500 text-slate-950 font-bold rounded-xl text-xs shadow-lg shadow-brand-600/10 transition flex items-center gap-2">
-                            <span>💾</span> Salvar Informações
+                            <span aria-hidden="true">💾</span> Salvar Informações
                         </button>
                     </div>
                 </form>
@@ -155,7 +166,7 @@
             <div class="rounded-xl bg-slate-900 border border-slate-800 p-8 shadow-xl">
                 <div class="mb-6">
                     <h2 class="text-xl font-black text-white flex items-center gap-2">
-                        <span>🔑</span> Trocar Senha de Acesso
+                        <span aria-hidden="true">🔑</span> Trocar Senha de Acesso
                     </h2>
                     <p class="text-xs text-slate-400 mt-1">Para sua segurança, informe sua senha atual antes de definir uma nova.</p>
                 </div>
@@ -165,23 +176,27 @@
                     @method('PUT')
 
                     <div>
-                        <label class="block text-xs font-semibold text-slate-300 mb-1">Senha Atual</label>
-                        <input type="password" name="current_password" required
+                        <label for="profile-current-password" class="block text-xs font-semibold text-slate-300 mb-1">Senha Atual</label>
+                        <input id="profile-current-password" type="password" name="current_password" required autocomplete="current-password"
+                            @error('current_password') aria-invalid="true" aria-describedby="profile-current-password-error" @enderror
                             class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-brand-500 transition"
                             placeholder="Digite sua senha em uso">
+                        <x-field-error name="current_password" id="profile-current-password-error" />
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1">Nova Senha</label>
-                            <input type="password" name="password" required minlength="8"
+                            <label for="profile-password" class="block text-xs font-semibold text-slate-300 mb-1">Nova Senha</label>
+                            <input id="profile-password" type="password" name="password" required minlength="8" autocomplete="new-password"
+                                @error('password') aria-invalid="true" aria-describedby="profile-password-error" @enderror
                                 class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-brand-500 transition"
                                 placeholder="Mínimo 8 caracteres">
+                            <x-field-error name="password" id="profile-password-error" />
                         </div>
 
                         <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1">Confirmar Nova Senha</label>
-                            <input type="password" name="password_confirmation" required minlength="8"
+                            <label for="profile-password-confirmation" class="block text-xs font-semibold text-slate-300 mb-1">Confirmar Nova Senha</label>
+                            <input id="profile-password-confirmation" type="password" name="password_confirmation" required minlength="8" autocomplete="new-password"
                                 class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-brand-500 transition"
                                 placeholder="Repita a nova senha">
                         </div>
@@ -189,7 +204,7 @@
 
                     <div class="pt-2 flex justify-end">
                         <button type="submit" class="px-6 py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl text-xs border border-slate-700 hover:border-slate-600 transition flex items-center gap-2">
-                            <span>🔐</span> Atualizar Senha
+                            <span aria-hidden="true">🔐</span> Atualizar Senha
                         </button>
                     </div>
                 </form>

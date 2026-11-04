@@ -29,7 +29,7 @@
 @section('content')
 <div class="max-w-2xl mx-auto py-10">
     <div class="rounded-2xl bg-slate-900 border border-slate-800 p-7 sm:p-9 shadow-xl">
-        <div class="w-16 h-16 rounded-full {{ $isPaid ? 'bg-emerald-950 text-emerald-400 border-emerald-700' : 'bg-amber-950 text-amber-300 border-amber-700' }} border text-2xl flex items-center justify-center mb-6">
+        <div class="w-16 h-16 rounded-full {{ $isPaid ? 'bg-emerald-950 text-emerald-400 border-emerald-700' : 'bg-amber-950 text-amber-300 border-amber-700' }} border text-2xl flex items-center justify-center mb-6" aria-hidden="true">
             {{ $isPaid ? '✓' : '⏳' }}
         </div>
         <x-page-heading :title="$isPaid ? 'Pagamento confirmado' : ($isCancelled ? 'Pedido cancelado' : 'Pedido criado')" eyebrow="STATUS DA COMPRA" />

@@ -17,16 +17,18 @@
     <div class="tm-section-heading"><div><span class="tm-kicker">ESCOLHA SEU UNIVERSO</span><h2 id="games-title">Qual é o seu jogo?</h2></div><a href="{{ route('listings.index') }}" class="tm-section-link">Explorar todos <x-icon /></a></div>
     <div class="tm-game-grid">
         @forelse ($games as $game)
+            @php
+                $bundledCover = file_exists(public_path('images/marketplace/' . $game->slug . '.jpg')) ? asset('images/marketplace/' . $game->slug . '.jpg') : null;
+                $cover = $game->cover_image_url ?? $bundledCover;
+            @endphp
             <a href="{{ route('listings.index', ['jogo' => $game->id]) }}" class="tm-game-card tm-game-{{ $loop->index % 6 }}">
-                @if ($game->cover_image_url)
-                    <img src="{{ $game->cover_image_url }}" alt="{{ $game->name }}" loading="lazy" width="320" height="240">
-                @elseif (in_array($game->slug, ['cs2', 'dota-2', 'valorant', 'league-of-legends']))
-                    <img src="{{ asset('images/marketplace/' . $game->slug . '.jpg') }}" alt="{{ $game->name }}" loading="lazy" width="320" height="240">
-                @elseif (file_exists(public_path('images/marketplace/' . $game->slug . '.jpg')))
-                    <img src="{{ asset('images/marketplace/' . $game->slug . '.jpg') }}" alt="{{ $game->name }}" loading="lazy" width="320" height="240">
-                @else
-                    <span class="tm-game-monogram" aria-hidden="true">{{ \Illuminate\Support\Str::upper(\Illuminate\Support\Str::substr($game->name, 0, 2)) }}</span>
+                @if ($cover)
+                    {{-- A capa é decorativa (o nome já está no card). Se falhar, tenta a capa local e depois o monograma. --}}
+                    <img src="{{ $cover }}" alt="" loading="lazy" width="320" height="240"
+                         @if ($bundledCover && $bundledCover !== $cover) data-fallback="{{ $bundledCover }}" @endif
+                         onerror="if (this.dataset.fallback) { this.src = this.dataset.fallback; delete this.dataset.fallback; } else { this.nextElementSibling.hidden = false; this.remove(); }">
                 @endif
+                <span class="tm-game-monogram" aria-hidden="true" @if ($cover) hidden @endif>{{ \Illuminate\Support\Str::upper(\Illuminate\Support\Str::substr($game->name, 0, 2)) }}</span>
                 <span class="tm-game-info"><strong>{{ $game->name }}</strong><small>{{ $game->listings_count }} {{ $game->listings_count === 1 ? 'anúncio disponível' : 'anúncios disponíveis' }}</small></span><span class="tm-game-arrow"><x-icon name="chevron" /></span>
             </a>
         @empty

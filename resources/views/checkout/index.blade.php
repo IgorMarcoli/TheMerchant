@@ -20,8 +20,8 @@
                     <label for="item-instructions-{{ $item->id }}" class="block text-xs text-slate-400 mt-3 mb-1">
                         {{ $item->listing->category?->type === 'service' ? 'Preferência de horário, fuso horário e detalhes para o coaching' : 'Instruções de entrega / Trade URL' }} (opcional)
                     </label>
-                    <textarea id="item-instructions-{{ $item->id }}" name="item_instructions[{{ $item->id }}]" form="checkout-form" rows="2" maxlength="1000" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-brand-500">{{ old('item_instructions.'.$item->id) }}</textarea>
-                    @error('item_instructions.'.$item->id)<p class="text-xs text-rose-400 mt-1">{{ $message }}</p>@enderror
+                    <textarea id="item-instructions-{{ $item->id }}" name="item_instructions[{{ $item->id }}]" form="checkout-form" rows="2" maxlength="1000" @error('item_instructions.'.$item->id) aria-invalid="true" aria-describedby="item-instructions-{{ $item->id }}-error" @enderror class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-brand-500">{{ old('item_instructions.'.$item->id) }}</textarea>
+                    <x-field-error :name="'item_instructions.'.$item->id" :id="'item-instructions-'.$item->id.'-error'" />
                 </div>
             @endforeach
         </div>
@@ -36,24 +36,24 @@
             {{-- Chave idempotente: reenvio do mesmo formulário devolve o mesmo pedido. --}}
             <input type="hidden" name="checkout_key" value="{{ old('checkout_key', (string) \Illuminate\Support\Str::uuid()) }}">
             <div>
-                <label class="block text-xs font-semibold text-slate-300 mb-2">Instruções para o Vendedor / Trade URL (Opcional)</label>
-                <textarea name="notes" rows="2" maxlength="500" placeholder="Observações gerais para o pedido" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-brand-500">{{ old('notes') }}</textarea>
-                @error('notes')<p class="text-xs text-rose-400 mt-1">{{ $message }}</p>@enderror
+                <label for="checkout-notes" class="block text-xs font-semibold text-slate-300 mb-2">Instruções para o Vendedor / Trade URL (Opcional)</label>
+                <textarea id="checkout-notes" name="notes" rows="2" maxlength="500" placeholder="Observações gerais para o pedido" @error('notes') aria-invalid="true" aria-describedby="checkout-notes-error" @enderror class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-brand-500">{{ old('notes') }}</textarea>
+                <x-field-error name="notes" id="checkout-notes-error" />
             </div>
 
             <div class="flex items-start gap-3 p-4 rounded-xl bg-slate-950 border border-slate-800">
-                <input type="checkbox" name="terms_agreed" id="terms" value="1" required @checked(old('terms_agreed')) class="mt-1 rounded bg-slate-900 border-slate-700 text-brand-600 focus:ring-brand-500">
+                <input type="checkbox" name="terms_agreed" id="terms" value="1" required @checked(old('terms_agreed')) @error('terms_agreed') aria-invalid="true" aria-describedby="terms-error" @enderror class="mt-1 rounded bg-slate-900 border-slate-700 text-brand-600 focus:ring-brand-500">
                 <label for="terms" class="text-xs text-slate-400">
                     Declaro estar ciente de que as negociações devem seguir as políticas das plataformas de jogos e que meus dados de pagamento serão processados de forma segura pelo gateway credenciado.
                 </label>
             </div>
-            @error('terms_agreed')<p class="text-xs text-rose-400">{{ $message }}</p>@enderror
+            <x-field-error name="terms_agreed" id="terms-error" />
             @if($errors->any())
                 <div role="alert" class="p-3 rounded-xl bg-rose-950/50 border border-rose-800 text-sm text-rose-300">Revise os campos destacados antes de continuar.</div>
             @endif
 
             <button type="submit" class="w-full py-4 bg-brand-600 hover:bg-brand-500 text-slate-950 font-bold rounded-xl shadow-lg shadow-brand-600/15 transition text-sm flex items-center justify-center gap-2">
-                <span>🔒</span> Confirmar Pedido e Pagar com PIX
+                <span aria-hidden="true">🔒</span> Confirmar Pedido e Pagar com PIX
             </button>
             <p class="text-[11px] text-slate-500 text-center">Os itens ficam reservados por {{ \App\Models\Reservation::TTL_MINUTES }} minutos enquanto o PIX é pago. Pagamento processado pela AbacatePay.</p>
         </form>

@@ -55,7 +55,7 @@
                                 <input type="hidden" name="listing_id" value="{{ $sale->listing_id }}">
                                 <input type="hidden" name="buyer_id" value="{{ $sale->order->buyer_id }}">
                                 <button type="submit" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition flex items-center gap-1.5 border border-slate-700">
-                                    <span>💬</span> Falar com comprador
+                                    <span aria-hidden="true">💬</span> Falar com comprador
                                 </button>
                             </form>
                         @endif
@@ -79,7 +79,7 @@
                             <span class="text-xs text-amber-300">A entrega será liberada após a confirmação do pagamento.</span>
                         @else
                             <span class="text-xs text-emerald-400 font-semibold">
-                                ✓ Entregue em {{ $sale->delivered_at?->format('d/m/Y H:i') }}
+                                <span aria-hidden="true">✓</span> Entregue em {{ $sale->delivered_at?->format('d/m/Y H:i') }}
                             </span>
                         @endif
                     </div>
