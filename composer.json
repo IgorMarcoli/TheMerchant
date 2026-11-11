@@ -9,6 +9,7 @@
         "php": "^8.2",
         "composer/ca-bundle": "^1.5",
         "laravel/framework": "^12.69",
+        "laravel/reverb": "^1.6",
         "laravel/tinker": "^2.9",
         "league/flysystem-aws-s3-v3": "~3.28.0"
     },

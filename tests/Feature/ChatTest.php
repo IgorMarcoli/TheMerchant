@@ -11,9 +11,15 @@ use App\Models\Message;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\User;
+use App\Services\ChatService;
+use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Broadcast;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Js;
+use Illuminate\Support\Str;
+use RuntimeException;
 use Tests\TestCase;
 
 class ChatTest extends TestCase
@@ -172,7 +178,7 @@ class ChatTest extends TestCase
         $this->actingAs($stranger)
             ->postJson(route('chat.messages.store', $conversation), [
                 'body' => 'Tentativa não autorizada',
-                'client_uuid' => 'unauth-uuid-1',
+                'client_uuid' => '2f1c6f0e-6f4d-4c55-9b0a-1d2e3f405161',
             ])
             ->assertForbidden();
     }
@@ -198,7 +204,7 @@ class ChatTest extends TestCase
         $this->actingAs($admin)
             ->postJson(route('chat.messages.store', $conversation), [
                 'body' => 'Admin tentando postar',
-                'client_uuid' => 'admin-uuid-1',
+                'client_uuid' => '3a2b1c0d-7e6f-4a5b-8c9d-0e1f2a3b4c5d',
             ])
             ->assertForbidden();
     }
@@ -215,7 +221,7 @@ class ChatTest extends TestCase
 
         $payload = [
             'body' => 'Olá vendedor, o envio é imediato após a confirmação?',
-            'client_uuid' => 'idempotent-uuid-12345',
+            'client_uuid' => '9b7a6c5d-4e3f-4a1b-9c8d-7e6f5a4b3c2d',
         ];
 
         // First send
@@ -248,7 +254,7 @@ class ChatTest extends TestCase
         $this->actingAs($this->buyer)
             ->postJson(route('chat.messages.store', $conversation), [
                 'body' => '   ',
-                'client_uuid' => 'empty-uuid',
+                'client_uuid' => '0d1e2f3a-4b5c-4d6e-8f70-8192a3b4c5d6',
             ])
             ->assertUnprocessable();
 
@@ -256,7 +262,7 @@ class ChatTest extends TestCase
         $this->actingAs($this->buyer)
             ->postJson(route('chat.messages.store', $conversation), [
                 'body' => str_repeat('a', 2001),
-                'client_uuid' => 'large-uuid',
+                'client_uuid' => '1e2f3a4b-5c6d-4e7f-8a9b-0c1d2e3f4a5b',
             ])
             ->assertUnprocessable();
     }
@@ -418,7 +424,7 @@ class ChatTest extends TestCase
 
         $first = $this->postJson(route('chat.messages.store', $conversation), [
             'body' => 'Olá, podemos combinar a entrega?',
-            'client_uuid' => 'buyer-message',
+            'client_uuid' => '5c6d7e8f-9a0b-4c1d-8e2f-3a4b5c6d7e8f',
         ])->assertCreated()->json('message.id');
 
         $this->actingAs($this->seller)->getJson(route('chat.messages', $conversation))
@@ -426,7 +432,7 @@ class ChatTest extends TestCase
 
         $second = $this->postJson(route('chat.messages.store', $conversation), [
             'body' => 'Sim, já estou disponível.',
-            'client_uuid' => 'seller-message',
+            'client_uuid' => '6d7e8f9a-0b1c-4d2e-9f3a-4b5c6d7e8f9a',
         ])->assertCreated()->json('message.id');
 
         $this->actingAs($this->buyer)->getJson(route('chat.messages', [$conversation, 'after_id' => $first]))
@@ -465,5 +471,260 @@ class ChatTest extends TestCase
             $this->assertSame((string) $this->buyer->id, $xpath->query('.//input[@name="buyer_id"]', $form)->item(0)->getAttribute('value'));
             $this->assertSame((string) $this->listing->id, $xpath->query('.//input[@name="listing_id"]', $form)->item(0)->getAttribute('value'));
         }
+    }
+
+    public function test_broadcast_carries_only_ids_on_private_channel_after_commit(): void
+    {
+        $conversation = $this->conversation();
+        $message = Message::create([
+            'conversation_id' => $conversation->id,
+            'sender_id' => $this->buyer->id,
+            'client_uuid' => (string) Str::uuid(),
+            'body' => 'Conteúdo que não pode ir para o WebSocket',
+        ]);
+
+        $event = new MessageSent($message);
+
+        $this->assertInstanceOf(ShouldDispatchAfterCommit::class, $event);
+        $this->assertSame(['private-chat.'.$conversation->id], array_map(fn ($channel) => $channel->name, $event->broadcastOn()));
+        $this->assertSame([
+            'conversation_id' => $conversation->id,
+            'message_id' => $message->id,
+            'sender_id' => $this->buyer->id,
+        ], $event->broadcastWith());
+    }
+
+    public function test_rolled_back_message_is_neither_persisted_nor_signaled(): void
+    {
+        $conversation = $this->conversation();
+        $signals = 0;
+        Event::listen(MessageSent::class, function () use (&$signals): void {
+            $signals++;
+        });
+
+        try {
+            DB::transaction(function () use ($conversation): void {
+                app(ChatService::class)->sendMessage($this->buyer, $conversation, 'Vai falhar', (string) Str::uuid());
+                throw new RuntimeException('falha depois de gravar');
+            });
+        } catch (RuntimeException) {
+        }
+
+        $this->assertSame(0, $signals);
+        $this->assertDatabaseCount('messages', 0);
+
+        app(ChatService::class)->sendMessage($this->buyer, $conversation, 'Agora vai', (string) Str::uuid());
+
+        $this->assertSame(1, $signals);
+    }
+
+    public function test_message_requires_uuid_and_plain_text(): void
+    {
+        $conversation = $this->conversation();
+
+        $this->actingAs($this->buyer)
+            ->postJson(route('chat.messages.store', $conversation), ['body' => 'Olá', 'client_uuid' => 'nao-e-uuid'])
+            ->assertUnprocessable()->assertJsonValidationErrors('client_uuid');
+
+        $this->postJson(route('chat.messages.store', $conversation), ['body' => "Olá\x07", 'client_uuid' => (string) Str::uuid()])
+            ->assertUnprocessable()->assertJsonValidationErrors('body');
+
+        $this->postJson(route('chat.messages.store', $conversation), ['body' => "Linha 1\nLinha 2 <b>sem HTML</b>", 'client_uuid' => (string) Str::uuid()])
+            ->assertCreated()->assertJsonPath('message.body', "Linha 1\nLinha 2 <b>sem HTML</b>");
+    }
+
+    public function test_sending_is_rate_limited_per_account(): void
+    {
+        $conversation = $this->conversation();
+        $this->actingAs($this->buyer);
+
+        for ($i = 1; $i <= 20; $i++) {
+            $this->postJson(route('chat.messages.store', $conversation), ['body' => "Mensagem {$i}", 'client_uuid' => (string) Str::uuid()])
+                ->assertCreated();
+        }
+
+        $this->postJson(route('chat.messages.store', $conversation), ['body' => 'Excesso', 'client_uuid' => (string) Str::uuid()])
+            ->assertTooManyRequests();
+        $this->assertDatabaseCount('messages', 20);
+    }
+
+    public function test_history_is_paginated_for_older_messages_and_reconnection(): void
+    {
+        $conversation = $this->conversation();
+        $ids = [];
+        for ($i = 1; $i <= 60; $i++) {
+            $ids[] = Message::create([
+                'conversation_id' => $conversation->id,
+                'sender_id' => $i % 2 ? $this->buyer->id : $this->seller->id,
+                'client_uuid' => (string) Str::uuid(),
+                'body' => "Mensagem {$i}",
+            ])->id;
+        }
+
+        $this->actingAs($this->buyer);
+
+        $latest = $this->getJson(route('chat.messages', $conversation))->assertOk()
+            ->assertJsonCount(50, 'messages')->assertJsonPath('has_more', true);
+        $this->assertSame($ids[10], $latest->json('messages.0.id'));
+        $this->assertSame($ids[59], $latest->json('messages.49.id'));
+
+        $this->getJson(route('chat.messages', [$conversation, 'before_id' => $ids[10]]))->assertOk()
+            ->assertJsonCount(10, 'messages')->assertJsonPath('has_more', false)
+            ->assertJsonPath('messages.0.id', $ids[0]);
+
+        // Reconexão: recupera tudo depois do último id conhecido, em páginas.
+        $this->getJson(route('chat.messages', [$conversation, 'after_id' => 0]))->assertOk()
+            ->assertJsonCount(50, 'messages')->assertJsonPath('has_more', true);
+        $this->getJson(route('chat.messages', [$conversation, 'after_id' => $ids[49]]))->assertOk()
+            ->assertJsonCount(10, 'messages')->assertJsonPath('has_more', false);
+
+        $this->getJson(route('chat.messages', [$conversation, 'after_id' => 1, 'before_id' => 5]))->assertUnprocessable();
+
+        $this->get(route('chat.index', ['c' => $conversation->id]))->assertOk()
+            ->assertSee('hasOlder: true', false)
+            ->assertSee('Mensagem 60')
+            ->assertDontSee('Mensagem 10"', false);
+    }
+
+    public function test_private_channel_is_authorized_only_for_active_participants(): void
+    {
+        $conversation = $this->conversation();
+        $stranger = User::factory()->create();
+        $admin = User::factory()->create(['is_admin' => true]);
+
+        $this->authorizeChannel($this->buyer, $conversation)->assertOk()->assertJsonStructure(['auth']);
+        $this->authorizeChannel($this->seller, $conversation)->assertOk();
+        $this->authorizeChannel($stranger, $conversation)->assertForbidden();
+        $this->authorizeChannel($admin, $conversation)->assertForbidden();
+
+        $this->actingAs($stranger)->getJson(route('chat.messages', $conversation))->assertForbidden();
+
+        $this->buyer->update(['status' => 'suspended']);
+        $this->authorizeChannel($this->buyer, $conversation)->assertForbidden();
+    }
+
+    public function test_guest_cannot_authorize_private_channel(): void
+    {
+        $conversation = $this->conversation();
+        $this->useReverbBroadcaster();
+
+        $this->postJson('/broadcasting/auth', ['socket_id' => '1234.5678', 'channel_name' => 'private-chat.'.$conversation->id])
+            ->assertUnauthorized();
+    }
+
+    public function test_suspension_revokes_read_send_and_reconnection_for_an_established_session(): void
+    {
+        $this->actingAs($this->buyer)->post(route('chat.start'), ['listing_id' => $this->listing->id]);
+        $conversation = Conversation::sole();
+
+        $this->postJson(route('chat.messages.store', $conversation), ['body' => 'Oi, vendedor', 'client_uuid' => (string) Str::uuid()])
+            ->assertCreated();
+        $this->actingAs($this->seller)->getJson(route('chat.messages', $conversation))->assertOk()->assertJsonCount(1, 'messages');
+        $this->authorizeChannel($this->seller, $conversation)->assertOk();
+
+        // Ação administrativa (#22) usando a regra de conta ativa (#2).
+        $admin = User::factory()->create(['is_admin' => true]);
+        $this->actingAs($admin)->put(route('admin.usuarios.update', $this->seller), ['status' => 'suspended', 'is_admin' => 0])
+            ->assertRedirect();
+
+        // A sessão já aberta do vendedor perde leitura, envio, cursor e reassinatura do canal.
+        $this->actingAs($this->seller)->getJson(route('chat.messages', $conversation))->assertForbidden();
+        $this->postJson(route('chat.messages.store', $conversation), ['body' => 'Ainda estou aqui', 'client_uuid' => (string) Str::uuid()])
+            ->assertForbidden();
+        $this->patchJson(route('chat.read', $conversation), ['last_read_message_id' => Message::first()->id])->assertForbidden();
+        $this->authorizeChannel($this->seller, $conversation)->assertForbidden();
+
+        // O comprador continua com o histórico; a mensagem nova não é exposta ao suspenso.
+        $this->actingAs($this->buyer)->getJson(route('chat.messages', $conversation))->assertOk()->assertJsonCount(1, 'messages');
+        $this->assertDatabaseCount('messages', 1);
+    }
+
+    public function test_buyer_resumes_after_purchase_but_cannot_open_new_chat_on_unavailable_listing(): void
+    {
+        $this->listing->update(['status' => 'vendido']);
+
+        $this->actingAs($this->buyer)->post(route('chat.start'), ['listing_id' => $this->listing->id])
+            ->assertSessionHasErrors('conversation');
+        $this->assertDatabaseCount('conversations', 0);
+
+        $this->paidOrder('pago');
+
+        $this->post(route('chat.start'), ['listing_id' => $this->listing->id])
+            ->assertRedirect(route('chat.index', ['c' => Conversation::sole()->id]));
+    }
+
+    public function test_seller_cannot_open_chat_with_buyer_whose_order_is_unpaid(): void
+    {
+        $this->paidOrder('pendente');
+
+        $this->actingAs($this->seller)->post(route('chat.start'), ['listing_id' => $this->listing->id, 'buyer_id' => $this->buyer->id])
+            ->assertSessionHasErrors('conversation');
+        $this->assertDatabaseCount('conversations', 0);
+    }
+
+    public function test_chat_page_loads_echo_only_when_reverb_is_configured_without_leaking_secret(): void
+    {
+        $this->actingAs($this->buyer)->post(route('chat.start'), ['listing_id' => $this->listing->id]);
+        $this->get(route('chat.index'))->assertOk()->assertDontSee('laravel-echo@', false);
+
+        $this->useReverbBroadcaster();
+
+        $this->get(route('chat.index'))->assertOk()
+            ->assertSee('laravel-echo@2.1.6', false)
+            ->assertSee('test-key', false)
+            ->assertDontSee('test-secret', false);
+    }
+
+    private function conversation(): Conversation
+    {
+        return Conversation::create([
+            'buyer_id' => $this->buyer->id,
+            'seller_id' => $this->seller->id,
+            'listing_id' => $this->listing->id,
+        ]);
+    }
+
+    private function paidOrder(string $status): void
+    {
+        $order = Order::create([
+            'buyer_id' => $this->buyer->id,
+            'order_number' => 'ORD-'.Str::upper(Str::random(8)),
+            'total_amount' => 250,
+            'status' => $status,
+        ]);
+
+        OrderItem::create([
+            'order_id' => $order->id,
+            'listing_id' => $this->listing->id,
+            'seller_id' => $this->seller->id,
+            'unit_price' => 250,
+            'quantity' => 1,
+            'delivery_status' => 'em_entrega',
+        ]);
+    }
+
+    private function useReverbBroadcaster(): void
+    {
+        config([
+            'broadcasting.default' => 'reverb',
+            'broadcasting.connections.reverb.key' => 'test-key',
+            'broadcasting.connections.reverb.secret' => 'test-secret',
+            'broadcasting.connections.reverb.app_id' => 'test-app',
+            'broadcasting.connections.reverb.options.host' => 'localhost',
+        ]);
+
+        // Os canais foram registrados no driver do boot; registra de novo no Reverb.
+        Broadcast::forgetDrivers();
+        require base_path('routes/channels.php');
+    }
+
+    private function authorizeChannel(User $user, Conversation $conversation): \Illuminate\Testing\TestResponse
+    {
+        $this->useReverbBroadcaster();
+
+        return $this->actingAs($user)->postJson('/broadcasting/auth', [
+            'socket_id' => '1234.5678',
+            'channel_name' => 'private-chat.'.$conversation->id,
+        ]);
     }
 }
