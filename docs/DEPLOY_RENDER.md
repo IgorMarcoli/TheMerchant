@@ -79,3 +79,9 @@ O arquivo `docker/entrypoint.sh`:
 2. Cria o link simbólico `storage/` para disponibilizar imagens estáticas;
 3. Otimiza a aplicação gerando cache de rotas e configurações para máxima performance;
 4. Executa as migrations (`php artisan migrate --force`) de forma transparente se `RUN_MIGRATIONS=true`.
+
+---
+
+## 6. Chat em Tempo Real (Reverb)
+
+O WebSocket do chat roda em um **segundo Web Service** com a mesma imagem e `APP_ROLE=reverb`; nesse modo o entrypoint executa só o `php artisan reverb:start` na porta `$PORT`. Variáveis, TLS, worker e origens permitidas estão em [CHAT_TEMPO_REAL.md](CHAT_TEMPO_REAL.md#5-produção-render). Sem esse serviço (`BROADCAST_CONNECTION=log`), o chat continua funcionando por sincronização HTTP.

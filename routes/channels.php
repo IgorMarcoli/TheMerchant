@@ -1,19 +1,7 @@
 <?php
 
-use App\Models\Conversation;
-use App\Models\User;
+use App\Broadcasting\ConversationChannel;
 use Illuminate\Support\Facades\Broadcast;
 
-Broadcast::channel('chat.{conversationId}', function (User $user, int|string $conversationId) {
-    if (! $user->isActive()) {
-        return false;
-    }
-
-    $conversation = Conversation::find($conversationId);
-
-    if (! $conversation) {
-        return false;
-    }
-
-    return $conversation->isParticipant($user);
-});
+// Canal privado por conversa; nenhum conteúdo de chat é enviado a canais públicos.
+Broadcast::channel('chat.{conversation}', ConversationChannel::class);
