@@ -101,7 +101,7 @@
                             &larr;
                         </button>
                         <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-slate-950 font-black text-sm shrink-0">
-                            {{ substr($activeOther?->name ?? 'U', 0, 1) }}
+                            {{ mb_substr($activeOther?->name ?? 'U', 0, 1) }}
                         </div>
                         <div>
                             <div class="flex items-center gap-2">
