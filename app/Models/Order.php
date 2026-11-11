@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Order extends Model
 {
+    /** Status em que o item já foi adquirido pelo comprador. */
+    public const PAID_STATUSES = ['pago', 'em_andamento', 'concluido'];
+
     protected $fillable = [
         'order_number',
         'checkout_key',
@@ -58,7 +61,7 @@ class Order extends Model
 
     public function isPaid(): bool
     {
-        return in_array($this->status, ['pago', 'em_andamento', 'concluido']);
+        return in_array($this->status, self::PAID_STATUSES, true);
     }
 
     public function isCompleted(): bool

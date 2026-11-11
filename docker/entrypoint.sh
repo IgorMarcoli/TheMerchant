@@ -56,6 +56,16 @@ chown -h www-data:www-data /var/www/html/public/storage 2>/dev/null || true
 # 7. Limpa caches antigos antes de rodar comandos artisan
 php artisan config:clear || true
 
+# 7.1 Servidor WebSocket do chat (Reverb): mesma imagem, servico separado com APP_ROLE=reverb.
+# Nao roda Apache, migrations nem seeds. Detalhes em docs/CHAT_TEMPO_REAL.md.
+if [ "$APP_ROLE" = "reverb" ]; then
+    if [ "$APP_ENV" = "production" ]; then
+        php artisan config:cache || true
+    fi
+    echo "Iniciando Laravel Reverb na porta $PORT..."
+    exec runuser -u www-data -- php artisan reverb:start --host=0.0.0.0 --port="$PORT"
+fi
+
 # 8. Execucao de migrations (executa por padrao, a menos que RUN_MIGRATIONS=false)
 if [ "$RUN_MIGRATIONS" != "false" ]; then
     echo "⚡ Executando migrations do banco de dados..."
