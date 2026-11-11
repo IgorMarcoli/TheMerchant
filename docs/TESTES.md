@@ -196,12 +196,12 @@ Esse envio **altera o pedido fictício** no comportamento atual. Repetir o mesmo
 | Entrega antes de pagar | Negada; vendedor vê apenas seus itens; #18 |
 | Coaching | Todas as sessões do item concluídas antes da avaliação; #29 |
 | Avaliação | Uma por item pago/entregue, sem aguardar outro vendedor; #19–#21 |
-| Chat em duas sessões | Mensagem aparece sem reload e persiste; #30–#32, pendente |
+| Chat em duas sessões | Mensagem aparece sem reload e persiste; regressão automatizada em `ChatTest` e `ChatRegressionTest`, E2E real pendente (#32) |
 | Terceiro ou suspenso | Não lê/envia/assina canal privado |
 | Reconexão/retry | Recupera mensagens perdidas sem duplicar |
 | Não lidas | Contador/cursor independentes, leitura após exibição |
 
-O chat precisa de E2E com Reverb/worker reais após implementação; mocks não comprovam entrega em tempo real.
+O chat precisa de E2E com Reverb/worker reais; mocks não comprovam entrega em tempo real. Comandos, cobertura automatizada e roteiro com duas sessões estão em [CHAT_TEMPO_REAL.md](CHAT_TEMPO_REAL.md#6-roteiro-manual-com-duas-sessões).
 
 ### M5 — Administração e apresentação
 

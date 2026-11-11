@@ -106,7 +106,29 @@ O Reverb roda como **segundo Web Service** com a mesma imagem Docker:
 5. Desligue a rede do navegador durante um envio e use "Tentar novamente": a mensagem aparece uma vez só.
 6. Entre com uma terceira conta e abra `/chat/{id}/mensagens` da conversa: `403`.
 7. Com a conversa aberta nas duas janelas, suspenda o vendedor pelo painel administrativo. A janela dele mostra "Acesso encerrado" em até 15 s e não envia nem lê mais nada.
+8. Com `QUEUE_CONNECTION=database`, pare o `queue:work` e envie mensagens: elas são gravadas e aparecem pela sincronização HTTP. Suba o worker de novo: os avisos pendentes são transmitidos e nada é duplicado.
+9. Repita os passos 2, 3 e 5 com a largura de um celular e usando só o teclado (Tab até o campo, Enter envia, Shift+Enter quebra a linha).
 
 ## 7. Testes automatizados
 
-`tests/Feature/ChatTest.php` cobre abertura de conversa, bloqueio consigo mesmo, retomada após compra, terceiros e administrador sem acesso, idempotência por UUID, rollback sem sinal, sinal sem conteúdo, validação de texto simples, limite de envios, histórico paginado e reconexão, autorização do canal privado (participante, terceiro, administrador, suspenso, visitante) e revogação com duas sessões. `tests/js/chat.test.mjs` cobre o comportamento do navegador (envio, nova tentativa com o mesmo UUID, sincronização e queda de conexão).
+```bash
+php artisan test --filter=Chat
+```
+
+```bash
+node --test tests/js/chat.test.mjs
+```
+
+- `tests/Feature/ChatTest.php` (#30): abertura de conversa, bloqueio consigo mesmo, retomada após compra, terceiros e administrador sem acesso, idempotência por UUID, rollback sem sinal, sinal sem conteúdo, validação de texto simples, limite de envios, histórico paginado e reconexão, autorização do canal privado (participante, terceiro, administrador, suspenso, visitante) e revogação com duas sessões.
+- `tests/Feature/ChatRegressionTest.php` (#32):
+  - criação concorrente de conversa e reenvio concorrente com o mesmo UUID, simulando a outra requisição entre o `SELECT` e o `INSERT`: resulta em uma conversa, uma mensagem e um único sinal;
+  - constraints únicas no banco e UUID com escopo por remetente e por conversa;
+  - isolamento entre conversas no histórico, na tela e no cursor de leitura;
+  - cursores independentes por participante, que nunca retrocedem, e contador de não lidas somando várias conversas e ignorando as próprias mensagens;
+  - matriz de acesso HTTP de todas as rotas do chat para visitante (`401`), terceiro e conta suspensa (`403`) e participante (`200`), além da reativação da conta sem perda de histórico;
+  - escape de texto, título e nome contra XSS na caixa de entrada e no payload inicial (só `x-text`, nunca `x-html`);
+  - limites de 2000 caracteres contados em caracteres (não em bytes), `trim` e texto só com espaços;
+  - limite de aberturas de conversa por conta e evento sem texto, e-mail ou nome.
+- `tests/js/chat.test.mjs`: comportamento do navegador (envio, nova tentativa com o mesmo UUID após falha de rede, sincronização, queda e volta da conexão, Shift+Enter e composição IME).
+
+Os testes usam SQLite em memória e broadcaster simulado. A entrega em tempo real com Reverb e worker reais, o uso no celular e por teclado e a queda do worker dependem do roteiro da seção 6, com duas pessoas.
