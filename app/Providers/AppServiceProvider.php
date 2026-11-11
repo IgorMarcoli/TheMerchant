@@ -42,5 +42,9 @@ class AppServiceProvider extends ServiceProvider
                 Limit::perMinute(3)->by('email:'.$key),
             ];
         });
+
+        // Chat (#30): limita envios por conta, inclusive novas tentativas, e aberturas de conversa.
+        RateLimiter::for('chat-messages', fn (Request $request): Limit => Limit::perMinute(20)->by('chat-send:'.$request->user()?->id));
+        RateLimiter::for('chat-start', fn (Request $request): Limit => Limit::perMinute(10)->by('chat-start:'.$request->user()?->id));
     }
 }

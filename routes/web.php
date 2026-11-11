@@ -93,11 +93,11 @@ Route::middleware(['auth', EnsureAccountIsActive::class])->group(function () {
 
     // Chat Privado em Tempo Real (RF21, RF22, RF23)
     Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
-    Route::post('/chat/iniciar', [ChatController::class, 'start'])->name('chat.start');
+    Route::post('/chat/iniciar', [ChatController::class, 'start'])->middleware('throttle:chat-start')->name('chat.start');
     Route::get('/chat/nao-lidas', [ChatController::class, 'unreadCount'])->name('chat.unread-count');
     Route::get('/chat/{conversation}', [ChatController::class, 'show'])->name('chat.show');
     Route::get('/chat/{conversation}/mensagens', [ChatController::class, 'messages'])->name('chat.messages');
-    Route::post('/chat/{conversation}/mensagens', [ChatController::class, 'store'])->name('chat.messages.store');
+    Route::post('/chat/{conversation}/mensagens', [ChatController::class, 'store'])->middleware('throttle:chat-messages')->name('chat.messages.store');
     Route::patch('/chat/{conversation}/lida', [ChatController::class, 'markAsRead'])->name('chat.read');
 });
 
