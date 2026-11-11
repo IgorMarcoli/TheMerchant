@@ -78,6 +78,29 @@ SQLite em memória serve ao primeiro diagnóstico. Locks/concorrência e SQL esp
 
 ### Resultados observados
 
+Consolidação da #24 em **11/11/2026**, na branch `João` (a partir de `21c2b03`), com PHP 8.4.26, Laravel 12.70.2, Node.js 26.12.1 e SQLite em memória:
+
+| Verificação | Resultado |
+| :--- | :--- |
+| `php artisan test` | 223 testes aprovados, 1461 assertions |
+| `npm test` | 22 testes JavaScript aprovados |
+| `php vendor/bin/pint --test` | Aprovado |
+
+Cobertura das regras críticas pedidas na #24:
+
+| Regra | Testes |
+| :--- | :--- |
+| Carrinho, checkout e pedido | `CheckoutTest`, `CheckoutReservationTest` |
+| Reserva, expiração, pagamento tardio, recusa e falha do gateway | `CheckoutReservationTest` (d01–d14), `AbacatePayGatewayTest` |
+| Webhook: segredo, assinatura, referência forjada, valor divergente, payload sanitizado, duplicado e fora de ordem | `WebhookPaymentTest`, `CheckoutReservationTest` (d09, d13) |
+| Entrega idempotente, só pelo vendedor do item, só com pedido pago, sessões de coaching em ordem e conclusão do pedido com vários vendedores (#18) | `SaleDeliveryTest` |
+| Policies de anúncio, pedido, avaliação, carrinho, vendedor e admin | `SellerListingTest`, `OrderTest`, `ReviewTest`, `CheckoutTest`, `SellerPermissionsTest`, `AdminTest` |
+| CSRF ativo (o Laravel o desliga em testes; `SecurityHardeningTest` o religa), token válido aceito, webhook fora do CSRF e `@csrf` em todos os formulários `POST` | `SecurityHardeningTest` |
+| Escape do Blade em vitrine, catálogo, busca, detalhe, pedidos, vendas, admin, avaliações e chat | `SecurityHardeningTest`, `ReviewTest`, `ChatRegressionTest` |
+| Diagnósticos (#28), RF03 (#27), suspensão de conta e chat (#32) | `DiagnosticSecurityTest`, `AccountRecoveryTest`, `AdminTest`, `ChatTest`, `ChatRegressionTest` |
+
+**Limites:** a reserva concorrente é testada em sequência (d04); a corrida real depende do `lockForUpdate`, que o SQLite ignora, e precisa ser exercitada em PostgreSQL com duas conexões. Os testes de webhook usam eventos sintéticos e `QUEUE_CONNECTION=sync`; não substituem a homologação no sandbox do gateway (#16).
+
 Validação das correções em **29/10/2026**, na branch `João`, com PHP 8.3.33, Laravel 12.70.2, PHPUnit 11.5.56 e Node.js 24.19.0:
 
 | Verificação | Resultado |
