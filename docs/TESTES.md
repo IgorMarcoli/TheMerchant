@@ -78,6 +78,29 @@ SQLite em memória serve ao primeiro diagnóstico. Locks/concorrência e SQL esp
 
 ### Resultados observados
 
+Consolidação da #24 em **11/11/2026**, na branch `João` (a partir de `21c2b03`), com PHP 8.4.26, Laravel 12.70.2, Node.js 26.12.1 e SQLite em memória:
+
+| Verificação | Resultado |
+| :--- | :--- |
+| `php artisan test` | 223 testes aprovados, 1461 assertions |
+| `npm test` | 22 testes JavaScript aprovados |
+| `php vendor/bin/pint --test` | Aprovado |
+
+Cobertura das regras críticas pedidas na #24:
+
+| Regra | Testes |
+| :--- | :--- |
+| Carrinho, checkout e pedido | `CheckoutTest`, `CheckoutReservationTest` |
+| Reserva, expiração, pagamento tardio, recusa e falha do gateway | `CheckoutReservationTest` (d01–d14), `AbacatePayGatewayTest` |
+| Webhook: segredo, assinatura, referência forjada, valor divergente, payload sanitizado, duplicado e fora de ordem | `WebhookPaymentTest`, `CheckoutReservationTest` (d09, d13) |
+| Entrega idempotente, só pelo vendedor do item, só com pedido pago, sessões de coaching em ordem e conclusão do pedido com vários vendedores (#18) | `SaleDeliveryTest` |
+| Policies de anúncio, pedido, avaliação, carrinho, vendedor e admin | `SellerListingTest`, `OrderTest`, `ReviewTest`, `CheckoutTest`, `SellerPermissionsTest`, `AdminTest` |
+| CSRF ativo (o Laravel o desliga em testes; `SecurityHardeningTest` o religa), token válido aceito, webhook fora do CSRF e `@csrf` em todos os formulários `POST` | `SecurityHardeningTest` |
+| Escape do Blade em vitrine, catálogo, busca, detalhe, pedidos, vendas, admin, avaliações e chat | `SecurityHardeningTest`, `ReviewTest`, `ChatRegressionTest` |
+| Diagnósticos (#28), RF03 (#27), suspensão de conta e chat (#32) | `DiagnosticSecurityTest`, `AccountRecoveryTest`, `AdminTest`, `ChatTest`, `ChatRegressionTest` |
+
+**Limites:** a reserva concorrente é testada em sequência (d04); a corrida real depende do `lockForUpdate`, que o SQLite ignora, e precisa ser exercitada em PostgreSQL com duas conexões. Os testes de webhook usam eventos sintéticos e `QUEUE_CONNECTION=sync`; não substituem a homologação no sandbox do gateway (#16).
+
 Validação das correções em **29/10/2026**, na branch `João`, com PHP 8.3.33, Laravel 12.70.2, PHPUnit 11.5.56 e Node.js 24.19.0:
 
 | Verificação | Resultado |
@@ -196,12 +219,12 @@ Esse envio **altera o pedido fictício** no comportamento atual. Repetir o mesmo
 | Entrega antes de pagar | Negada; vendedor vê apenas seus itens; #18 |
 | Coaching | Todas as sessões do item concluídas antes da avaliação; #29 |
 | Avaliação | Uma por item pago/entregue, sem aguardar outro vendedor; #19–#21 |
-| Chat em duas sessões | Mensagem aparece sem reload e persiste; #30–#32, pendente |
+| Chat em duas sessões | Mensagem aparece sem reload e persiste; regressão automatizada em `ChatTest` e `ChatRegressionTest`, E2E real pendente (#32) |
 | Terceiro ou suspenso | Não lê/envia/assina canal privado |
 | Reconexão/retry | Recupera mensagens perdidas sem duplicar |
 | Não lidas | Contador/cursor independentes, leitura após exibição |
 
-O chat precisa de E2E com Reverb/worker reais após implementação; mocks não comprovam entrega em tempo real.
+O chat precisa de E2E com Reverb/worker reais; mocks não comprovam entrega em tempo real. Comandos, cobertura automatizada e roteiro com duas sessões estão em [CHAT_TEMPO_REAL.md](CHAT_TEMPO_REAL.md#6-roteiro-manual-com-duas-sessões).
 
 ### M5 — Administração e apresentação
 
