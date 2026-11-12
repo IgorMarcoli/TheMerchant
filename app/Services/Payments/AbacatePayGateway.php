@@ -43,7 +43,8 @@ class AbacatePayGateway implements PaymentGateway
             'data' => [
                 'amount' => $order->totalCents(),
                 'expiresIn' => $expiresInSeconds,
-                'description' => "Pedido {$order->order_number} — TheMerchant",
+                // A AbacatePay recusa caracteres como o travessão (U+2014) na descrição.
+                'description' => "Pedido {$order->order_number} - TheMerchant",
                 'externalId' => $order->order_number,
                 'metadata' => ['order_number' => $order->order_number],
             ],

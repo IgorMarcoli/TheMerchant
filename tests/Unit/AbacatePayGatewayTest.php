@@ -44,10 +44,13 @@ class AbacatePayGatewayTest extends TestCase
             && $request->data() === ['method' => 'PIX', 'data' => [
                 'amount' => 15050,
                 'expiresIn' => 840,
-                'description' => 'Pedido ORD-ABC-20260925 — TheMerchant',
+                'description' => 'Pedido ORD-ABC-20260925 - TheMerchant',
                 'externalId' => 'ORD-ABC-20260925',
                 'metadata' => ['order_number' => 'ORD-ABC-20260925'],
             ]]);
+
+        // A AbacatePay responde 400 a caracteres fora do ASCII na descrição (ex.: travessão U+2014).
+        Http::assertSent(fn (Request $request): bool => mb_check_encoding($request->data()['data']['description'], 'ASCII'));
 
         $this->assertSame('pix_char_1', $charge->id);
         $this->assertSame(GatewayCharge::PENDING, $charge->status);
