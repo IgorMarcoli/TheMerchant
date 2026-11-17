@@ -29,3 +29,6 @@ AI_ROLES.md
 docs/ACEITE_ISSUE_20.md
 docs/ACEITE_ISSUE_19.md
 database/seeders/FreeListingsSeeder.php
+
+# Configuracao local do Claude Code (fica so na maquina de cada um)
+.claude/
