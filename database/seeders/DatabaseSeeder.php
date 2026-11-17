@@ -35,9 +35,10 @@ class DatabaseSeeder extends Seeder
             'user_id' => $seller->id,
             'status' => 'approved',
             'bio' => 'Vendedor verificado especializado em itens raros de CS2 e coaching de Valorant. Entregas em até 15 minutos via Trade URL.',
-            'reputation_score' => 4.95,
-            'total_reviews' => 128,
-            'total_sales' => 342,
+            // Reputação e vendas começam zeradas: o ReviewService recalcula a partir de avaliações reais.
+            'reputation_score' => 0,
+            'total_reviews' => 0,
+            'total_sales' => 0,
         ]);
 
         User::create([

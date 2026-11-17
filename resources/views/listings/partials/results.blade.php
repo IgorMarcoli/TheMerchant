@@ -13,7 +13,7 @@
             </p>
         </div>
     @empty
-        <x-empty-state title="Nenhum anúncio encontrado para os filtros selecionados." description="Tente outra busca ou explore o catálogo completo para encontrar seu próximo upgrade." icon="search" :href="route('listings.index')" action="Explorar todos os anúncios" />
+        <x-empty-state title="Nada encontrado com esses filtros" description="Tente mudar a busca ou limpar os filtros para ver todos os anúncios." icon="search" :href="route('listings.index')" action="Explorar todos os anúncios" />
     @endforelse
 </div>
 {{ $listings->links('vendor.pagination.catalog') }}

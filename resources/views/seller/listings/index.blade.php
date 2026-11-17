@@ -8,7 +8,7 @@
 @endif
 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-5 mb-8">
     <div>
-        <x-page-heading title="Meus Anúncios" eyebrow="SEU INVENTÁRIO TEM POTENCIAL" description="Gerencie seus produtos e serviços cadastrados." />
+        <x-page-heading title="Meus Anúncios" eyebrow="Sua loja" description="Gerencie seus produtos e serviços cadastrados." />
     </div>
     <div class="flex gap-3">
         <a href="{{ route('seller.sales.index') }}" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition">
@@ -30,7 +30,7 @@
                     @if($listing->primaryImage)
                         <img src="{{ $listing->primaryImage->url }}" alt="Capa de {{ $listing->title }}" width="56" height="56" class="w-14 h-14 rounded-xl object-cover">
                     @else
-                        <span aria-hidden="true">💎</span>
+                        <x-icon name="gem" class="!h-6 !w-6 text-slate-500" />
                     @endif
                 </div>
                 <div>
@@ -75,7 +75,7 @@
             </div>
         </div>
     @empty
-        <x-empty-state title="Você ainda não cadastrou nenhum anúncio." description="Transforme seus itens e sua experiência em novas conquistas." icon="store" :href="route('seller.application')" action="Gerenciar perfil de vendedor" />
+        <x-empty-state title="Você ainda não cadastrou nenhum anúncio." description="Crie seu primeiro anúncio para ele aparecer no catálogo." icon="store" :href="route('seller.application')" action="Gerenciar perfil de vendedor" />
     @endforelse
 </div>
 

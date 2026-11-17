@@ -29,7 +29,7 @@
                         <img :src="images[current]" :class="transitioning ? 'opacity-40' : 'opacity-100'" alt="{{ $listing->title }}" width="1200" height="800" fetchpriority="high" class="max-h-[70vh] w-full object-contain transition-opacity duration-300">
                     </template>
                     @if($galleryImages->isEmpty())
-                        <x-icon :name="$listing->category->type === 'service' ? 'game' : 'spark'" />
+                        <x-icon :name="$listing->category->type === 'service' ? 'game' : 'gem'" />
                         <p class="mt-4 text-sm text-slate-300">Este anúncio ainda não tem fotos.</p>
                     @endif
 
@@ -85,7 +85,7 @@
                     <form action="{{ route('cart.add', $listing) }}" method="POST">
                         @csrf
                         <button type="submit" class="w-full py-3.5 bg-brand-600 hover:bg-brand-500 text-slate-950 font-bold rounded-xl shadow-lg shadow-brand-600/10 transition flex items-center justify-center gap-2">
-                            <span aria-hidden="true">🛒</span> Adicionar ao carrinho
+                            <x-icon name="cart" class="!h-5 !w-5" /> Adicionar ao carrinho
                         </button>
                     </form>
                 @elseif($isOwnListing)
@@ -143,7 +143,7 @@
 
                 @auth
                     @if(! $isOwnListing)
-                        <button type="button" @click="reportOpen = true" class="w-full text-xs text-rose-400 hover:text-rose-300 transition text-center mt-4"><span aria-hidden="true">🚩</span> Denunciar este anúncio</button>
+                        <button type="button" @click="reportOpen = true" class="w-full text-xs text-rose-400 hover:text-rose-300 transition text-center mt-4"><x-icon name="flag" class="inline !h-4 !w-4 align-[-3px]" /> Denunciar este anúncio</button>
                     @endif
                 @endauth
             </section>
@@ -160,18 +160,18 @@
                         @csrf
                         <div>
                             <label for="report-reason" class="block text-xs font-semibold text-slate-300 mb-1">Motivo</label>
-                            <select id="report-reason" name="reason" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
+                            <select id="report-reason" name="reason" required @error('reason') aria-invalid="true" aria-describedby="report-reason-error" @enderror class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
                                 <option value="fraude" @selected(old('reason') === 'fraude')>Item inexistente ou tentativa de golpe</option>
                                 <option value="termos" @selected(old('reason') === 'termos')>Violação dos termos do jogo</option>
                                 <option value="preco" @selected(old('reason') === 'preco')>Preço abusivo ou anúncio duplicado</option>
                                 <option value="Outro" @selected(old('reason') === 'Outro')>Outro motivo</option>
                             </select>
-                            @error('reason')<p class="text-xs text-rose-400 mt-1" role="alert">{{ $message }}</p>@enderror
+                            <x-field-error name="reason" id="report-reason-error" />
                         </div>
                         <div>
                             <label for="report-details" class="block text-xs font-semibold text-slate-300 mb-1">Detalhes e evidências</label>
-                            <textarea id="report-details" name="details" rows="4" minlength="10" maxlength="1000" required placeholder="Descreva os fatos..." class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">{{ old('details') }}</textarea>
-                            @error('details')<p class="text-xs text-rose-400 mt-1" role="alert">{{ $message }}</p>@enderror
+                            <textarea id="report-details" name="details" @error('details') aria-invalid="true" aria-describedby="report-details-error" @enderror rows="4" minlength="10" maxlength="1000" required placeholder="Descreva os fatos..." class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white">{{ old('details') }}</textarea>
+                            <x-field-error name="details" id="report-details-error" />
                         </div>
                         <div class="flex justify-end gap-2 pt-2">
                             <button type="button" @click="reportOpen = false" class="px-3 py-2 text-xs font-semibold text-slate-400 hover:text-white">Cancelar</button>

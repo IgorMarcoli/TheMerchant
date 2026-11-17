@@ -17,8 +17,8 @@ class StorefrontTest extends TestCase
     public function test_empty_storefront_has_actionable_empty_states(): void
     {
         $this->get('/')->assertOk()
-            ->assertSee('Seu próximo nível')
-            ->assertSee('O próximo drop pode ser seu.')
+            ->assertSee('Skins e coaching')
+            ->assertSee('Ainda não tem nenhum anúncio por aqui')
             ->assertDontSee('Teste de Conexão');
     }
 

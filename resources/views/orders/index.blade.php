@@ -5,7 +5,7 @@
 @section('content')
 <div class="max-w-5xl mx-auto">
     <div class="mb-8">
-        <x-page-heading title="Histórico de Pedidos" eyebrow="CADA CONQUISTA, EM UM LUGAR" description="Acompanhe suas compras e realize avaliações pós-entrega." />
+        <x-page-heading title="Histórico de Pedidos" eyebrow="Suas compras" description="Veja o andamento de cada pedido e avalie o vendedor depois da entrega." />
     </div>
 
     <div class="space-y-4">
@@ -47,7 +47,7 @@
                 </div>
             </div>
         @empty
-            <x-empty-state title="Você ainda não realizou nenhum pedido." description="Seu próximo upgrade está no marketplace. Encontre algo com a sua cara." icon="grid" :href="route('listings.index')" action="Explorar marketplace" />
+            <x-empty-state title="Você ainda não fez nenhum pedido" description="Quando comprar algo, o pedido aparece aqui com o andamento da entrega." icon="grid" :href="route('listings.index')" action="Explorar marketplace" />
         @endforelse
     </div>
 

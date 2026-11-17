@@ -6,7 +6,7 @@
 <div class="max-w-5xl mx-auto">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-5 mb-8">
         <div>
-            <x-page-heading title="Gestão de Vendas" eyebrow="DA SUA LOJA PARA O PRÓXIMO PLAYER" description="Acompanhe pedidos recebidos, instruções e entregas digitais." />
+            <x-page-heading title="Gestão de Vendas" eyebrow="Sua loja" description="Acompanhe pedidos recebidos, instruções e entregas digitais." />
         </div>
         <a href="{{ route('seller.anuncios.index') }}" class="px-4 py-2 rounded-xl bg-slate-800 text-xs font-semibold text-slate-300 hover:text-white transition">
             &larr; Meus Anúncios
@@ -55,7 +55,7 @@
                                 <input type="hidden" name="listing_id" value="{{ $sale->listing_id }}">
                                 <input type="hidden" name="buyer_id" value="{{ $sale->order->buyer_id }}">
                                 <button type="submit" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition flex items-center gap-1.5 border border-slate-700">
-                                    <span aria-hidden="true">💬</span> Falar com comprador
+                                    <x-icon name="message" class="!h-4 !w-4" /> Falar com comprador
                                 </button>
                             </form>
                         @endif
@@ -111,7 +111,7 @@
                 @endif
             </div>
         @empty
-            <x-empty-state title="Nenhuma venda registrada até o momento." description="Seus pedidos recebidos aparecerão aqui. Prepare seus anúncios para o próximo player." icon="store" :href="route('seller.anuncios.index')" action="Ver meus anúncios" />
+            <x-empty-state title="Nenhuma venda registrada até o momento." description="Quando alguém comprar um anúncio seu, o pedido aparece aqui." icon="store" :href="route('seller.anuncios.index')" action="Ver meus anúncios" />
         @endforelse
     </div>
 

@@ -1,4 +1,4 @@
-@props(['title', 'eyebrow' => 'SEU UNIVERSO GAMER', 'description' => null])
+@props(['title', 'eyebrow' => 'TheMerchant', 'description' => null])
 
 <div {{ $attributes->class(['tm-page-heading']) }}>
     <span class="tm-eyebrow"><span class="tm-status-dot" aria-hidden="true"></span>{{ $eyebrow }}</span>

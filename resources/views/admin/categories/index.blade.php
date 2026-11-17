@@ -12,12 +12,12 @@
                 <span class="text-slate-600">/</span>
                 <span class="text-xs text-brand-400 font-semibold">Catálogo</span>
             </div>
-            <x-page-heading title="Gestão de Categorias e Jogos" eyebrow="ORGANIZE CADA UNIVERSO" description="Cadastre e gerencie os jogos e as categorias do marketplace." />
+            <x-page-heading title="Gestão de Categorias e Jogos" eyebrow="Administração" description="Cadastre e gerencie os jogos e as categorias do marketplace." />
         </div>
 
         <div class="flex items-center gap-3">
             <a href="#form-nova-categoria" class="px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-slate-950 font-bold text-xs transition flex items-center gap-1.5 shadow-lg shadow-brand-600/10">
-                <span aria-hidden="true">➕</span> Nova Categoria
+                <x-icon name="plus" class="!h-4 !w-4" /> Nova Categoria
             </a>
         </div>
     </div>
@@ -27,7 +27,7 @@
         <!-- Card 1: Criar Nova Categoria (2 colunas) -->
         <div id="form-nova-categoria" class="lg:col-span-2 rounded-xl bg-slate-900 border border-slate-800 p-6 shadow-xl">
             <h2 class="text-base font-bold text-white mb-4 flex items-center gap-2">
-                <span aria-hidden="true">✨</span> Cadastrar Nova Categoria
+                Cadastrar Nova Categoria
             </h2>
 
             <form action="{{ route('admin.categorias.store') }}" method="POST" class="space-y-4">
@@ -35,17 +35,15 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label for="name" class="block text-xs font-semibold text-slate-300 mb-1">Nome da Categoria</label>
-                        <input type="text" name="name" id="name" required placeholder="Ex: Skins de Rifles, Coaching..."
+                        <input type="text" name="name" id="name" required @error('name') aria-invalid="true" aria-describedby="name-error" @enderror placeholder="Ex: Skins de Rifles, Coaching..."
                                value="{{ old('name') }}"
                                class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:ring-2 focus:ring-brand-500">
-                        @error('name')
-                            <span class="text-rose-400 text-[10px] mt-1 block">{{ $message }}</span>
-                        @enderror
+                        <x-field-error name="name" id="name-error" />
                     </div>
 
                     <div>
                         <label for="game_id" class="block text-xs font-semibold text-slate-300 mb-1">Jogo Vinculado (RN01)</label>
-                        <select name="game_id" id="game_id" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:ring-2 focus:ring-brand-500">
+                        <select name="game_id" id="game_id" required @error('game_id') aria-invalid="true" aria-describedby="game_id-error" @enderror class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:ring-2 focus:ring-brand-500">
                             <option value="">Selecione um jogo...</option>
                             @foreach($games as $game)
                                 <option value="{{ $game->id }}" @selected(old('game_id') == $game->id)>
@@ -53,20 +51,16 @@
                                 </option>
                             @endforeach
                         </select>
-                        @error('game_id')
-                            <span class="text-rose-400 text-[10px] mt-1 block">{{ $message }}</span>
-                        @enderror
+                        <x-field-error name="game_id" id="game_id-error" />
                     </div>
 
                     <div>
                         <label for="type" class="block text-xs font-semibold text-slate-300 mb-1">Tipo da Categoria</label>
-                        <select name="type" id="type" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:ring-2 focus:ring-brand-500">
+                        <select name="type" id="type" required @error('type') aria-invalid="true" aria-describedby="type-error" @enderror class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:ring-2 focus:ring-brand-500">
                             <option value="cosmetic" @selected(old('type') === 'cosmetic')>Cosmético (Skin, Item, Visual)</option>
                             <option value="service" @selected(old('type') === 'service')>Serviço (Coaching, Mentoria)</option>
                         </select>
-                        @error('type')
-                            <span class="text-rose-400 text-[10px] mt-1 block">{{ $message }}</span>
-                        @enderror
+                        <x-field-error name="type" id="type-error" />
                     </div>
 
                     <div class="flex items-center pt-6">
@@ -89,7 +83,7 @@
         <!-- Card 2: Controle de Jogos (Ativação / Inativação) -->
         <div class="rounded-xl bg-slate-900 border border-slate-800 p-6 shadow-xl">
             <h2 class="text-base font-bold text-white mb-2 flex items-center gap-2">
-                <span aria-hidden="true">🎮</span> Jogos no Sistema
+                Jogos no Sistema
             </h2>
             <p class="text-xs text-slate-400 mb-4 leading-relaxed">
                 Inative jogos para ocultá-los do catálogo público mantendo o histórico de pedidos seguro.
@@ -154,7 +148,7 @@
     <div class="rounded-xl bg-slate-900 border border-slate-800 overflow-hidden shadow-xl">
         <div class="p-6 border-b border-slate-800 flex items-center justify-between">
             <h2 class="text-base font-bold text-white flex items-center gap-2">
-                <span aria-hidden="true">📋</span> Categorias Cadastradas
+                Categorias Cadastradas
             </h2>
             <span class="text-xs text-slate-400 font-semibold">{{ $categories->total() }} categorias encontradas</span>
         </div>

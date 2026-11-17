@@ -90,7 +90,7 @@ class AuthTest extends TestCase
         $response = $this->get(route('register'));
 
         $response->assertOk();
-        $response->assertSee('Criar Nova Conta');
+        $response->assertSee('Crie sua conta');
     }
 
     public function test_visitor_can_register_as_buyer(): void

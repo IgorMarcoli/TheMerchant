@@ -3,7 +3,7 @@
 @section('title', 'Acessar Conta')
 
 @section('content')
-<x-auth-card title="Bem-vindo de volta!" eyebrow="BOM TER VOCÊ DE VOLTA" description="Entre com seu e-mail e senha para continuar." :fields="['email', 'password']">
+<x-auth-card title="Que bom te ver de novo" eyebrow="Entrar" description="Entre com seu e-mail e senha para continuar." :fields="['email', 'password']">
 
         <form action="{{ route('login') }}" method="POST" class="space-y-4">
             @csrf

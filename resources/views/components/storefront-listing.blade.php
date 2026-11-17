@@ -4,7 +4,7 @@
         @if ($listing->primaryImage?->url)
             <img src="{{ $listing->primaryImage->url }}" alt="{{ $listing->title }}" width="400" height="240" loading="lazy">
         @else
-            <x-icon :name="$listing->category?->type === 'service' ? 'game' : 'spark'" class="tm-product-symbol" /><span class="tm-art-caption">{{ $listing->category?->type === 'service' ? 'COACHING' : 'COSMÉTICOS' }}</span>
+            <x-icon :name="$listing->category?->type === 'service' ? 'game' : 'gem'" class="tm-product-symbol" /><span class="tm-art-caption">{{ $listing->category?->type === 'service' ? 'Coaching' : 'Cosmético' }}</span>
         @endif
         <span class="tm-product-tag">{{ $listing->game?->name }}</span>
     </div>
