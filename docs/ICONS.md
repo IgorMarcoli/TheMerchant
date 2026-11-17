@@ -29,6 +29,19 @@ links e botões sem texto visível devem receber um nome acessível via `aria-la
 | store | store |
 | chevron | chevron-right |
 | arrow | arrow-right |
+| check | check |
+| alert | circle-alert |
+| info | info |
+| message | message-circle |
+| lock | lock |
+| flag | flag |
+| clock | clock |
+| refresh | rotate-cw |
+| plus | plus |
+| gem | gem |
+| inbox | inbox |
+| image | image |
+| star | star |
 
 Nomes desconhecidos mantêm o fallback para arrow-right.
 

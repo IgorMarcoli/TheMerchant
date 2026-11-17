@@ -17,7 +17,7 @@
 })">
     <div class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-            <x-page-heading title="Mensagens & Negociações" eyebrow="DE PLAYER PARA PLAYER" description="Converse com compradores e vendedores e acompanhe suas negociações." />
+            <x-page-heading title="Mensagens & Negociações" eyebrow="Mensagens" description="Converse com compradores e vendedores e acompanhe suas negociações." />
         </div>
 
         <div class="flex items-center gap-2 text-xs">
@@ -62,7 +62,7 @@
                         </div>
 
                         <div class="flex items-center gap-1.5 text-[11px] text-brand-400 font-medium mb-1 truncate">
-                            <span aria-hidden="true">🎮</span>
+                            <x-icon name="game" class="!h-3.5 !w-3.5" />
                             <span class="truncate">{{ $conversation->listing->title }}</span>
                         </div>
 
@@ -79,9 +79,9 @@
                     </a>
                 @empty
                     <div class="p-8 text-center text-slate-500 text-xs">
-                        <span aria-hidden="true" class="text-3xl block mb-2">📭</span>
-                        Nenhuma conversa iniciada.<br>
-                        Acesse o catálogo e converse com um vendedor.
+                        <x-icon name="inbox" class="!h-8 !w-8 mx-auto mb-2" />
+                        Você ainda não conversou com ninguém.<br>
+                        Abra um anúncio e use o botão Falar com o vendedor.
                     </div>
                 @endforelse
             </div>
@@ -111,7 +111,7 @@
                                 </span>
                             </div>
                             <div class="text-[11px] text-slate-400 flex items-center gap-2">
-                                <span><span aria-hidden="true">🔒</span> Chat Privado</span>
+                                <span class="inline-flex items-center gap-1"><x-icon name="lock" class="!h-3.5 !w-3.5" /> Chat privado</span>
                                 <span>•</span>
                                 <span>Dados pessoais protegidos</span>
                             </div>
@@ -145,8 +145,8 @@
 
                     <template x-if="messages.length === 0">
                         <div class="h-full flex flex-col items-center justify-center text-center p-8 text-slate-500">
-                            <span aria-hidden="true" class="text-4xl mb-2">💬</span>
-                            <p class="text-sm font-semibold text-slate-400">Inicie a conversa!</p>
+                            <x-icon name="message" class="!h-9 !w-9 mb-2" />
+                            <p class="text-sm font-semibold text-slate-400">Nenhuma mensagem ainda</p>
                             <p class="text-xs mt-1 max-w-sm">Tire dúvidas sobre o produto, entrega ou combine detalhes com respeito e segurança.</p>
                         </div>
                     </template>
@@ -162,13 +162,13 @@
                                 <div class="mt-1 flex items-center justify-end gap-1.5 text-[9px] opacity-75">
                                     <span x-text="msg.formatted_time"></span>
                                     <template x-if="msg.status === 'sending'">
-                                        <span><span aria-hidden="true">⏳</span><span class="sr-only">Enviando</span></span>
+                                        <span><x-icon name="clock" class="!h-3 !w-3" /><span class="sr-only">Enviando</span></span>
                                     </template>
                                     <template x-if="msg.status === 'sent' || (!msg.status && msg.id)">
                                         <span><span aria-hidden="true">✓</span><span class="sr-only">Enviada</span></span>
                                     </template>
                                     <template x-if="msg.status === 'error'">
-                                        <span class="text-rose-950 font-bold"><span aria-hidden="true">⚠️</span> Falha</span>
+                                        <span class="text-rose-950 font-bold inline-flex items-center gap-1"><x-icon name="alert" class="!h-3 !w-3" /> Falha</span>
                                     </template>
                                 </div>
                             </div>
@@ -176,7 +176,7 @@
                             <!-- Botão de Retry para mensagens com erro -->
                             <template x-if="msg.status === 'error'">
                                 <button type="button" @click="retryMessage(msg)" class="mt-1 text-[10px] text-rose-400 hover:text-rose-300 underline font-semibold flex items-center gap-1 focus:outline-none focus:ring-1 focus:ring-rose-500">
-                                    <span aria-hidden="true">🔄</span> Tentar novamente
+                                    <x-icon name="refresh" class="!h-3 !w-3" /> Tentar novamente
                                 </button>
                             </template>
                         </div>
@@ -228,7 +228,7 @@
             @else
                 <!-- Estado vazio quando nenhuma conversa foi selecionada -->
                 <div class="h-full flex flex-col items-center justify-center text-center p-12 text-slate-500">
-                    <span aria-hidden="true" class="text-5xl mb-3">💬</span>
+                    <x-icon name="message" class="!h-10 !w-10 mb-3" />
                     <h3 class="text-base font-bold text-white mb-1">Selecione uma conversa</h3>
                     <p class="text-xs max-w-sm">Escolha uma conversa na lista à esquerda ou inicie uma nova na página de qualquer anúncio disponível.</p>
                 </div>

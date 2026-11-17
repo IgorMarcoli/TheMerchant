@@ -5,7 +5,7 @@
 @section('content')
 <div class="max-w-3xl mx-auto">
     <div class="mb-8 text-center">
-        <x-page-heading title="Finalização do Pedido" eyebrow="FALTA POUCO PARA O PRÓXIMO NÍVEL" description="Confira os itens e as instruções de entrega antes de continuar." />
+        <x-page-heading title="Finalização do Pedido" eyebrow="Passo 2 de 3" description="Confira os itens e as instruções de entrega antes de continuar." />
     </div>
 
     <div class="rounded-xl bg-slate-900 border border-slate-800 p-8 shadow-xl">
@@ -53,7 +53,7 @@
             @endif
 
             <button type="submit" class="w-full py-4 bg-brand-600 hover:bg-brand-500 text-slate-950 font-bold rounded-xl shadow-lg shadow-brand-600/15 transition text-sm flex items-center justify-center gap-2">
-                <span aria-hidden="true">🔒</span> Confirmar Pedido e Pagar com PIX
+                <x-icon name="lock" class="!h-5 !w-5" /> Confirmar Pedido e Pagar com PIX
             </button>
             <p class="text-[11px] text-slate-500 text-center">Os itens ficam reservados por {{ \App\Models\Reservation::TTL_MINUTES }} minutos enquanto o PIX é pago. Pagamento processado pela AbacatePay.</p>
         </form>

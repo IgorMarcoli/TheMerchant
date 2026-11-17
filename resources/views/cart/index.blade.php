@@ -5,7 +5,7 @@
 @section('content')
 <div class="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:py-12">
     <div class="mb-8 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-        <x-page-heading title="Seu carrinho" eyebrow="QUASE LÁ" description="Confira seus anúncios antes de seguir para o checkout." />
+        <x-page-heading title="Seu carrinho" eyebrow="Passo 1 de 3" description="Confira seus anúncios antes de seguir para o checkout." />
         @if($cart && $cart->items->isNotEmpty())
             <div x-data="{ confirmClear: false }" class="shrink-0">
                 <button type="button" @click="confirmClear = true" class="rounded-lg px-3 py-2 text-sm font-semibold text-rose-300 transition hover:bg-rose-400/10 hover:text-rose-200">
@@ -41,8 +41,8 @@
 
     @if(!$cart || $cart->items->isEmpty())
         <div class="rounded-3xl border border-slate-800 bg-slate-900/70 px-6 py-14 text-center sm:py-20">
-            <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-brand-400/20 bg-brand-400/10 text-3xl text-brand-300" aria-hidden="true">🛒</div>
-            <p class="mt-6 text-xs font-bold uppercase tracking-[0.2em] text-brand-300">Ainda dá tempo de encontrar algo incrível</p>
+            <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-brand-400/20 bg-brand-400/10 text-brand-300"><x-icon name="cart" class="!h-8 !w-8" /></div>
+            <p class="mt-6 text-sm font-semibold text-brand-300">Nada por aqui ainda</p>
             <h2 class="mt-2 text-2xl font-black text-white">Seu carrinho está vazio</h2>
             <p class="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-400">Explore os anúncios e adicione cosméticos ou serviços para continuar.</p>
             <a href="{{ route('listings.index') }}" class="mt-7 inline-flex items-center justify-center rounded-xl bg-brand-500 px-5 py-3 text-sm font-bold text-slate-950 transition hover:bg-brand-400">Explorar anúncios</a>
@@ -70,7 +70,7 @@
                                 @if($listing && $listing->primaryImage)
                                     <img src="{{ $listing->primaryImage->url }}" alt="Imagem de {{ $listing->title }}" class="h-full w-full object-cover">
                                 @else
-                                    <div class="flex h-full items-center justify-center text-2xl" aria-hidden="true">{{ $listing?->category?->type === 'service' ? '🎮' : '💎' }}</div>
+                                    <div class="flex h-full items-center justify-center text-slate-500"><x-icon :name="$listing?->category?->type === 'service' ? 'game' : 'gem'" class="!h-7 !w-7" /></div>
                                 @endif
                             </div>
                             <div class="min-w-0 flex-1">

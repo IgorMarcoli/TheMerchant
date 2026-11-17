@@ -2,10 +2,7 @@
 @section('title', 'Quero vender')
 @section('content')
 <div class="max-w-2xl mx-auto space-y-6 rounded-2xl bg-slate-900 p-6">
-    <x-page-heading title="Quero vender" eyebrow="COMECE UMA NOVA CONQUISTA" description="Use sua conta para comprar e vender. Preencha sua apresentação para a equipe aprovar seu perfil." />
-    @if ($errors->any())
-        <p class="text-rose-300" role="alert">{{ $errors->first() }}</p>
-    @endif
+    <x-page-heading title="Quero vender" eyebrow="Vender no TheMerchant" description="Conte um pouco sobre o que você quer vender. A equipe revisa e libera seu perfil de vendedor." />
     @if ($profile)
         <p>Situação: <strong>{{ ['pending' => 'Aguardando aprovação', 'approved' => 'Aprovado', 'suspended' => 'Vendas suspensas'][$profile->status] }}</strong></p>
         @if ($profile->status === 'approved')
@@ -20,7 +17,8 @@
         <form action="{{ route('seller.application.store') }}" method="POST" class="space-y-4">
             @csrf
             <label for="bio" class="block">Apresentação do vendedor</label>
-            <textarea id="bio" name="bio" required minlength="10" maxlength="500" rows="5" class="w-full rounded-lg bg-slate-950 p-3" placeholder="Conte quais itens ou serviços pretende vender e sua experiência.">{{ old('bio') }}</textarea>
+            <textarea id="bio" name="bio" required @error('bio') aria-invalid="true" aria-describedby="bio-error" @enderror minlength="10" maxlength="500" rows="5" class="w-full rounded-lg bg-slate-950 p-3" placeholder="Conte quais itens ou serviços pretende vender e sua experiência.">{{ old('bio') }}</textarea>
+            <x-field-error name="bio" id="bio-error" />
             <button class="tm-button" type="submit">Solicitar aprovação</button>
         </form>
     @endif

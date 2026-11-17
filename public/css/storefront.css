@@ -149,6 +149,23 @@
     font-weight:600;
 }
 
+/* "Sair" é ação secundária: texto discreto, não o botão verde principal. */
+.tm-logout {
+    padding:0 8px;
+    border:0;
+    background:none;
+    color:var(--tm-muted);
+    font:inherit;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    transition:color .15s ease;
+}
+
+.tm-logout:hover {
+    color:var(--tm-text);
+}
+
 .tm-button {
     display:inline-flex;
     align-items:center;
@@ -1266,4 +1283,25 @@
 }
 @media (prefers-reduced-motion:reduce) {
     .tm-home *, .tm-header *, .tm-main * { transition:none !important; animation:none !important; scroll-behavior:auto !important; }
+}
+
+/* Rótulos acima dos títulos: frases curtas em caixa normal, sem espaçamento largo e com 12px no mínimo. */
+.tm-eyebrow,
+.tm-kicker,
+.tm-welcome>span:first-child,
+.tm-page-heading .tm-eyebrow {
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:0;
+    line-height:1.5;
+}
+
+.tm-floating-label {
+    font-size:12px;
+    letter-spacing:0;
+}
+
+.tm-art-caption {
+    font-size:12px;
+    letter-spacing:0;
 }

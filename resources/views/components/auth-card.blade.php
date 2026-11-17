@@ -1,4 +1,4 @@
-@props(['title', 'description' => null, 'eyebrow' => 'SUA CONTA, SEU UNIVERSO', 'fields' => []])
+@props(['title', 'description' => null, 'eyebrow' => 'Sua conta', 'fields' => []])
 
 @php
     // Erros dos campos listados em $fields aparecem junto ao campo; o resumo cita só o que não tem lugar no formulário.

@@ -70,7 +70,7 @@ input[type="checkbox"], input[type="radio"] {
     padding: 32px 0;
     border-bottom: 1px solid var(--tm-border);
 }
-.market-footer-eyebrow { color: var(--tm-accent); font-size: 10px; font-weight: 700; letter-spacing: 1.7px; }
+.market-footer-eyebrow { color: var(--tm-accent); font-size: 12px; font-weight: 600; }
 .market-footer-banner h2 { margin: 8px 0; font-size: 25px; font-weight: 800; letter-spacing: -.7px; }
 .market-footer-banner p { color: var(--tm-muted); font-size: 12px; line-height: 1.8; }
 .market-footer-cta {

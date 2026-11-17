@@ -50,6 +50,59 @@
         @case('chevron')
             <path d="m9 18 6-6-6-6" />
             @break
+        @case('check')
+            <path d="M20 6 9 17l-5-5" />
+            @break
+        @case('alert')
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" x2="12" y1="8" y2="12" />
+            <line x1="12" x2="12.01" y1="16" y2="16" />
+            @break
+        @case('info')
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 16v-4" />
+            <path d="M12 8h.01" />
+            @break
+        @case('message')
+            <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
+            @break
+        @case('lock')
+            <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            @break
+        @case('flag')
+            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
+            <line x1="4" x2="4" y1="22" y2="15" />
+            @break
+        @case('clock')
+            <circle cx="12" cy="12" r="10" />
+            <polyline points="12 6 12 12 16 14" />
+            @break
+        @case('refresh')
+            <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
+            <path d="M21 3v5h-5" />
+            @break
+        @case('plus')
+            <path d="M5 12h14" />
+            <path d="M12 5v14" />
+            @break
+        @case('gem')
+            <path d="M6 3h12l4 6-10 13L2 9Z" />
+            <path d="M11 3 8 9l4 13 4-13-3-6" />
+            <path d="M2 9h20" />
+            @break
+        @case('inbox')
+            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12" />
+            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
+            @break
+        @case('image')
+            <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+            <circle cx="9" cy="9" r="2" />
+            <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
+            @break
+        @case('star')
+            <path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z" />
+            @break
         @default
             <path d="M5 12h14" />
             <path d="m12 5 7 7-7 7" />

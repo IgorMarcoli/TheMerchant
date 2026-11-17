@@ -3,7 +3,7 @@
 @section('title', 'Criar Conta')
 
 @section('content')
-<x-auth-card title="Criar Nova Conta" eyebrow="SEU PRÓXIMO NÍVEL COMEÇA AQUI" description="Faça parte da comunidade e encontre seu próximo upgrade." :fields="['name', 'email', 'password']">
+<x-auth-card title="Crie sua conta" eyebrow="Cadastro" description="Com uma conta você compra, vende e conversa com outros jogadores." :fields="['name', 'email', 'password']">
 
         <form action="{{ route('register') }}" method="POST" class="space-y-4">
             @csrf

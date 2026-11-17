@@ -7,18 +7,18 @@
     <!-- Cabeçalho e Navegação do Painel -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-6">
         <div>
-            <x-page-heading title="Painel de Controle Administrativo" eyebrow="VISÃO GERAL DO MARKETPLACE" description="Acompanhe transações, catálogo, denúncias e contas em um só lugar." />
+            <x-page-heading title="Painel de Controle Administrativo" eyebrow="Administração" description="Acompanhe transações, catálogo, denúncias e contas em um só lugar." />
         </div>
 
         <div class="flex flex-wrap items-center gap-2">
             <a href="{{ route('admin.usuarios.index') }}" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition flex items-center gap-1.5 border border-slate-700">
-                <span aria-hidden="true">👥</span> Gerenciar Contas
+                Gerenciar Contas
             </a>
             <a href="{{ route('admin.categorias.index') }}" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition flex items-center gap-1.5 border border-slate-700">
-                <span aria-hidden="true">🏷️</span> Categorias & Jogos
+                Categorias & Jogos
             </a>
             <a href="{{ route('admin.reports.index') }}" class="px-3.5 py-2 rounded-xl bg-rose-950/60 hover:bg-rose-900/60 text-rose-300 text-xs font-semibold transition flex items-center gap-1.5 border border-rose-800/50">
-                <span aria-hidden="true">🚩</span> Moderação ({{ $metrics['open_reports'] }})
+                <x-icon name="flag" class="!h-4 !w-4" /> Moderação ({{ $metrics['open_reports'] }})
             </a>
         </div>
     </div>
@@ -30,7 +30,6 @@
             <div>
                 <div class="flex items-center justify-between text-slate-400 mb-2">
                     <span class="text-xs uppercase font-bold tracking-wider">Volume Transacionado</span>
-                    <span aria-hidden="true" class="text-base">💳</span>
                 </div>
                 <div class="text-2xl font-black text-brand-400">
                     R$ {{ number_format($metrics['transacted_volume'], 2, ',', '.') }}
@@ -46,7 +45,6 @@
             <div>
                 <div class="flex items-center justify-between text-slate-400 mb-2">
                     <span class="text-xs uppercase font-bold tracking-wider">Volume de Pedidos</span>
-                    <span aria-hidden="true" class="text-base">📦</span>
                 </div>
                 <div class="text-2xl font-black text-white">
                     {{ $metrics['total_orders'] }}
@@ -70,7 +68,6 @@
             <div>
                 <div class="flex items-center justify-between text-slate-400 mb-2">
                     <span class="text-xs uppercase font-bold tracking-wider">Usuários Cadastrados</span>
-                    <span aria-hidden="true" class="text-base">👤</span>
                 </div>
                 <div class="text-2xl font-black text-white">
                     {{ $metrics['total_users'] }}
@@ -96,7 +93,6 @@
             <div>
                 <div class="flex items-center justify-between text-slate-400 mb-2">
                     <span class="text-xs uppercase font-bold tracking-wider">Anúncios no Catálogo</span>
-                    <span aria-hidden="true" class="text-base">💎</span>
                 </div>
                 <div class="text-2xl font-black text-brand-400">
                     {{ $metrics['active_listings'] }}
@@ -114,7 +110,7 @@
         <div class="rounded-xl bg-slate-900 border border-slate-800 p-6 shadow-xl">
             <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
                 <h2 class="text-sm font-bold text-white flex items-center gap-2">
-                    <span aria-hidden="true">🛒</span> Últimos Pedidos Registrados
+                    Últimos Pedidos Registrados
                 </h2>
                 <span class="text-xs text-slate-500 font-semibold">Exibindo 5 mais recentes</span>
             </div>
@@ -152,7 +148,7 @@
         <div class="rounded-xl bg-slate-900 border border-slate-800 p-6 shadow-xl">
             <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
                 <h2 class="text-sm font-bold text-white flex items-center gap-2">
-                    <span aria-hidden="true">🚩</span> Denúncias Pendentes de Moderação
+                    Denúncias Pendentes de Moderação
                 </h2>
                 <a href="{{ route('admin.reports.index') }}" class="text-xs text-brand-400 hover:text-brand-300 font-semibold">
                     Ver todas &rarr;

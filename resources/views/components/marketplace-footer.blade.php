@@ -2,21 +2,21 @@
     <div class="market-footer-inner">
         <div class="market-footer-banner">
             <div>
-                <span class="market-footer-eyebrow">DE PLAYER PARA PLAYER</span>
-                <h2>Seu próximo upgrade está aqui.</h2>
-                <p>Encontre seu estilo, evolua no jogo e faça parte da comunidade.</p>
+                <span class="market-footer-eyebrow">Procurando algo específico?</span>
+                <h2>Veja o catálogo completo</h2>
+                <p>Filtre por jogo, tipo de anúncio, preço e nota do vendedor.</p>
             </div>
-            <a class="market-footer-cta" href="{{ route('listings.index') }}">Explorar marketplace <x-icon /></a>
+            <a class="market-footer-cta" href="{{ route('listings.index') }}">Ver catálogo <x-icon /></a>
         </div>
 
         <div class="market-footer-grid">
             <div class="market-footer-brand">
-                <a href="{{ route('home') }}" class="market-footer-logo" aria-label="TheMerchant — início">
+                <a href="{{ route('home') }}" class="market-footer-logo" aria-label="TheMerchant, página inicial">
                     <span class="market-footer-mark"><x-icon name="store" /></span>
                     <span>the<span class="market-footer-accent">merchant.</span></span>
                 </a>
                 <p>Compre e venda skins, personalize seu inventário e encontre coaching para evoluir nas partidas.</p>
-                <span class="market-footer-signature"><x-icon name="game" /> De gamers, para gamers</span>
+                <span class="market-footer-signature"><x-icon name="game" /> Projeto da Fatec Praia Grande</span>
             </div>
 
             <nav aria-label="Explorar o marketplace">

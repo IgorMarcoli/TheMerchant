@@ -26,7 +26,7 @@
     <div class="rounded-xl bg-slate-900 border border-slate-800 p-6 sm:p-8 shadow-xl">
         <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-5 pb-6 border-b border-slate-800">
             <div>
-                <x-page-heading :title="'Pedido #'.$order->order_number" eyebrow="Comprovante de Compra" />
+                <x-page-heading :title="'Pedido #'.$order->order_number" eyebrow="Comprovante" />
                 <span class="text-xs text-slate-400 mt-1 block">
                     Realizado em {{ $order->created_at->format('d/m/Y \à\s H:i:s') }}
                 </span>
@@ -40,15 +40,15 @@
             </div>
         </div>
 
-        <!-- 🧭 Timeline do Ciclo de Vida do Pedido (RF13, Contrato #13/#14) -->
+        <!-- Timeline do Ciclo de Vida do Pedido (RF13, Contrato #13/#14) -->
         <div class="py-6 border-b border-slate-800">
             <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-1.5">
-                <span>⏱️</span> Linha do Tempo do Pedido
+                Linha do Tempo do Pedido
             </h2>
 
             @if($order->status === 'cancelado')
                 <div class="p-4 rounded-2xl bg-rose-950/40 border border-rose-800/60 text-xs text-rose-300 flex items-center gap-3">
-                    <span aria-hidden="true" class="text-2xl">⚠️</span>
+                    <x-icon name="alert" class="!h-7 !w-7 shrink-0" />
                     <div>
                         <strong class="font-bold block text-sm">Pedido Cancelado</strong>
                         <span>Este pedido foi cancelado ou expirou antes da confirmação de pagamento pelo gateway. Nenhum valor pendente será cobrado.</span>
@@ -113,15 +113,15 @@
                 </div>
 
                 <div class="mt-3 p-2.5 rounded-xl bg-slate-950/40 border border-slate-800/80 text-[11px] text-slate-400 text-center">
-                    <span aria-hidden="true">💡</span> <em>A timeline acima reflete o estado do pedido. A entrega de cada cosmético ou serviço é gerenciada e rastreada de forma independente pelos vendedores nos itens abaixo.</em>
+                    A linha do tempo acima mostra o estado do pedido. A entrega de cada item é feita e acompanhada separadamente pelo vendedor, nos itens abaixo.
                 </div>
             @endif
         </div>
 
-        <!-- 💳 Detalhes de Pagamento do Gateway (RF11, RF12, RNF04) -->
+        <!-- Detalhes de Pagamento do Gateway (RF11, RF12, RNF04) -->
         <div class="py-6 border-b border-slate-800">
             <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-1.5">
-                <span aria-hidden="true">🛡️</span> Detalhes do Pagamento
+                Detalhes do Pagamento
             </h2>
 
             @if($order->payment)
@@ -165,16 +165,16 @@
                         <span class="font-semibold text-white block mb-0.5">Aguardando Confirmação do Provedor de Pagamento</span>
                         <span>O processamento é realizado pelo gateway credenciado. Assim que o webhook assíncrono confirmar o pagamento, o status mudará para <strong>Pago</strong>.</span>
                     </div>
-                    <span aria-hidden="true" class="text-2xl">⏳</span>
+                    <x-icon name="clock" class="!h-7 !w-7 shrink-0" />
                 </div>
             @endif
         </div>
 
-        <!-- 📝 Instruções do Pedido / Observações do Comprador (Trade URL / Horários) -->
+        <!-- Instruções do Pedido / Observações do Comprador (Trade URL / Horários) -->
         @if($order->notes)
             <div class="py-6 border-b border-slate-800">
                 <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <span aria-hidden="true">📌</span> Instruções do Comprador para Entrega
+                    Instruções do Comprador para Entrega
                 </h2>
                 <div class="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 text-xs text-slate-200 leading-relaxed font-mono whitespace-pre-wrap">
                     {{ $order->notes }}
@@ -182,11 +182,11 @@
             </div>
         @endif
 
-        <!-- 📦 Itens do Pedido, Quantidades, Duração, Instruções e Avaliação Pós-Entrega -->
+        <!-- Itens do Pedido, Quantidades, Duração, Instruções e Avaliação Pós-Entrega -->
         <div class="pt-6">
             <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center justify-between">
                 <span class="flex items-center gap-1.5">
-                    <span aria-hidden="true">💎</span> Itens Contratados ({{ $order->items->count() }})
+                     Itens Contratados ({{ $order->items->count() }})
                 </span>
                 <span class="text-[11px] text-slate-500 font-normal">Entrega individual por item</span>
             </h2>
@@ -197,8 +197,8 @@
                         <!-- Topo do Item: Identificação, Tipo e Status de Entrega -->
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800/80">
                             <div class="flex items-start sm:items-center gap-4">
-                                <div class="w-12 h-12 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center text-2xl shrink-0" aria-hidden="true">
-                                    {{ ($item->listing?->category?->type === 'service') ? '🎓' : '💎' }}
+                                <div class="w-12 h-12 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center shrink-0 text-slate-400">
+                                    <x-icon :name="$item->listing?->category?->type === 'service' ? 'game' : 'gem'" class="!h-6 !w-6" />
                                 </div>
                                 <div>
                                     <div class="flex flex-wrap items-center gap-2">
@@ -286,7 +286,7 @@
                             @if($item->listing?->category?->type === 'service')
                                 <div class="p-3 rounded-xl bg-purple-950/30 border border-purple-900/40 text-purple-200">
                                     <strong class="font-bold flex items-center gap-1 text-purple-300 mb-1">
-                                        <span aria-hidden="true">🎓</span> Duração e Condições do Serviço / Coaching:
+                                        Duração e Condições do Serviço / Coaching:
                                     </strong>
                                     <p class="text-[11px] text-slate-300">
                                         A duração de cada sessão segue as especificações do anúncio. Utilize o chat direto abaixo para alinhar horário, link de Discord ou sala personalizada com o mentor.
@@ -295,7 +295,7 @@
                             @else
                                 <div class="p-3 rounded-xl bg-slate-900/50 border border-slate-800 text-slate-300">
                                     <strong class="font-bold flex items-center gap-1 text-brand-300 mb-1">
-                                        <span aria-hidden="true">💎</span> Instruções de Envio do Cosmético Digital:
+                                        Instruções de Envio do Cosmético Digital:
                                     </strong>
                                     <p class="text-[11px] text-slate-400">
                                         O envio é feito via troca direta na plataforma do jogo ou pelo Trade URL informado no pedido. Fique atento às notificações no chat.
@@ -313,7 +313,7 @@
                                 <button type="submit"
                                         class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs transition flex items-center gap-1.5 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500"
                                         aria-label="Falar com {{ $item->seller->name }}">
-                                    <span aria-hidden="true">💬</span> Falar com Vendedor
+                                    <x-icon name="message" class="!h-4 !w-4" /> Falar com Vendedor
                                 </button>
                             </form>
                         </div>

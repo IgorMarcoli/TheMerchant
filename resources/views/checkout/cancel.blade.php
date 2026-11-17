@@ -6,7 +6,7 @@
 <div class="max-w-2xl mx-auto py-10">
     <div class="rounded-2xl bg-slate-900 border border-slate-800 p-7 sm:p-9 shadow-xl">
         <div class="w-16 h-16 rounded-full bg-rose-950 text-rose-300 border border-rose-800 text-2xl flex items-center justify-center mb-6">!</div>
-        <x-page-heading title="Pagamento não concluído" eyebrow="RETORNO DO CHECKOUT" />
+        <x-page-heading title="Pagamento não concluído" eyebrow="Pagamento" />
         <p class="text-sm text-slate-300 mt-3">O gateway retornou sem concluir o pagamento. O status exibido abaixo vem do pedido e das notificações recebidas; esta página não cancela nem altera o pedido.</p>
 
         <div class="rounded-xl bg-slate-950 border border-slate-800 p-5 mt-6 text-sm space-y-3">

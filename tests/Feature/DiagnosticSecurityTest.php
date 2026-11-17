@@ -38,6 +38,8 @@ class DiagnosticSecurityTest extends TestCase
         $connection->shouldReceive('select')->with('SELECT 1')
             ->andThrow(new \RuntimeException('password authentication failed: secret-sentinel'));
         DB::shouldReceive('connection')->once()->andReturn($connection);
+        // O Laravel 12.73+ desconecta as conexões no tearDown e chama getConnections() no DB mockado.
+        DB::shouldReceive('getConnections')->andReturn([]);
         $this->artisan('test:db')
             ->expectsOutputToContain('Confira DB_USERNAME e DB_PASSWORD')
             ->doesntExpectOutputToContain('secret-sentinel')

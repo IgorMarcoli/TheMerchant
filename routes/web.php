@@ -127,3 +127,12 @@ Route::middleware(['auth', EnsureAccountIsActive::class, 'can:viewAny,App\Models
     Route::get('denuncias', [AdminReportController::class, 'index'])->name('reports.index');
     Route::patch('denuncias/{report}/moderar', [AdminReportController::class, 'moderate'])->name('reports.moderate');
 });
+
+/*
+|--------------------------------------------------------------------------
+| Endereço inexistente
+|--------------------------------------------------------------------------
+| Sem esta rota, um 404 de URL desconhecida não passa pelo grupo "web",
+| a sessão não é iniciada e o cabeçalho aparece como se o usuário tivesse saído.
+*/
+Route::fallback(fn () => abort(404));

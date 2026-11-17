@@ -5,7 +5,7 @@
 @section('content')
 <div class="max-w-5xl mx-auto">
     <div class="mb-8">
-        <x-page-heading title="Fila de Moderação de Denúncias" eyebrow="UMA COMUNIDADE BEM CUIDADA" description="Analise denúncias e suspenda anúncios irregulares." />
+        <x-page-heading title="Fila de Moderação de Denúncias" eyebrow="Administração" description="Analise denúncias e suspenda anúncios irregulares." />
     </div>
 
     <form method="GET" action="{{ route('admin.reports.index') }}" class="mb-5 flex flex-wrap items-end gap-3 rounded-xl border border-slate-800 bg-slate-900 p-4">

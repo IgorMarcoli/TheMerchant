@@ -29,10 +29,10 @@
 @section('content')
 <div class="max-w-2xl mx-auto py-10">
     <div class="rounded-2xl bg-slate-900 border border-slate-800 p-7 sm:p-9 shadow-xl">
-        <div class="w-16 h-16 rounded-full {{ $isPaid ? 'bg-emerald-950 text-emerald-400 border-emerald-700' : 'bg-amber-950 text-amber-300 border-amber-700' }} border text-2xl flex items-center justify-center mb-6" aria-hidden="true">
-            {{ $isPaid ? '✓' : '⏳' }}
+        <div class="w-16 h-16 rounded-full {{ $isPaid ? 'bg-emerald-950 text-emerald-400 border-emerald-700' : 'bg-amber-950 text-amber-300 border-amber-700' }} border flex items-center justify-center mb-6">
+            <x-icon :name="$isPaid ? 'check' : 'clock'" class="!h-7 !w-7" />
         </div>
-        <x-page-heading :title="$isPaid ? 'Pagamento confirmado' : ($isCancelled ? 'Pedido cancelado' : 'Pedido criado')" eyebrow="STATUS DA COMPRA" />
+        <x-page-heading :title="$isPaid ? 'Pagamento confirmado' : ($isCancelled ? 'Pedido cancelado' : 'Pedido criado')" :eyebrow="$isPaid ? 'Compra concluída' : 'Passo 3 de 3'" />
         <p class="text-sm text-slate-300 mt-3">
             {{ $isPaid ? 'O gateway confirmou o pagamento. Os vendedores já podem iniciar as entregas.' : ($isCancelled ? 'Este pedido foi cancelado e a reserva dos itens foi liberada.' : 'Seus itens estão reservados. A confirmação vem do gateway; acessar esta página não confirma o pagamento.') }}
         </p>
@@ -58,13 +58,13 @@
                     <label for="pix-code" class="block text-xs font-semibold text-slate-300 mt-4 mb-1">PIX copia e cola</label>
                     <div class="flex gap-2">
                         <input id="pix-code" x-ref="code" type="text" readonly value="{{ $payment->br_code }}" class="flex-1 min-w-0 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200 font-mono">
-                        <button type="button" @click="navigator.clipboard.writeText($refs.code.value).then(() => copied = true)" class="px-3 py-2 rounded-lg bg-brand-600 hover:bg-brand-500 text-slate-950 text-xs font-bold" x-text="copied ? 'Copiado!' : 'Copiar'">Copiar</button>
+                        <button type="button" @click="navigator.clipboard.writeText($refs.code.value).then(() => copied = true)" class="px-3 py-2 rounded-lg bg-brand-600 hover:bg-brand-500 text-slate-950 text-xs font-bold" x-text="copied ? 'Copiado' : 'Copiar'">Copiar</button>
                     </div>
                 @endif
                 <div class="flex flex-wrap gap-3 mt-5">
                     <form method="POST" action="{{ route('checkout.payment.refresh', $order) }}">
                         @csrf
-                        <button type="submit" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs">Já paguei — atualizar status</button>
+                        <button type="submit" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs">Já paguei, atualizar status</button>
                     </form>
                     @if(config('services.abacatepay.dev_mode') && $payment->dev_mode)
                         <form method="POST" action="{{ route('checkout.payment.simulate', $order) }}">
